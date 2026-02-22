@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Links | Blue Tiger Inc Studios</title>
+
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --bg: #fcfcfc;
+        --txt: #111111;
+        --card-bg: rgba(255, 255, 255, 0.75);
+        --border: rgba(0, 0, 0, 0.08);
+        --teal: #00c4b6;
+        --aurora-1: rgba(0, 196, 182, 0.15);
+        --aurora-2: rgba(0, 196, 182, 0.08);
+        --shadow-hover: rgba(0, 0, 0, 0.08);
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #0a0a0a;
+            --txt: #fcfcfc;
+            --card-bg: rgba(20, 20, 20, 0.75);
+            --border: rgba(255, 255, 255, 0.1);
+            --aurora-1: rgba(0, 196, 182, 0.2);
+            --aurora-2: rgba(0, 196, 182, 0.1);
+            --shadow-hover: rgba(0, 196, 182, 0.15);
+        }
+    }
+
+    body {
+        margin: 0;
+        font-family: 'DM Sans', sans-serif;
+        background: var(--bg);
+        color: var(--txt);
+        /* 100dvh perfectly sizes to mobile screens, ignoring URL bars */
+        min-height: 100dvh; 
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center; /* Centers everything perfectly to remove dead space */
+        overflow-x: hidden;
+        -webkit-tap-highlight-color: transparent;
+        position: relative;
+    }
+
+    /* --- PREMIUM AURORA BACKGROUND --- */
+    .aurora-bg {
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        z-index: -1;
+        overflow: hidden;
+        background: var(--bg);
+    }
+
+    .aurora-bg::before, .aurora-bg::after {
+        content: '';
+        position: absolute;
+        width: 150vw; height: 150vw;
+        border-radius: 50%;
+        filter: blur(80px);
+        animation: drift 15s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate;
+    }
+
+    .aurora-bg::before {
+        top: -50vw; left: -50vw;
+        background: radial-gradient(circle, var(--aurora-1), transparent 60%);
+    }
+
+    .aurora-bg::after {
+        bottom: -50vw; right: -50vw;
+        background: radial-gradient(circle, var(--aurora-2), transparent 60%);
+        animation-delay: -5s;
+    }
+
+    @keyframes drift {
+        0% { transform: translate(0, 0) scale(1); }
+        100% { transform: translate(10vw, 10vh) scale(1.1); }
+    }
+
+    /* --- MAIN CONTAINER --- */
+    .container {
+        position: relative;
+        z-index: 10;
+        width: 100%;
+        max-width: 500px;
+        box-sizing: border-box;
+        padding: 40px 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    /* --- MINIMAL LOGO HEADER --- */
+    .header {
+        text-align: center;
+        margin-bottom: 25px;
+        /* Load Animation */
+        opacity: 0;
+        transform: translateY(-20px);
+        animation: fadeDown 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .logo {
+        height: 56px; /* Significantly increased from 36px */
+        width: auto;
+        margin: 0 auto;
+        display: block;
+    }
+
+    .logo-dark { display: none; }
+    
+    @media (prefers-color-scheme: dark) {
+        .logo-light { display: none; }
+        .logo-dark { display: block; }
+    }
+
+    /* --- LEVITATING CARDS --- */
+    .card-wrapper {
+        /* Load Animation */
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+        filter: blur(10px);
+        animation: snapFocus 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* Staggered load times */
+    .card-wrapper:nth-child(2) { animation-delay: 0.1s; }
+    .card-wrapper:nth-child(3) { animation-delay: 0.2s; }
+    .card-wrapper:nth-child(4) { animation-delay: 0.3s; }
+
+    /* Continuous breathing animation applied after load */
+    .card-breather {
+        animation: breathe 6s ease-in-out infinite;
+    }
+    .card-wrapper:nth-child(2) .card-breather { animation-delay: -2s; }
+    .card-wrapper:nth-child(3) .card-breather { animation-delay: -4s; }
+
+    @keyframes fadeDown {
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes snapFocus {
+        to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+    }
+
+    @keyframes breathe {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-6px); }
+    }
+
+    .card {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: var(--card-bg);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        padding: 24px 28px;
+        text-decoration: none;
+        color: var(--txt);
+        transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.2s ease, box-shadow 0.2s ease;
+        position: relative;
+        overflow: hidden; /* Contains the ripple */
+    }
+
+    /* --- DESKTOP HOVER EFFECTS --- */
+    @media (hover: hover) {
+        .card:hover {
+            transform: translateY(-4px) scale(1.02);
+            border-color: var(--teal);
+            box-shadow: 0 12px 24px var(--shadow-hover);
+        }
+        
+        .card:hover .arrow {
+            stroke: var(--teal);
+            transform: translate(3px, -3px);
+        }
+
+        .primary-card:hover {
+            border: none;
+        }
+    }
+
+    /* Tactile Mobile Tap */
+    .card:active {
+        transform: scale(0.96);
+    }
+
+    .card-content {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        position: relative;
+        z-index: 2;
+        pointer-events: none;
+    }
+
+    .card-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin: 0;
+        letter-spacing: -0.02em;
+    }
+
+    .card-meta {
+        font-size: 0.9rem;
+        color: #888;
+        margin: 0;
+    }
+
+    .arrow {
+        width: 24px;
+        height: 24px;
+        stroke: var(--txt);
+        fill: none;
+        stroke-width: 2.5;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        position: relative;
+        z-index: 2;
+        transition: stroke 0.2s ease, transform 0.2s ease;
+    }
+
+    /* --- SPINNING BORDER (YOUTUBE) --- */
+    .primary-card {
+        border: none;
+        padding: 25px 29px; 
+    }
+
+    .primary-card::before {
+        content: '';
+        position: absolute;
+        top: -50%; left: -50%; width: 200%; height: 200%;
+        background: conic-gradient(transparent, var(--teal), transparent 25%);
+        animation: spin 3.5s linear infinite;
+        z-index: 0;
+    }
+
+    .primary-card::after {
+        content: '';
+        position: absolute;
+        inset: 2px;
+        background: var(--card-bg);
+        border-radius: 22px;
+        z-index: 1;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    /* --- THE TACTILE RIPPLE --- */
+    .ripple {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(0, 196, 182, 0.3);
+        transform: scale(0);
+        animation: rippleEffect 0.6s linear;
+        pointer-events: none;
+        z-index: 5;
+    }
+
+    @keyframes rippleEffect {
+        to { transform: scale(4); opacity: 0; }
+    }
+
+    /* --- SUBTLE FOOTER --- */
+    .footer {
+        text-align: center;
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: #888;
+        margin-top: 20px;
+        /* Matches header fade down */
+        opacity: 0;
+        transform: translateY(-20px);
+        animation: fadeDown 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        animation-delay: 0.4s;
+    }
+
+</style>
+</head>
+<body>
+
+    <div class="aurora-bg"></div>
+
+    <div class="container">
+        
+        <div class="header">
+            <img src="studios-logo.svg" alt="Blue Tiger Inc Studios" class="logo logo-light">
+            <img src="favicon.svg" alt="Blue Tiger Inc Studios" class="logo logo-dark">
+        </div>
+
+        <div class="card-wrapper">
+            <div class="card-breather">
+                <a href="https://youtube.com/@BlueTigerIncStudios" target="_blank" rel="noopener noreferrer" class="card primary-card">
+                    <div class="card-content">
+                        <h2 class="card-title">YouTube</h2>
+                        <p class="card-meta">@BlueTigerIncStudios</p>
+                    </div>
+                    <svg class="arrow" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </a>
+            </div>
+        </div>
+
+        <div class="card-wrapper">
+            <div class="card-breather">
+                <a href="/" class="card">
+                    <div class="card-content">
+                        <h2 class="card-title">Main Site</h2>
+                        <p class="card-meta">bluetigerincstudios.com</p>
+                    </div>
+                    <svg class="arrow" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </a>
+            </div>
+        </div>
+
+        <div class="card-wrapper">
+            <div class="card-breather">
+                <a href="https://instagram.com/bluetigerincstudios" target="_blank" rel="noopener noreferrer" class="card">
+                    <div class="card-content">
+                        <h2 class="card-title">Instagram</h2>
+                        <p class="card-meta">@bluetigerincstudios</p>
+                    </div>
+                    <svg class="arrow" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </a>
+            </div>
+        </div>
+
+        <div class="footer">
+            &copy; 2026 Blue Tiger Inc Studios
+        </div>
+
+    </div>
+
+    <script>
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('pointerdown', function(e) {
+                let ripple = document.createElement('span');
+                ripple.classList.add('ripple');
+                
+                let rect = this.getBoundingClientRect();
+                let size = Math.max(rect.width, rect.height);
+                
+                ripple.style.width = ripple.style.height = `${size}px`;
+                ripple.style.left = `${e.clientX - rect.left - size/2}px`;
+                ripple.style.top = `${e.clientY - rect.top - size/2}px`;
+                
+                this.appendChild(ripple);
+                
+                // Clean up the span after animation completes
+                setTimeout(() => ripple.remove(), 600);
+            });
+        });
+    </script>
+
+</body>
+</html>
