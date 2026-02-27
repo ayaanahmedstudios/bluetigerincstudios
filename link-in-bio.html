@@ -3,13 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Links | Blue Tiger Inc Studios</title>
+<title>Links / Blue Tiger Inc Studios</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-    /* --- CORE VARIABLES --- */
     :root {
         --bg: #fcfcfc; 
         --txt: #111111; 
@@ -20,7 +19,6 @@
         --aurora-2: rgba(0, 196, 182, 0.08);
     }
 
-    /* Strict Dark Mode Architecture */
     @media (prefers-color-scheme: dark) {
         :root {
             --bg: #0a0a0a; 
@@ -32,7 +30,6 @@
         }
     }
 
-    /* --- MOBILE VIEWPORT LOCK --- */
     body {
         margin: 0; 
         font-family: 'DM Sans', sans-serif; 
@@ -43,10 +40,9 @@
         flex-direction: column; 
         overflow: hidden; 
         -webkit-tap-highlight-color: transparent; 
-        touch-action: manipulation; /* Removes 300ms tap delay */
+        touch-action: manipulation;
     }
 
-    /* --- AMBIENT KINETIC BACKGROUND --- */
     .aurora-bg {
         position: fixed; inset: -50%; z-index: -1;
         background: radial-gradient(circle at 50% 50%, var(--aurora-1) 0%, transparent 50%),
@@ -55,33 +51,37 @@
         animation: fluidAurora 20s ease-in-out infinite alternate;
         pointer-events: none;
     }
+
     @keyframes fluidAurora { 0% { background-position: 0% 0%; } 100% { background-position: 100% 100%; } }
 
-    /* --- THE BULLETPROOF LOGO MASK --- */
     .header {
         padding: 40px 20px 20px 20px;
         display: flex; justify-content: center; align-items: center;
-        flex-shrink: 0; pointer-events: none; z-index: 10;
-    }
-    .logo-mask {
-        width: 100%; max-width: 200px; height: 40px; 
-        background-color: var(--txt); /* Dynamically maps to OS text color */
-        -webkit-mask-image: url('favicon.svg'); mask-image: url('favicon.svg');
-        -webkit-mask-size: contain; mask-size: contain;
-        -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
-        -webkit-mask-position: center; mask-position: center;
+        flex-shrink: 0; z-index: 10;
     }
 
-    /* --- LAYERED MOODBOARD ARCHITECTURE --- */
+    .logo-link {
+        display: block; width: 100%; max-width: 200px;
+        cursor: pointer; pointer-events: auto;
+    }
+
+    .logo-mask {
+        width: 100%; height: 40px; 
+        background-color: var(--txt);
+        mask-image: url('favicon.svg');
+        mask-size: contain; mask-repeat: no-repeat; mask-position: center;
+        -webkit-mask-image: url('favicon.svg');
+        -webkit-mask-size: contain; -webkit-mask-repeat: no-repeat; -webkit-mask-position: center;
+    }
+
     .stack-container {
         flex: 1; display: flex; flex-direction: column; 
         justify-content: center; padding: 0 20px 40px 20px;
         width: 100%; max-width: 500px; margin: 0 auto; box-sizing: border-box;
     }
 
-    /* The Glass Card Mechanics */
     .card {
-        width: 85%; /* Allows for the zig-zag offset */
+        width: 85%; 
         background: var(--card-bg); 
         backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
         border: 1px solid var(--border); 
@@ -91,52 +91,60 @@
         text-decoration: none; color: var(--txt);
         display: flex; flex-direction: column; justify-content: center;
         position: relative; overflow: hidden;
-        
-        /* Smooth base transitions for hover/active states */
         transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
                     border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
         will-change: transform;
     }
 
-    /* --- THE OVERLAP & ZIG-ZAG LOGIC --- */
-    .c1 { align-self: flex-start; z-index: 1; animation: breathe 6s ease-in-out infinite; }
-    
-    /* Pulls up into the card above it, creating the glass overlap */
+    .c1 { align-self: flex-start; z-index: 3; animation: breathe 6s ease-in-out infinite; }
     .c2 { align-self: flex-end; margin-top: -35px; z-index: 2; animation: breathe 6s ease-in-out infinite -2s; }
-    
-    .c3 { align-self: flex-start; margin-top: -35px; z-index: 3; animation: breathe 6s ease-in-out infinite -4s; }
+    .c3 { align-self: flex-start; margin-top: -35px; z-index: 1; animation: breathe 6s ease-in-out infinite -4s; }
 
-    @keyframes breathe { 
-        0%, 100% { transform: translateY(0); } 
-        50% { transform: translateY(-8px); } 
-    }
+    @keyframes breathe { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
 
-    /* --- DESKTOP HOVER PHYSICS --- */
     @media (hover: hover) {
         .card:hover { 
             transform: scale(1.03) translateY(-4px) !important; 
             border-color: var(--teal); 
             box-shadow: 0 20px 45px rgba(0, 196, 182, 0.15);
-            z-index: 10; /* Pops above the others on hover */
-            animation-play-state: paused; 
+            z-index: 10; animation-play-state: paused; 
         }
         .card:hover .arrow { stroke: var(--teal); transform: translate(4px, -4px); }
     }
 
-    /* --- MOBILE ACTIVE PHYSICS --- */
-    .card:active { 
-        transform: scale(0.96) !important; 
-        background: rgba(0, 196, 182, 0.1); 
-        border-color: var(--teal); 
-        animation-play-state: paused; 
-    }
-    .card:active .arrow { stroke: var(--teal); transform: scale(0.9); }
+    .card:active { transform: scale(0.96) !important; background: rgba(0, 196, 182, 0.1); border-color: var(--teal); }
 
-    /* --- TYPOGRAPHY --- */
     .card-content { z-index: 2; pointer-events: none; }
     
-    /* Fixed text casing as requested */
-    .title { font-size: 1.8rem; font-weight: 700; margin: 0; line-height: 1.1; }
+    .title-wrapper {
+        font-size: 1.8rem; font-weight: 700; margin: 0; line-height: 1.1;
+        height: 1.1em; 
+        overflow: hidden; 
+        display: block;
+    }
+
+    .roller {
+        display: flex; flex-direction: column;
+        will-change: transform;
+        animation: studioRoll 6s cubic-bezier(0.85, 0, 0.15, 1) infinite;
+    }
+
+    .c1 .roller { animation-delay: 0s; }
+    .c2 .roller { animation-delay: 0.2s; }
+    .c3 .roller { animation-delay: 0.4s; }
+
+    .roll-text {
+        height: 1.1em; display: flex; align-items: center; white-space: nowrap;
+    }
+
+    .roll-accent { color: var(--teal); }
+
+    @keyframes studioRoll {
+        0%, 40% { transform: translateY(0); }
+        50%, 90% { transform: translateY(-1.1em); }
+        100% { transform: translateY(0); }
+    }
+
     .meta { font-size: 0.95rem; color: #888; margin: 5px 0 0 0; }
 
     .arrow {
@@ -145,14 +153,13 @@
         z-index: 2; transition: all 0.3s ease;
     }
 
-    /* Tactile Ripple */
     .ripple { 
         position: absolute; border-radius: 50%; background: rgba(255, 255, 255, 0.5); 
         transform: scale(0); animation: rippleEffect 0.6s linear; pointer-events: none; z-index: 5; 
     }
+
     @keyframes rippleEffect { to { transform: scale(4); opacity: 0; } }
 
-    /* Fixed Footer Letter Spacing */
     .footer { 
         text-align: center; font-size: 0.8rem; color: #888; opacity: 0.7; 
         padding-bottom: 25px; flex-shrink: 0; pointer-events: none;
@@ -164,7 +171,9 @@
     <div class="aurora-bg"></div>
 
     <div class="header">
-        <div class="logo-mask"></div>
+        <a href="https://youtube.com/@BlueTigerIncStudios" target="_blank" rel="noopener noreferrer" class="logo-link">
+            <div class="logo-mask"></div>
+        </a>
     </div>
 
     <div class="stack-container">
@@ -172,7 +181,12 @@
         <a href="https://youtube.com/@BlueTigerIncStudios" target="_blank" rel="noopener noreferrer" class="card c1">
             <svg class="arrow" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
             <div class="card-content">
-                <h2 class="title">YouTube</h2>
+                <div class="title-wrapper">
+                    <div class="roller">
+                        <div class="roll-text">YouTube</div>
+                        <div class="roll-text roll-accent">Watch Videos</div>
+                    </div>
+                </div>
                 <p class="meta">@BlueTigerIncStudios</p>
             </div>
         </a>
@@ -180,7 +194,12 @@
         <a href="https://instagram.com/bluetigerincstudios" target="_blank" rel="noopener noreferrer" class="card c2">
             <svg class="arrow" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
             <div class="card-content">
-                <h2 class="title">Instagram</h2>
+                <div class="title-wrapper">
+                    <div class="roller">
+                        <div class="roll-text">Instagram</div>
+                        <div class="roll-text roll-accent">Browse Feed</div>
+                    </div>
+                </div>
                 <p class="meta">@bluetigerincstudios</p>
             </div>
         </a>
@@ -188,29 +207,32 @@
         <a href="/" class="card c3">
             <svg class="arrow" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
             <div class="card-content">
-                <h2 class="title">Website</h2>
+                <div class="title-wrapper">
+                    <div class="roller">
+                        <div class="roll-text">Website</div>
+                        <div class="roll-text roll-accent">Visit Site</div>
+                    </div>
+                </div>
                 <p class="meta">bluetigerincstudios.com</p>
             </div>
         </a>
 
     </div>
 
-    <div class="footer">&copy; 2026 Blue Tiger Inc Studios</div>
+    <div class="footer">&copy; <span id="year"></span> Blue Tiger Inc Studios</div>
 
     <script>
-        // High-performance tactile ripple injection
+        document.getElementById('year').textContent = new Date().getFullYear();
+
         document.querySelectorAll('.card').forEach(card => {
             card.addEventListener('pointerdown', function(e) {
                 let ripple = document.createElement('span'); 
                 ripple.classList.add('ripple');
-                
                 let rect = this.getBoundingClientRect(); 
                 let size = Math.max(rect.width, rect.height);
-                
                 ripple.style.width = ripple.style.height = `${size}px`; 
                 ripple.style.left = `${e.clientX - rect.left - size/2}px`; 
                 ripple.style.top = `${e.clientY - rect.top - size/2}px`;
-                
                 this.appendChild(ripple); 
                 setTimeout(() => ripple.remove(), 600);
             });
