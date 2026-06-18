@@ -5,238 +5,233 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Links / Blue Tiger Inc Studios</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-    :root {
-        --bg: #fcfcfc; 
-        --txt: #111111; 
-        --card-bg: rgba(255, 255, 255, 0.5);
-        --border: rgba(0, 0, 0, 0.08);
-        --teal: #00c4b6;
-        --aurora-1: rgba(0, 196, 182, 0.15); 
-        --aurora-2: rgba(0, 196, 182, 0.08);
-    }
+:root {
+--bg: #fcfcfc;
+--txt: #111111;
+--card-bg: rgba(255, 255, 255, 0.5);
+--border: rgba(0, 0, 0, 0.08);
+--teal: #00c4b6;
+--aurora-1: rgba(0, 196, 182, 0.15);
+--aurora-2: rgba(0, 196, 182, 0.08);
+}
 
-    @media (prefers-color-scheme: dark) {
-        :root {
-            --bg: #0a0a0a; 
-            --txt: #fcfcfc; 
-            --card-bg: rgba(25, 25, 25, 0.5);
-            --border: rgba(255, 255, 255, 0.1);
-            --aurora-1: rgba(0, 196, 182, 0.25); 
-            --aurora-2: rgba(0, 196, 182, 0.12);
-        }
-    }
+@media (prefers-color-scheme: dark) {
+:root {
+--bg: #0a0a0a;
+--txt: #fcfcfc;
+--card-bg: rgba(25, 25, 25, 0.5);
+--border: rgba(255, 255, 255, 0.1);
+--aurora-1: rgba(0, 196, 182, 0.25);
+--aurora-2: rgba(0, 196, 182, 0.12);
+}
+}
 
-    body {
-        margin: 0; 
-        font-family: 'DM Sans', sans-serif; 
-        background: var(--bg); 
-        color: var(--txt);
-        height: 100dvh; 
-        display: flex; 
-        flex-direction: column; 
-        overflow: hidden; 
-        -webkit-tap-highlight-color: transparent; 
-        touch-action: manipulation;
-    }
+body {
+margin: 0;
+font-family: 'Bricolage Grotesque', sans-serif;
+background: var(--bg);
+color: var(--txt);
+height: 100dvh;
+display: flex;
+flex-direction: column;
+overflow: hidden;
+-webkit-tap-highlight-color: transparent;
+touch-action: manipulation;
+}
 
-    .aurora-bg {
-        position: fixed; inset: -50%; z-index: -1;
-        background: radial-gradient(circle at 50% 50%, var(--aurora-1) 0%, transparent 50%),
-                    radial-gradient(circle at 80% 20%, var(--aurora-2) 0%, transparent 50%);
-        background-size: 200% 200%; filter: blur(60px);
-        animation: fluidAurora 20s ease-in-out infinite alternate;
-        pointer-events: none;
-    }
+.aurora-bg {
+position: fixed; inset: -50%; z-index: -1;
+background: radial-gradient(circle at 50% 50%, var(--aurora-1) 0%, transparent 50%),
+radial-gradient(circle at 80% 20%, var(--aurora-2) 0%, transparent 50%);
+background-size: 200% 200%; filter: blur(60px);
+animation: fluidAurora 20s ease-in-out infinite alternate;
+pointer-events: none;
+}
 
-    @keyframes fluidAurora { 0% { background-position: 0% 0%; } 100% { background-position: 100% 100%; } }
+@keyframes fluidAurora { 0% { background-position: 0% 0%; } 100% { background-position: 100% 100%; } }
 
-    .header {
-        padding: 40px 20px 20px 20px;
-        display: flex; justify-content: center; align-items: center;
-        flex-shrink: 0; z-index: 10;
-    }
+.header {
+padding: 40px 20px 20px 20px;
+display: flex; justify-content: center; align-items: center;
+flex-shrink: 0; z-index: 10;
+}
 
-    .logo-link {
-        display: block; width: 100%; max-width: 200px;
-        cursor: pointer; pointer-events: auto;
-    }
+.logo-link {
+display: block; width: 100%; max-width: 200px;
+cursor: pointer; pointer-events: auto;
+}
 
-    .logo-mask {
-        width: 100%; height: 40px; 
-        background-color: var(--txt);
-        mask-image: url('favicon.svg');
-        mask-size: contain; mask-repeat: no-repeat; mask-position: center;
-        -webkit-mask-image: url('favicon.svg');
-        -webkit-mask-size: contain; -webkit-mask-repeat: no-repeat; -webkit-mask-position: center;
-    }
+.logo-mask {
+width: 100%; height: 40px;
+background-color: var(--txt);
+mask-image: url('favicon.svg');
+mask-size: contain; mask-repeat: no-repeat; mask-position: center;
+-webkit-mask-image: url('favicon.svg');
+-webkit-mask-size: contain; -webkit-mask-repeat: no-repeat; -webkit-mask-position: center;
+}
 
-    .stack-container {
-        flex: 1; display: flex; flex-direction: column; 
-        justify-content: center; padding: 0 20px 40px 20px;
-        width: 100%; max-width: 500px; margin: 0 auto; box-sizing: border-box;
-    }
+.stack-container {
+flex: 1; display: flex; flex-direction: column;
+justify-content: center; padding: 0 20px 40px 20px;
+width: 100%; max-width: 500px; margin: 0 auto; box-sizing: border-box;
+}
 
-    .card {
-        width: 85%; 
-        background: var(--card-bg); 
-        backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
-        border: 1px solid var(--border); 
-        border-radius: 28px;
-        box-shadow: 0 15px 35px rgba(0,0,0,0.08);
-        padding: 30px; box-sizing: border-box;
-        text-decoration: none; color: var(--txt);
-        display: flex; flex-direction: column; justify-content: center;
-        position: relative; overflow: hidden;
-        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
-                    border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
-        will-change: transform;
-    }
+.card {
+width: 85%;
+background: var(--card-bg);
+backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+border: 1px solid var(--border);
+border-radius: 28px;
+box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+padding: 30px; box-sizing: border-box;
+text-decoration: none; color: var(--txt);
+display: flex; flex-direction: column; justify-content: center;
+position: relative; overflow: hidden;
+transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+will-change: transform;
+}
 
-    .c1 { align-self: flex-start; z-index: 3; animation: breathe 6s ease-in-out infinite; }
-    .c2 { align-self: flex-end; margin-top: -35px; z-index: 2; animation: breathe 6s ease-in-out infinite -2s; }
-    .c3 { align-self: flex-start; margin-top: -35px; z-index: 1; animation: breathe 6s ease-in-out infinite -4s; }
+.c1 { align-self: flex-start; z-index: 3; animation: breathe 6s ease-in-out infinite; }
+.c2 { align-self: flex-end; margin-top: -35px; z-index: 2; animation: breathe 6s ease-in-out infinite -2s; }
+.c3 { align-self: flex-start; margin-top: -35px; z-index: 1; animation: breathe 6s ease-in-out infinite -4s; }
 
-    @keyframes breathe { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+@keyframes breathe { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
 
-    @media (hover: hover) {
-        .card:hover { 
-            transform: scale(1.03) translateY(-4px) !important; 
-            border-color: var(--teal); 
-            box-shadow: 0 20px 45px rgba(0, 196, 182, 0.15);
-            z-index: 10; animation-play-state: paused; 
-        }
-        .card:hover .arrow { stroke: var(--teal); transform: translate(4px, -4px); }
-    }
+@media (hover: hover) {
+.card:hover {
+transform: scale(1.03) translateY(-4px) !important;
+border-color: var(--teal);
+box-shadow: 0 20px 45px rgba(0, 196, 182, 0.15);
+z-index: 10; animation-play-state: paused;
+}
+.card:hover .arrow { stroke: var(--teal); transform: translate(4px, -4px); }
+}
 
-    .card:active { transform: scale(0.96) !important; background: rgba(0, 196, 182, 0.1); border-color: var(--teal); }
+.card:active { transform: scale(0.96) !important; background: rgba(0, 196, 182, 0.1); border-color: var(--teal); }
 
-    .card-content { z-index: 2; pointer-events: none; }
-    
-    .title-wrapper {
-        font-size: 1.8rem; font-weight: 700; margin: 0; line-height: 1.1;
-        height: 1.1em; 
-        overflow: hidden; 
-        display: block;
-    }
+.card-content { z-index: 2; pointer-events: none; }
 
-    .roller {
-        display: flex; flex-direction: column;
-        will-change: transform;
-        animation: studioRoll 6s cubic-bezier(0.85, 0, 0.15, 1) infinite;
-    }
+.title-wrapper {
+font-size: 1.8rem; font-weight: 700; margin: 0; line-height: 1.1;
+height: 1.1em;
+overflow: hidden;
+display: block;
+}
 
-    .c1 .roller { animation-delay: 0s; }
-    .c2 .roller { animation-delay: 0.2s; }
-    .c3 .roller { animation-delay: 0.4s; }
+.roller {
+display: flex; flex-direction: column;
+will-change: transform;
+animation: studioRoll 6s cubic-bezier(0.85, 0, 0.15, 1) infinite;
+}
 
-    .roll-text {
-        height: 1.1em; display: flex; align-items: center; white-space: nowrap;
-    }
+.c1 .roller { animation-delay: 0s; }
+.c2 .roller { animation-delay: 0.2s; }
+.c3 .roller { animation-delay: 0.4s; }
 
-    .roll-accent { color: var(--teal); }
+.roll-text {
+height: 1.1em; display: flex; align-items: center; white-space: nowrap;
+}
 
-    @keyframes studioRoll {
-        0%, 40% { transform: translateY(0); }
-        50%, 90% { transform: translateY(-1.1em); }
-        100% { transform: translateY(0); }
-    }
+.roll-accent { color: var(--teal); }
 
-    .meta { font-size: 0.95rem; color: #888; margin: 5px 0 0 0; }
+@keyframes studioRoll {
+0%, 40% { transform: translateY(0); }
+50%, 90% { transform: translateY(-1.1em); }
+100% { transform: translateY(0); }
+}
 
-    .arrow {
-        position: absolute; top: 30px; right: 25px;
-        width: 26px; height: 26px; stroke: var(--txt); fill: none; stroke-width: 2.5;
-        z-index: 2; transition: all 0.3s ease;
-    }
+.meta { font-size: 0.95rem; color: #888; margin: 5px 0 0 0; }
 
-    .ripple { 
-        position: absolute; border-radius: 50%; background: rgba(255, 255, 255, 0.5); 
-        transform: scale(0); animation: rippleEffect 0.6s linear; pointer-events: none; z-index: 5; 
-    }
+.arrow {
+position: absolute; top: 30px; right: 25px;
+width: 26px; height: 26px; stroke: var(--txt); fill: none; stroke-width: 2.5;
+z-index: 2; transition: all 0.3s ease;
+}
 
-    @keyframes rippleEffect { to { transform: scale(4); opacity: 0; } }
+.ripple {
+position: absolute; border-radius: 50%; background: rgba(255, 255, 255, 0.5);
+transform: scale(0); animation: rippleEffect 0.6s linear; pointer-events: none; z-index: 5;
+}
 
-    .footer { 
-        text-align: center; font-size: 0.8rem; color: #888; opacity: 0.7; 
-        padding-bottom: 25px; flex-shrink: 0; pointer-events: none;
-    }
+@keyframes rippleEffect { to { transform: scale(4); opacity: 0; } }
+
+.footer {
+text-align: center; font-size: 0.75rem; color: #aaa; opacity: 0.35; font-weight: 300;
+padding-bottom: 25px; flex-shrink: 0; pointer-events: none;
+}
 </style>
 </head>
 <body>
+<div class="aurora-bg"></div>
 
-    <div class="aurora-bg"></div>
+<div class="header">
+<a href="https://youtube.com/@BlueTigerIncStudios" target="_blank" rel="noopener noreferrer" class="logo-link">
+<div class="logo-mask"></div>
+</a>
+</div>
 
-    <div class="header">
-        <a href="https://youtube.com/@BlueTigerIncStudios" target="_blank" rel="noopener noreferrer" class="logo-link">
-            <div class="logo-mask"></div>
-        </a>
-    </div>
+<div class="stack-container">
+<a href="https://youtube.com/@BlueTigerIncStudios" target="_blank" rel="noopener noreferrer" class="card c1">
+<svg class="arrow" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+<div class="card-content">
+<div class="title-wrapper">
+<div class="roller">
+<div class="roll-text">YouTube</div>
+<div class="roll-text roll-accent">Watch Videos</div>
+</div>
+</div>
+<p class="meta">@BlueTigerIncStudios</p>
+</div>
+</a>
 
-    <div class="stack-container">
-        
-        <a href="https://youtube.com/@BlueTigerIncStudios" target="_blank" rel="noopener noreferrer" class="card c1">
-            <svg class="arrow" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-            <div class="card-content">
-                <div class="title-wrapper">
-                    <div class="roller">
-                        <div class="roll-text">YouTube</div>
-                        <div class="roll-text roll-accent">Watch Videos</div>
-                    </div>
-                </div>
-                <p class="meta">@BlueTigerIncStudios</p>
-            </div>
-        </a>
+<a href="https://instagram.com/bluetigerincstudios" target="_blank" rel="noopener noreferrer" class="card c2">
+<svg class="arrow" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+<div class="card-content">
+<div class="title-wrapper">
+<div class="roller">
+<div class="roll-text">Instagram</div>
+<div class="roll-text roll-accent">Browse Feed</div>
+</div>
+</div>
+<p class="meta">@bluetigerincstudios</p>
+</div>
+</a>
 
-        <a href="https://instagram.com/bluetigerincstudios" target="_blank" rel="noopener noreferrer" class="card c2">
-            <svg class="arrow" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-            <div class="card-content">
-                <div class="title-wrapper">
-                    <div class="roller">
-                        <div class="roll-text">Instagram</div>
-                        <div class="roll-text roll-accent">Browse Feed</div>
-                    </div>
-                </div>
-                <p class="meta">@bluetigerincstudios</p>
-            </div>
-        </a>
+<a href="/" class="card c3">
+<svg class="arrow" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+<div class="card-content">
+<div class="title-wrapper">
+<div class="roller">
+<div class="roll-text">Website</div>
+<div class="roll-text roll-accent">Visit Site</div>
+</div>
+</div>
+<p class="meta">bluetigerincstudios.com</p>
+</div>
+</a>
+</div>
 
-        <a href="/" class="card c3">
-            <svg class="arrow" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-            <div class="card-content">
-                <div class="title-wrapper">
-                    <div class="roller">
-                        <div class="roll-text">Website</div>
-                        <div class="roll-text roll-accent">Visit Site</div>
-                    </div>
-                </div>
-                <p class="meta">bluetigerincstudios.com</p>
-            </div>
-        </a>
+<div class="footer">&copy; <span id="year"></span> Blue Tiger Inc Studios</div>
 
-    </div>
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
 
-    <div class="footer">&copy; <span id="year"></span> Blue Tiger Inc Studios</div>
-
-    <script>
-        document.getElementById('year').textContent = new Date().getFullYear();
-
-        document.querySelectorAll('.card').forEach(card => {
-            card.addEventListener('pointerdown', function(e) {
-                let ripple = document.createElement('span'); 
-                ripple.classList.add('ripple');
-                let rect = this.getBoundingClientRect(); 
-                let size = Math.max(rect.width, rect.height);
-                ripple.style.width = ripple.style.height = `${size}px`; 
-                ripple.style.left = `${e.clientX - rect.left - size/2}px`; 
-                ripple.style.top = `${e.clientY - rect.top - size/2}px`;
-                this.appendChild(ripple); 
-                setTimeout(() => ripple.remove(), 600);
-            });
-        });
-    </script>
+document.querySelectorAll('.card').forEach(card => {
+card.addEventListener('pointerdown', function(e) {
+let ripple = document.createElement('span');
+ripple.classList.add('ripple');
+let rect = this.getBoundingClientRect();
+let size = Math.max(rect.width, rect.height);
+ripple.style.width = ripple.style.height = `${size}px`;
+ripple.style.left = `${e.clientX - rect.left - size/2}px`;
+ripple.style.top = `${e.clientY - rect.top - size/2}px`;
+this.appendChild(ripple);
+setTimeout(() => ripple.remove(), 600);
+});
+});
+</script>
 </body>
 </html>
