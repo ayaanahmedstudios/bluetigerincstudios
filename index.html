@@ -1,234 +1,341 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Blue Tiger Inc Studios</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Blue Tiger Inc Studios</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal: #00c4b6;
+  --bg: #040504;
+  --ink: #eeeeee;
+}
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@900&display=swap" rel="stylesheet">
-    
-    <style>
-        :root {
-            --bg: #070707;
-            --txt: #ebebeb;
-            --teal: #00c4b6;
-        }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100dvh; 
-            background-color: var(--bg);
-            font-family: 'DM Sans', sans-serif;
-            overflow: hidden; 
-            touch-action: none; 
-            user-select: none;
-            
-            background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-            background-size: 3vw 3vw;
-            background-position: center center;
-        }
+html, body {
+  width: 100%; height: 100dvh;
+  background: var(--bg);
+  overflow: hidden;
+  font-family: 'Bricolage Grotesque', sans-serif;
+}
 
-        #mural-link {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            width: 100%;
-            height: 100%;
-            padding-left: 6vw;
-            box-sizing: border-box;
-            text-decoration: none;
-            cursor: crosshair;
-        }
+/* Perfectly centered both axes, on every screen size */
+#stage {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 5.5vw;
+  /* nudge up slightly: cap-height + descender of the type makes mathematical
+     center look low; this corrects the optical center */
+  transform: translateY(-4%);
+  transition: align-items 0s, padding-top 0.2s ease;
+}
 
-        .row {
-            display: flex;
-            gap: 0.25em; /* Tightly kerned word spacing */
-        }
+/* When the textarea is focused (keyboard open), pin content to the top
+   of the screen instead of fighting the keyboard for vertical centering.
+   This guarantees the text is always above the keyboard, predictably. */
+#stage.editing {
+  align-items: flex-start;
+  padding-top: clamp(2.5rem, 8vh, 4rem);
+  padding-bottom: 2rem;
+  transform: none;
+  overflow-y: auto;
+}
 
-        .word {
-            font-size: clamp(4rem, 14vw, 16rem);
-            font-weight: 900;
-            /* FIXED: 0.95 clears the 'p' and 't' overlap perfectly */
-            line-height: 0.95; 
-            letter-spacing: -0.05em;
-            text-transform: lowercase; 
-            margin: 0;
-            color: var(--txt);
-            white-space: nowrap;
-        }
+#stage.editing #textWrap {
+  align-items: flex-start;
+  text-align: left;
+}
 
-        .accent .word {
-            color: var(--teal);
-        }
+#stage.editing .line {
+  justify-content: flex-start;
+}
 
-        .char {
-            display: inline-block;
-            will-change: transform; 
-        }
+#textWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: min(90vw, 1400px);
+  max-height: 80vh;
+  overflow: visible;
+  text-align: center;
+}
 
-        /* --- THE MOBILE OPTIMIZATION --- */
-        @media (max-width: 768px) {
-            body, html {
-                background-size: 6vw 6vw; 
-            }
-            .row {
-                flex-direction: column; 
-                gap: 0; 
-            }
-            .word {
-                /* MASSIVE: Pushed to the absolute limit before 'tiger.' overflows */
-                font-size: 18vw; 
-                /* Extra breathing room to protect descenders on narrow screens */
-                line-height: 0.98; 
-            }
-        }
-    </style>
+.line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  line-height: 0.92;
+  row-gap: 0.06em;
+  font-size: clamp(3.6rem, 13vw, 15rem);
+}
+
+.word {
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  text-transform: lowercase;
+  white-space: nowrap;
+  color: var(--ink);
+}
+
+.char {
+  display: inline-block;
+  opacity: 0;
+}
+.char.teal { color: var(--teal); }
+.char.in {
+  opacity: 1;
+  animation: charPop 0.18s ease-out;
+}
+@keyframes charPop {
+  0%   { opacity: 0; transform: translateY(0.08em) scale(0.9); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+#cursor {
+  display: inline-block;
+  width: 0.42em;
+  height: 0.78em;
+  background: var(--teal);
+  vertical-align: -0.06em;
+  margin-left: 0.04em;
+  animation: blink 1s steps(1) infinite;
+}
+@keyframes blink { 0%,49% { opacity: 1; } 50%,100% { opacity: 0; } }
+
+/* The real, invisible input that captures keystrokes.
+   Sits over the text area so a tap there focuses it (mobile keyboard)
+   without triggering the YouTube redirect. */
+#typeTarget {
+  position: absolute;
+  inset: -8% -4%;
+  background: transparent;
+  border: none;
+  outline: none;
+  caret-color: transparent;
+  color: transparent;
+  /* must be >=16px or iOS Safari auto-zooms on focus */
+  font-size: 16px;
+  line-height: 1;
+  z-index: 5;
+  resize: none;
+  cursor: text;
+  -webkit-text-fill-color: transparent;
+}
+
+
+</style>
 </head>
 <body>
 
-    <a href="https://youtube.com/@BlueTigerIncStudios" target="_blank" rel="noopener noreferrer" id="mural-link">
-        <div class="row">
-            <div class="word">sup,</div>
-        </div>
-        <div class="row">
-            <div class="word">im</div>
-            <div class="word">the</div>
-        </div>
-        <div class="row accent">
-            <div class="word">blue</div>
-            <div class="word">tiger.</div>
-        </div>
-    </a>
+<main id="stage">
+  <div id="textWrap">
+    <div class="line" id="line1"></div>
+    <div class="line" id="line2"></div>
+    <textarea id="typeTarget" autocomplete="off" autocapitalize="off" spellcheck="false" rows="1"></textarea>
+  </div>
+</main>
 
-    <script>
-        // --- 1. STRUCTURAL TYPOGRAPHY PREP --- //
-        
-        const words = document.querySelectorAll('.word');
-        const charData = []; 
 
-        words.forEach(word => {
-            const text = word.innerText;
-            word.innerHTML = ''; 
-            
-            text.split('').forEach(char => {
-                const span = document.createElement('span');
-                span.className = 'char';
-                span.innerText = char;
-                word.appendChild(span);
-                
-                charData.push({
-                    el: span,
-                    homeX: 0, homeY: 0, 
-                    tx: 0, ty: 0,       
-                    vx: 0, vy: 0        
-                });
-            });
-        });
+<script>
+const YOUTUBE_URL = 'https://youtube.com/@BlueTigerIncStudios';
 
-        function calculateHomes() {
-            charData.forEach(c => {
-                c.el.style.transform = `translate3d(0px, 0px, 0)`;
-                c.tx = 0; c.ty = 0; c.vx = 0; c.vy = 0;
-                
-                const rect = c.el.getBoundingClientRect();
-                c.homeX = rect.left + rect.width / 2;
-                c.homeY = rect.top + rect.height / 2;
-            });
-        }
-        
-        document.fonts.ready.then(calculateHomes);
-        
-        // --- 2. RESPONSIVE PHYSICS ENGINE --- //
-        
-        let getRadius = () => window.innerWidth < 768 ? 80 : 160;
-        let pointer = { x: -1000, y: -1000, radius: getRadius() };
-        let isTouching = false;
+const FULL_LINES = [
+  { id: 'line1', words: ['sup,', 'im', 'the'], teal: false },
+  { id: 'line2', words: ['blue', 'tiger.'],     teal: true  }
+];
 
-        window.addEventListener('resize', () => {
-            calculateHomes();
-            pointer.radius = getRadius();
-        });
+const typeTarget = document.getElementById('typeTarget');
+const textWrap = document.getElementById('textWrap');
 
-        function renderPhysics() {
-            charData.forEach(c => {
-                let currentX = c.homeX + c.tx;
-                let currentY = c.homeY + c.ty;
-                
-                let dx = pointer.x - currentX;
-                let dy = pointer.y - currentY;
-                let dist = Math.sqrt(dx * dx + dy * dy);
+let typing = false;
+let userEditing = false;
 
-                if (dist < pointer.radius && isTouching) {
-                    let force = (pointer.radius - dist) / pointer.radius;
-                    let repulsion = window.innerWidth < 768 ? 22 : 15;
-                    c.vx -= (dx / dist) * force * repulsion; 
-                    c.vy -= (dy / dist) * force * repulsion;
-                }
+function buildLine(lineDef) {
+  const el = document.getElementById(lineDef.id);
+  el.innerHTML = '';
+  const charNodes = [];
+  lineDef.words.forEach((word, wi) => {
+    const wordEl = document.createElement('span');
+    wordEl.className = 'word';
+    if (wi > 0) wordEl.style.marginLeft = '0.18em';
+    [...word].forEach(ch => {
+      const c = document.createElement('span');
+      c.className = 'char' + (lineDef.teal ? ' teal' : '');
+      c.textContent = ch;
+      wordEl.appendChild(c);
+      charNodes.push(c);
+    });
+    el.appendChild(wordEl);
+  });
+  return charNodes;
+}
 
-                c.vx += (0 - c.tx) * 0.12; 
-                c.vy += (0 - c.ty) * 0.12;
+const line1Chars = buildLine(FULL_LINES[0]);
+const line2Chars = buildLine(FULL_LINES[1]);
+const allChars = [...line1Chars, ...line2Chars];
 
-                c.vx *= 0.8;
-                c.vy *= 0.8;
+const cursor = document.createElement('span');
+cursor.id = 'cursor';
 
-                c.tx += c.vx;
-                c.ty += c.vy;
+function typeSequence(onDone) {
+  if (typing) return;
+  typing = true;
 
-                c.el.style.transform = `translate3d(${c.tx}px, ${c.ty}px, 0) rotate(${c.vx * 0.5}deg)`;
-            });
+  allChars.forEach(c => c.classList.remove('in'));
+  cursor.remove();
+  line1Chars[0].before(cursor);
 
-            requestAnimationFrame(renderPhysics);
-        }
-        renderPhysics();
+  let i = 0;
+  const total = allChars.length;
 
-        // --- 3. INPUT HANDLING --- //
+  function typeNext() {
+    if (i >= total) {
+      cursor.remove();
+      allChars[total-1].after(cursor);
+      typing = false;
+      if (onDone) onDone();
+      return;
+    }
+    const ch = allChars[i];
+    ch.classList.add('in');
+    cursor.remove();
+    ch.after(cursor);
 
-        const updatePointer = (x, y) => {
-            pointer.x = x;
-            pointer.y = y;
-            isTouching = true;
-        };
+    let delay = 38 + Math.random() * 55;
+    const prevChar = ch.textContent;
+    if (prevChar === ',' || prevChar === '.') delay += 220;
+    if (i > 0 && allChars[i-1].parentElement !== ch.parentElement) delay += 90;
 
-        window.addEventListener('mousemove', (e) => updatePointer(e.clientX, e.clientY));
-        window.addEventListener('mouseleave', () => isTouching = false);
+    i++;
+    setTimeout(typeNext, delay);
+  }
 
-        window.addEventListener('touchmove', (e) => {
-            updatePointer(e.touches[0].clientX, e.touches[0].clientY);
-        }, { passive: true });
-        
-        window.addEventListener('touchstart', (e) => {
-            updatePointer(e.touches[0].clientX, e.touches[0].clientY);
-        }, { passive: true });
-        
-        const clearPointer = () => {
-            isTouching = false;
-            pointer.x = -1000; 
-            pointer.y = -1000;
-        };
+  setTimeout(typeNext, 260);
+}
 
-        window.addEventListener('touchend', clearPointer);
-        window.addEventListener('touchcancel', clearPointer);
+// ── FREE EDITING ─────────────────────────────────────────────────────────
+// Once the intro finishes, the user can tap the text to focus the hidden
+// textarea and type freely. We render whatever they type in its place,
+// replacing "sup, im the / blue tiger." entirely once they start.
 
-        // --- 4. SMART LINK LOGIC --- //
-        const link = document.getElementById('mural-link');
-        let startX, startY;
+function renderFreeText(value) {
+  // Render the user's text with real word-wrapping, like a normal text
+  // editor: words are separate inline-block spans so the browser can wrap
+  // them naturally at the container edge, instead of one unbreakable line.
+  const l1 = document.getElementById('line1');
+  const l2 = document.getElementById('line2');
+  l2.innerHTML = ''; // line2 unused in free-edit mode; everything flows in line1
 
-        link.addEventListener('pointerdown', (e) => {
-            startX = e.clientX; startY = e.clientY;
-        });
+  l1.innerHTML = '';
+  l1.style.flexWrap = 'wrap';
 
-        link.addEventListener('click', (e) => {
-            let dx = Math.abs(e.clientX - startX);
-            let dy = Math.abs(e.clientY - startY);
-            if (dx > 15 || dy > 15) {
-                e.preventDefault(); 
-            }
-        });
+  const words = value.split('\n').map(line => line.split(' '));
+  let lastCharEl = null;
 
-    </script>
+  words.forEach((lineWords, li) => {
+    if (li > 0) {
+      // explicit newline: force a line break
+      l1.appendChild(document.createElement('br'));
+    }
+    lineWords.forEach((word, wi) => {
+      if (wi > 0) {
+        // space between words — its own breakable point, sized naturally
+        // now that font-size correctly inherits from .line
+        const space = document.createElement('span');
+        space.className = 'char in';
+        space.textContent = '\u00A0';
+        l1.appendChild(space);
+        lastCharEl = space;
+      }
+      if (word.length === 0) return;
+      const wordEl = document.createElement('span');
+      wordEl.className = 'word wrap-word';
+      [...word].forEach(ch => {
+        const c = document.createElement('span');
+        c.className = 'char in';
+        c.textContent = ch;
+        wordEl.appendChild(c);
+        lastCharEl = c;
+      });
+      l1.appendChild(wordEl);
+    });
+  });
+
+  cursor.remove();
+  if (lastCharEl) {
+    lastCharEl.after(cursor);
+  } else {
+    l1.appendChild(cursor);
+  }
+}
+
+const GREETING_TEXT = 'sup, im the\nblue tiger.';
+const stage = document.getElementById('stage');
+
+typeTarget.addEventListener('focus', () => {
+  userEditing = true;
+  // Pin text to top of screen so the keyboard never covers it.
+  stage.classList.add('editing');
+  // Pre-fill with the real current text so the user edits it directly
+  // instead of typing into a blank field that nukes everything on first key.
+  if (typeTarget.value === '') {
+    typeTarget.value = GREETING_TEXT;
+    // place caret at the end so it feels natural to keep typing/deleting
+    typeTarget.setSelectionRange(typeTarget.value.length, typeTarget.value.length);
+  }
+});
+
+typeTarget.addEventListener('input', () => {
+  renderFreeText(typeTarget.value);
+  // keep the cursor in view as text wraps to new lines, like a real editor
+  cursor.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+});
+
+typeTarget.addEventListener('blur', () => {
+  stage.classList.remove('editing');
+  // if left empty, restore original greeting
+  if (typeTarget.value.trim() === '') {
+    userEditing = false;
+    restoreOriginal();
+  }
+});
+
+function restoreOriginal() {
+  document.getElementById('line1').innerHTML = '';
+  document.getElementById('line2').innerHTML = '';
+  // rebuild char structure fresh
+  const newLine1 = buildLine(FULL_LINES[0]);
+  const newLine2 = buildLine(FULL_LINES[1]);
+  allChars.length = 0;
+  allChars.push(...newLine1, ...newLine2);
+  line1Chars.length = 0; line1Chars.push(...newLine1);
+  line2Chars.length = 0; line2Chars.push(...newLine2);
+  typeSequence();
+}
+
+// ── CLICK / TAP ROUTING ───────────────────────────────────────────────────
+// Tap on the text area -> focus it (mobile keyboard, desktop caret)
+// Tap anywhere else -> go to YouTube
+typeTarget.addEventListener('click', e => {
+  e.stopPropagation();
+  typeTarget.focus();
+});
+
+document.addEventListener('click', e => {
+  if (e.target === typeTarget) return;
+  window.open(YOUTUBE_URL, '_blank');
+});
+
+// run intro on load
+typeSequence();
+</script>
 </body>
 </html>
