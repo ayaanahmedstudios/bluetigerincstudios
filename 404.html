@@ -2,70 +2,275 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>404 - Not Found</title>
-
-<link rel="icon" type="image/svg+xml" href="/favicon.svg">
-
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>404 · Blue Tiger Inc Studios</title>
+<meta name="theme-color" content="#040504">
+<meta name="robots" content="noindex">
+<meta name="description" content="this page wandered off.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23040504'/%3E%3Crect x='3' y='3' width='10' height='10' fill='%2300c4b6'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@500&family=Geist+Pixel&display=swap" rel="stylesheet">
 <style>
-    body {
-        margin: 0;
-        font-family: 'DM Sans', sans-serif;
-        background: #fcfcfc;
-        color: #111111;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        height: 100vh;
-        text-align: center;
-    }
+:root{
+  --teal:#00c4b6; --deep:#00766e; --bg:#040504; --ink:#eeeeee; --dim:#7d847d; --faint:#4b524b; --line:#1d231d;
+  --sans:'Geist',system-ui,sans-serif; --pixel:'Geist Pixel','Geist',monospace;
+  --pad:clamp(16px,3.2vw,32px);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100dvh;background:var(--bg);color:var(--ink);overflow:hidden;
+  font:500 15px/1.4 var(--sans);font-synthesis:none;-webkit-font-smoothing:antialiased;
+  -webkit-tap-highlight-color:transparent;text-transform:lowercase}
+body{touch-action:none}
+a{color:inherit;text-decoration:none}
+a:focus-visible,button:focus-visible{outline:2px solid var(--teal);outline-offset:3px;border-radius:8px}
 
-    .hero {
-        font-size: clamp(3rem, 8vw, 8rem);
-        font-weight: 400;
-        letter-spacing: -0.04em;
-        margin: 0 0 20px 0;
-    }
+#world{position:fixed;left:0;top:0;z-index:0;pointer-events:none;transition:opacity .45s ease}
 
-    a {
-        color: #111111;
-        text-decoration: none;
-        font-weight: 700;
-        font-size: 1.2rem;
-        position: relative;
-        display: inline-block;
-    }
+/* header */
+header{position:fixed;z-index:10;left:0;right:0;top:0;display:flex;align-items:center;justify-content:space-between;
+  padding:max(14px,env(safe-area-inset-top)) var(--pad) 22px;
+  background:linear-gradient(var(--bg) 40%,rgba(4,5,4,0))}
+.brand{display:flex;align-items:center;gap:10px;min-height:40px;font-size:15px;letter-spacing:-.01em}
+.mark{width:10px;height:10px;background:var(--teal);box-shadow:0 0 14px rgba(0,196,182,.55)}
+.brand .long{color:var(--dim)}
+nav{display:flex;align-items:center;gap:4px}
+nav a{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 12px;border-radius:9px;color:var(--dim);transition:color .15s,background .15s,border-color .15s}
+nav a:hover{color:var(--ink)}
+nav a.on{color:var(--teal)}
+nav a.yt{margin-left:6px;border:1px solid var(--line);color:var(--ink)}
+nav a.yt:hover{border-color:var(--teal);color:var(--teal)}
+.arr{width:.78em;height:.78em;flex:none}
 
-    a::after {
-        content: '';
-        position: absolute;
-        bottom: 10%;
-        left: 0;
-        width: 100%;
-        height: 15%;
-        background: #00c4b6;
-        transform: scaleX(0);
-        transform-origin: right;
-        transition: transform 0.3s ease;
-        z-index: -1;
-    }
+/* buttons: two, same height, same radius */
+.btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+@media(max-width:520px){#msg .btns{flex-direction:column;width:min(300px,100%)}#msg .btn{width:100%}}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;height:48px;padding:0 22px;border-radius:10px;
+  font-size:15px;border:1px solid var(--line);color:var(--ink);background:rgba(4,5,4,.5);transition:border-color .15s,background .15s,transform .1s,box-shadow .2s}
+.btn:hover{border-color:#3a443a;background:#0b0e0b}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--teal);border-color:var(--teal);color:#021210;
+  box-shadow:0 0 0 1px rgba(0,196,182,.25),0 10px 34px -10px rgba(0,196,182,.6)}
+.btn.primary:hover{background:#17d8ca;border-color:#17d8ca}
 
-    a:hover::after {
-        transform: scaleX(1);
-        transform-origin: left;
-    }
+.pix{font-family:var(--pixel);font-weight:400}
+.hint{position:fixed;z-index:5;left:0;right:0;bottom:max(20px,env(safe-area-inset-bottom));text-align:center;font-size:13px;color:var(--faint);pointer-events:none}
+.hint b{font-family:var(--pixel);font-weight:400;color:var(--dim)}
+@media(max-width:520px){.brand .long{display:none}nav a{padding:0 10px}}
+
+#msg{position:fixed;z-index:3;left:0;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;text-align:center;
+  padding:0 var(--pad) max(34px,calc(env(safe-area-inset-bottom) + 24px))}
+#msg h1{font:400 clamp(1.6rem,4.6vw,2.6rem)/1.1 var(--pixel);color:var(--ink);text-shadow:0 2px 24px #040504}
+#msg h1 b{font-weight:400;color:var(--teal)}
+#msg p{margin:12px 0 26px;color:var(--dim);max-width:34ch}
+#msg .btns{opacity:0;transform:translateY(6px);transition:opacity .6s .5s,transform .6s .5s}
+body.in #msg .btns{opacity:1;transform:none}
 </style>
 </head>
 <body>
+<canvas id="world" aria-hidden="true"></canvas>
+<header>
+  <a class="brand" href="/" aria-label="blue tiger inc studios, home"><i class="mark"></i><span>blue tiger<span class="long"> inc studios</span></span></a>
+  <nav aria-label="main">
+    <a href="/#tiger">tiger</a>
+    <a href="/#piano">piano</a>
+    <a class="yt" href="https://youtube.com/@BlueTigerIncStudios" target="_blank" rel="noopener">youtube <svg class="arr" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" aria-hidden="true"><path d="M3 9l6-6M4 3h5v5"/></svg></a>
+  </nav>
+</header>
+<main id="msg">
+  <h1>this page <b>wandered off.</b></h1>
+  <p>the link is broken, or the page never existed.</p>
+  <div class="btns">
+    <a class="btn primary" href="/">back home</a>
+    <a class="btn" href="https://youtube.com/@BlueTigerIncStudios" target="_blank" rel="noopener">watch on youtube <svg class="arr" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" aria-hidden="true"><path d="M3 9l6-6M4 3h5v5"/></svg></a>
+  </div>
+</main>
+<script>
+(() => {
+'use strict';
+/* ── shared ascii engine: a lit heightfield rendered as shaded glyphs. No dependencies. ── */
+const RAMP = ' .:-=+*#%@', CHARS = RAMP + '|';
+const PALETTE = ['#2b322b', '#00766e', '#00c4b6', '#f1f1f1'];      // faint, deep, teal, white
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
 
-    <div>
-        <p class="hero">this isn't a place.</p>
-        <a href="/">go back.</a>
-    </div>
+function createEngine(canvas) {
+  const ctx = canvas.getContext('2d');
+  const S = { W: 0, H: 0, dpr: 1, cwD: 0, chD: 0, cw: 0, ch: 0, cols: 0, rows: 0, atlas: null };
 
+  function layout() {
+    const W = innerWidth, H = innerHeight, dpr = Math.min(2, window.devicePixelRatio || 1);
+    const fs = clamp(Math.round(Math.sqrt(W * H) / 68), 11, 18);
+    const cwD = Math.max(5, Math.round(fs * 0.6 * dpr)), chD = Math.max(8, Math.round(fs * dpr));
+    Object.assign(S, { W, H, dpr, cwD, chD, cw: cwD / dpr, ch: chD / dpr });
+    S.cols = Math.ceil(W * dpr / cwD); S.rows = Math.ceil(H * dpr / chD);
+    canvas.width = S.cols * cwD; canvas.height = S.rows * chD;
+    canvas.style.width = S.cols * S.cw + 'px'; canvas.style.height = S.rows * S.ch + 'px';
+    const a = document.createElement('canvas');
+    a.width = CHARS.length * cwD; a.height = PALETTE.length * chD;
+    const g = a.getContext('2d');
+    g.font = `${Math.round(fs * dpr * 0.98)}px "Geist Pixel", "Geist", monospace`;
+    g.textAlign = 'center'; g.textBaseline = 'middle';
+    PALETTE.forEach((c, r) => { g.fillStyle = c; for (let i = 1; i < CHARS.length; i++) g.fillText(CHARS[i], i * cwD + cwD / 2, r * chD + chD / 2 + dpr * 0.5); });
+    S.atlas = a;
+  }
+  const put = (c, r, ci, col) => { if (ci > 0 && c >= 0 && r >= 0 && c < S.cols && r < S.rows) ctx.drawImage(S.atlas, ci * S.cwD, col * S.chD, S.cwD, S.chD, c * S.cwD, r * S.chD, S.cwD, S.chD); };
+  const wipe = (c0, r0, c1, r1) => ctx.clearRect(c0 * S.cwD, r0 * S.chD, (c1 - c0) * S.cwD, (r1 - r0) * S.chD);
+  const wipeAll = () => ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  /* rasterise a drawing (in css px) to per-cell coverage, 2x2 supersampled */
+  function cover(draw) {
+    const k = 2, w = S.cols * k, h = S.rows * k;
+    const cv = document.createElement('canvas'); cv.width = w; cv.height = h;
+    const g = cv.getContext('2d', { willReadFrequently: true });
+    g.setTransform(k / S.cw, 0, 0, k / S.ch, 0, 0);
+    draw(g);
+    const d = g.getImageData(0, 0, w, h).data, out = new Float32Array(S.cols * S.rows);
+    for (let r = 0; r < S.rows; r++) for (let c = 0; c < S.cols; c++) {
+      const p = (r * k * w + c * k) * 4 + 3, q = p + w * 4;
+      out[r * S.cols + c] = (d[p] + d[p + 4] + d[q] + d[q + 4]) / 1020;
+    }
+    return out;
+  }
+  function blur(a, rad) {
+    const { cols, rows } = S, n = 2 * rad + 1, t = new Float32Array(a.length), o = new Float32Array(a.length);
+    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) { let s = 0; for (let k = -rad; k <= rad; k++) s += a[r * cols + clamp(c + k, 0, cols - 1)]; t[r * cols + c] = s / n; }
+    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) { let s = 0; for (let k = -rad; k <= rad; k++) s += t[clamp(r + k, 0, rows - 1) * cols + c]; o[r * cols + c] = s / n; }
+    return o;
+  }
+  /* distance (px) from every inside cell to the nearest outside cell, two-pass chamfer */
+  function dist(cov) {
+    const { cols, rows, cw, ch } = S, N = cols * rows, d = new Float32Array(N), dg = Math.hypot(cw, ch);
+    for (let i = 0; i < N; i++) d[i] = cov[i] > 0.5 ? 1e9 : 0;
+    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+      const i = r * cols + c; if (!d[i]) continue; let v = d[i];
+      if (c > 0) v = Math.min(v, d[i - 1] + cw);
+      if (r > 0) { v = Math.min(v, d[i - cols] + ch); if (c > 0) v = Math.min(v, d[i - cols - 1] + dg); if (c < cols - 1) v = Math.min(v, d[i - cols + 1] + dg); }
+      d[i] = v;
+    }
+    for (let r = rows - 1; r >= 0; r--) for (let c = cols - 1; c >= 0; c--) {
+      const i = r * cols + c; if (!d[i]) continue; let v = d[i];
+      if (c < cols - 1) v = Math.min(v, d[i + 1] + cw);
+      if (r < rows - 1) { v = Math.min(v, d[i + cols] + ch); if (c < cols - 1) v = Math.min(v, d[i + cols + 1] + dg); if (c > 0) v = Math.min(v, d[i + cols - 1] + dg); }
+      d[i] = v;
+    }
+    return d;
+  }
+  /* a pillow: height rises like a quarter circle from the silhouette edge; `carve` presses features in */
+  function relief(cov, R, carve, carveAmt) {
+    const { cols, rows, cw, ch } = S, N = cols * rows, d = dist(cov), h = new Float32Array(N);
+    for (let i = 0; i < N; i++) {
+      if (cov[i] <= 0.5) continue;
+      const t = Math.min(1, (d[i] - 0.5 * Math.min(cw, ch)) / R);
+      h[i] = R * 0.95 * Math.sqrt(Math.max(0, 1 - (1 - Math.max(0, t)) ** 2)) - (carve ? carve[i] * carveAmt : 0);
+    }
+    const hb = blur(blur(h, 1), 1), nx = new Float32Array(N), ny = new Float32Array(N), nz = new Float32Array(N);
+    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+      const i = r * cols + c;
+      const gx = (hb[r * cols + Math.min(cols - 1, c + 1)] - hb[r * cols + Math.max(0, c - 1)]) / (2 * cw);
+      const gy = (hb[Math.min(rows - 1, r + 1) * cols + c] - hb[Math.max(0, r - 1) * cols + c]) / (2 * ch);
+      const l = Math.hypot(gx, gy, 1);
+      nx[i] = -gx / l; ny[i] = -gy / l; nz[i] = 1 / l;
+    }
+    return { nx, ny, nz };
+  }
+  /* per-cell reveal threshold: spreads out from (cx,cy), with a little noise so it dissolves instead of wiping */
+  function thresholds(cx, cy) {
+    const { cols, rows } = S, t = new Float32Array(cols * rows), m = Math.hypot(cols, rows * S.ch / S.cw) * 0.5;
+    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+      const v = Math.sin((r * 91.7 + c * 12.9) * 4.1) * 43758.5; 
+      t[r * cols + c] = Math.hypot(c + 0.5 - cx, (r + 0.5 - cy) * S.ch / S.cw) / m * 0.8 + (v - Math.floor(v)) * 0.25;
+    }
+    return t;
+  }
+  /* eases a light toward the pointer at ~30fps and stops the moment it arrives: idle = zero cost */
+  function createLight(onChange) {
+    const cur = { x: -0.55, y: -0.7 }, tgt = { x: -0.55, y: -0.7 }; let raf = 0, last = 0;
+    function tick(t) {
+      raf = 0; if (t - last < 30) { raf = requestAnimationFrame(tick); return; } last = t;
+      const dx = tgt.x - cur.x, dy = tgt.y - cur.y, done = Math.abs(dx) + Math.abs(dy) < 0.004;
+      if (done) { cur.x = tgt.x; cur.y = tgt.y; } else { cur.x += dx * 0.2; cur.y += dy * 0.2; }
+      onChange(cur); if (!done) raf = requestAnimationFrame(tick);
+    }
+    return { cur, set(x, y) { tgt.x = x; tgt.y = y; if (reduce) { cur.x = x; cur.y = y; onChange(cur); } else if (!raf) raf = requestAnimationFrame(tick); } };
+  }
+  const lightFromPointer = (x, y) => [clamp((x / S.W - 0.5) * 2.2, -1.1, 1.1), clamp((y / S.H - 0.5) * 2.2, -1.1, 1.1)];
+  /* one-shot eased animation, full rate, ends by itself */
+  function tween(ms, fn, done) {
+    if (reduce) { fn(1); done && done(); return; }
+    const t0 = performance.now();
+    (function f(t) { const k = clamp((t - t0) / ms, 0, 1); fn(1 - (1 - k) ** 3); if (k < 1) requestAnimationFrame(f); else done && done(); })(t0);
+  }
+  return { S, ctx, layout, put, wipe, wipeAll, cover, blur, relief, thresholds, createLight, lightFromPointer, tween };
+}
+
+/* shaded glyph for a lit surface: v 0..1 */
+function glyphFor(v, faint) { const ci = Math.max(1, Math.min(9, (v * 10) | 0)); return [ci, faint ? 1 : v < 0.4 ? 1 : v < 0.82 ? 2 : 3]; }
+
+const eng = createEngine(document.getElementById('world')), S = eng.S, msg = document.getElementById('msg');
+const D = {};
+function build() {
+  const { W, H, cw, ch, cols, rows } = S, top = 92, bot = msg.getBoundingClientRect().top - 12;
+  const availH = Math.max(120, bot - top), gap = 0.22;
+  let dw = Math.min(W * 0.94 / (3 + 2 * gap), availH / 1.5, 340), dh = dw * 1.5;
+  if (dh > availH) { dh = availH; dw = dh / 1.5; }
+  const tot = dw * 3 + dw * gap * 2, x0 = (W - tot) / 2, y0 = top + (availH - dh) / 2, t = dh * 0.25;
+  const xs = [0, 1, 2].map(i => x0 + i * dw * (1 + gap));
+  D.cov = eng.cover(g => {
+    g.strokeStyle = '#fff'; g.lineWidth = t; g.lineCap = 'round'; g.lineJoin = 'round';
+    [xs[0], xs[2]].forEach(x => { const l = x + t / 2, r = x + dw - t / 2, tp = y0 + t / 2, bt = y0 + dh - t / 2;
+      g.beginPath(); g.moveTo(x + dw * 0.7, tp); g.lineTo(l, y0 + dh * 0.66); g.lineTo(r, y0 + dh * 0.66);
+      g.moveTo(x + dw * 0.7, tp); g.lineTo(x + dw * 0.7, bt); g.stroke(); });
+    g.beginPath(); g.ellipse(xs[1] + dw / 2, y0 + dh / 2, (dw - t) / 2, (dh - t) / 2, 0, 0, 7); g.stroke();
+  });
+  Object.assign(D, eng.relief(D.cov, t / 2));
+  D.soft = eng.blur(D.cov, 2); D.shadowLen = t * 0.7;
+  const hx = (xs[1] + dw / 2) / cw, hy = (y0 + dh / 2) / ch, hrx = (dw / 2 - t) / cw, hry = (dh / 2 - t) / ch;
+  D.eye = { cx: hx, cy: hy, rx: hrx, ry: hry };
+  D.thr = eng.thresholds(W / 2 / cw, (y0 + dh / 2) / ch); D.rev = reduce ? 9 : 0;
+}
+function draw() {
+  const { cols, rows } = S, L = light.cur, lz = 0.8, inv = 1 / Math.hypot(L.x, L.y, lz), Lx = L.x * inv, Ly = L.y * inv, Lz = lz * inv;
+  const sdx = -L.x * D.shadowLen / S.cw, sdy = -L.y * D.shadowLen / S.ch, e = D.eye;
+  const pr = 0.5, pcx = e.cx + clamp(L.x, -1, 1) * e.rx * 0.45, pcy = e.cy + clamp(L.y, -1, 1) * e.ry * 0.45;
+  eng.wipeAll();
+  for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+    const i = r * cols + c, rv = clamp((D.rev - D.thr[i]) * 7, 0, 1);
+    if (rv <= 0) continue;
+    let ci, col;
+    if (D.cov[i] > 0.5) {
+      const v = Math.pow(0.12 + 0.88 * Math.max(0, D.nx[i] * Lx + D.ny[i] * Ly + D.nz[i] * Lz), 1.05);
+      [ci, col] = glyphFor(v, false);
+    } else {
+      const dx = (c + 0.5 - e.cx) / e.rx, dy = (r + 0.5 - e.cy) / e.ry;
+      if (dx * dx + dy * dy < 0.95) {                                     // inside the 0: a pupil that follows the light
+        const px = (c + 0.5 - pcx) / (e.rx * 0.36), py = (r + 0.5 - pcy) / (e.ry * 0.36);
+        if (px * px + py * py <= 1) { ci = 9; col = 2; } else continue;
+      } else {
+        const sr = Math.round(r + sdy), sc = Math.round(c + sdx);
+        if (sr < 0 || sc < 0 || sr >= rows || sc >= cols) continue;
+        const v = D.soft[sr * cols + sc]; if (v < 0.14) continue;
+        ci = v > 0.7 ? 3 : v > 0.4 ? 2 : 1; col = 0;
+      }
+    }
+    if (rv < 1) ci = Math.max(1, (ci * rv) | 0);
+    eng.put(c, r, ci, col);
+  }
+}
+const light = eng.createLight(draw);
+addEventListener('pointermove', e => light.set(...eng.lightFromPointer(e.clientX, e.clientY)), { passive: true });
+addEventListener('pointerdown', e => light.set(...eng.lightFromPointer(e.clientX, e.clientY)), { passive: true });
+function init() { eng.layout(); build(); D.rev = 9; draw(); }
+let rz = 0, lw = innerWidth, lh = innerHeight;
+addEventListener('resize', () => { if (innerWidth === lw && Math.abs(innerHeight - lh) < 140) return; clearTimeout(rz); rz = setTimeout(() => { lw = innerWidth; lh = innerHeight; init(); }, 160); });
+(async () => {
+  try { await Promise.race([document.fonts.load('16px "Geist Pixel"'), new Promise(r => setTimeout(r, 1500))]); } catch (e) {}
+  eng.layout(); build(); D.rev = 0;
+  eng.tween(1500, k => { D.rev = k * 1.35; draw(); }, () => document.body.classList.add('in'));
+  if (reduce) document.body.classList.add('in');
+  document.fonts.ready.then(init);
+})();
+})();
+</script>
 </body>
 </html>
