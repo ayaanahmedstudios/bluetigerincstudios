@@ -2,1017 +2,481 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Blue Tiger Inc Studios</title>
 <meta name="theme-color" content="#040504">
 <meta name="description" content="sup, im the blue tiger.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23040504'/%3E%3Crect x='3' y='3' width='10' height='10' fill='%2300c4b6'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400..800&family=Geist+Pixel&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@500&family=Geist+Pixel&display=swap" rel="stylesheet">
 <style>
-:root {
-  --teal: #00c4b6;
-  --deep: #00766e;
-  --bg: #040504;
-  --ink: #eeeeee;
-  --dim: #5b5f5b;
-  --faint: #454a45;
+:root{
+  --teal:#00c4b6; --deep:#00766e; --bg:#040504; --ink:#eeeeee; --dim:#7d847d; --faint:#4b524b; --line:#1d231d;
+  --sans:'Geist',system-ui,sans-serif; --pixel:'Geist Pixel','Geist',monospace;
+  --pad:clamp(16px,3.2vw,32px);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100dvh;background:var(--bg);color:var(--ink);overflow:hidden;
+  font:500 15px/1.4 var(--sans);font-synthesis:none;-webkit-font-smoothing:antialiased;
+  -webkit-tap-highlight-color:transparent;text-transform:lowercase}
+body{touch-action:none}
+a{color:inherit;text-decoration:none}
+a:focus-visible,button:focus-visible{outline:2px solid var(--teal);outline-offset:3px;border-radius:8px}
 
-  /* the whole site is these two families and nothing else */
-  --sans:  'Geist', system-ui, sans-serif;
-  --pixel: 'Geist Pixel', 'Geist', monospace;
-}
+#world{position:fixed;left:0;top:0;z-index:0;pointer-events:none;transition:opacity .45s ease}
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* header */
+header{position:fixed;z-index:10;left:0;right:0;top:0;display:flex;align-items:center;justify-content:space-between;
+  padding:max(14px,env(safe-area-inset-top)) var(--pad) 22px;
+  background:linear-gradient(var(--bg) 40%,rgba(4,5,4,0))}
+.brand{display:flex;align-items:center;gap:10px;min-height:40px;font-size:15px;letter-spacing:-.01em}
+.mark{width:10px;height:10px;background:var(--teal);box-shadow:0 0 14px rgba(0,196,182,.55)}
+.brand .long{color:var(--dim)}
+nav{display:flex;align-items:center;gap:4px}
+nav a{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 12px;border-radius:9px;color:var(--dim);transition:color .15s,background .15s,border-color .15s}
+nav a:hover{color:var(--ink)}
+nav a.on{color:var(--teal)}
+nav a.yt{margin-left:6px;border:1px solid var(--line);color:var(--ink)}
+nav a.yt:hover{border-color:var(--teal);color:var(--teal)}
+.arr{width:.78em;height:.78em;flex:none}
 
-html, body {
-  width: 100%; height: 100dvh;
-  background: var(--bg);
-  overflow: hidden;
-  font-family: var(--sans);
-  font-weight: 500;
-  font-synthesis: none;          /* Geist Pixel has one weight: never fake a bold */
-  -webkit-font-smoothing: antialiased;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: none;
-}
+/* buttons: two, same height, same radius */
+.btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+@media(max-width:520px){#msg .btns{flex-direction:column;width:min(300px,100%)}#msg .btn{width:100%}}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;height:48px;padding:0 22px;border-radius:10px;
+  font-size:15px;border:1px solid var(--line);color:var(--ink);background:rgba(4,5,4,.5);transition:border-color .15s,background .15s,transform .1s,box-shadow .2s}
+.btn:hover{border-color:#3a443a;background:#0b0e0b}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--teal);border-color:var(--teal);color:#021210;
+  box-shadow:0 0 0 1px rgba(0,196,182,.25),0 10px 34px -10px rgba(0,196,182,.6)}
+.btn.primary:hover{background:#17d8ca;border-color:#17d8ca}
 
-a { color: inherit; text-decoration: none; }
+.pix{font-family:var(--pixel);font-weight:400}
+.hint{position:fixed;z-index:5;left:0;right:0;bottom:max(20px,env(safe-area-inset-bottom));text-align:center;font-size:13px;color:var(--faint);pointer-events:none}
+.hint b{font-family:var(--pixel);font-weight:400;color:var(--dim)}
+@media(max-width:520px){.brand .long{display:none}nav a{padding:0 10px}}
 
-/* ════════════════ THE WORLD: a grid of pixels, animated by anime.js ════════════════ */
+#world{opacity:.17}
+body[data-scene=tiger] #world,body[data-scene=piano] #world{opacity:1}
+#world.swap{opacity:0!important;transition-duration:.18s}
 
-#world {
-  position: fixed;
-  z-index: 0;
-  display: grid;
-  pointer-events: none;
-  overflow: hidden;
-}
-#world i {
-  display: block;
-  width: calc(var(--cell) * 0.26);
-  height: calc(var(--cell) * 0.26);
-  place-self: center;
-  background: #232823;
-  opacity: 0;
-}
-/* used by the live stripe scene: colour changes glide instead of snapping */
-#world.live i { transition: background-color .3s ease; }
+#stage{position:fixed;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:64px var(--pad) 40px;pointer-events:none;transition:opacity .35s ease,transform .35s ease}
+body:not([data-scene=home]) #stage{opacity:0;transform:translateY(8px);visibility:hidden;transition:opacity .25s,transform .25s,visibility 0s .25s}
+#hero{font-family:var(--pixel);font-weight:400;font-size:clamp(2.6rem,min(12.4vw,16vh),11rem);line-height:1.04;text-align:center;
+  white-space:pre-wrap;overflow-wrap:anywhere;max-width:min(94vw,1400px);color:var(--ink);
+  text-shadow:0 2px 30px #040504,0 0 3px #040504}
+#hero .t{color:var(--teal)}
+#cur{display:inline-block;width:.5em;height:.8em;margin-left:.06em;vertical-align:-.04em;background:var(--teal);animation:blink 1.1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+#cta{margin-top:clamp(1.4rem,4.5vh,2.6rem);pointer-events:auto;opacity:0;transform:translateY(6px);transition:opacity .6s ease,transform .6s ease}
+#cta.show{opacity:1;transform:none}
+@media(max-width:520px){#cta{flex-direction:column;width:min(300px,100%)}#cta .btn{width:100%}}
 
-#ring {
-  position: fixed; left: 0; top: 0;
-  width: var(--cell, 24px); height: var(--cell, 24px);
-  border: 1px solid var(--teal);
-  z-index: 3;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity .3s;
-}
-#ring.on { opacity: .9; }
-
-/* ════════════════ HERO (your original typed intro, unchanged in spirit) ════════════════ */
-
-#stage {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 5.5vw;
-  transform: translateY(-4%);
-  transition: align-items 0s, padding-top 0.2s ease;
-}
-#stage.editing {
-  align-items: flex-start;
-  padding-top: clamp(2.5rem, 8vh, 4rem);
-  padding-bottom: 2rem;
-  transform: none;
-  overflow-y: auto;
-}
-#stage.editing #textWrap { align-items: flex-start; text-align: left; }
-#stage.editing .line { justify-content: flex-start; }
-
-#textWrap {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  max-width: min(92vw, 1500px);
-  max-height: 80vh;
-  overflow: visible;
-  text-align: center;
-}
-
-.line {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: center;
-  line-height: 1.02;
-  row-gap: 0.08em;
-  font-size: clamp(2.8rem, 10.4vw, 12.5rem);
-}
-.br { flex-basis: 100%; height: 0; }
-
-.word {
-  font-family: var(--pixel);
-  font-weight: 400;
-  letter-spacing: 0;
-  text-transform: lowercase;
-  white-space: nowrap;
-  color: var(--ink);
-}
-.char { display: inline-block; opacity: 0; }
-.char.teal { color: var(--teal); }
-.char.in { opacity: 1; animation: charPop 0.18s ease-out; }
-@keyframes charPop {
-  0%   { opacity: 0; transform: translateY(0.08em) scale(0.9); }
-  100% { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-#cursor {
-  display: inline-block;
-  width: 0.5em;
-  height: 0.8em;
-  background: var(--teal);
-  vertical-align: -0.04em;
-  margin-left: 0.05em;
-  animation: blink 1s steps(1) infinite;
-}
-@keyframes blink { 0%,49% { opacity: 1; } 50%,100% { opacity: 0; } }
-
-#typeTarget {
-  position: absolute;
-  inset: -8% -4%;
-  background: transparent;
-  border: none;
-  outline: none;
-  caret-color: transparent;
-  color: transparent;
-  font-size: 16px; /* >=16px or iOS Safari zooms on focus */
-  line-height: 1;
-  z-index: 5;
-  resize: none;
-  cursor: text;
-  -webkit-text-fill-color: transparent;
-}
-
-/* ════════════════ NAV / HINT / HELP ════════════════ */
-
-#nav {
-  position: fixed;
-  left: 0; right: 0; bottom: 0;
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.1rem;
-  padding: 0 1rem calc(1rem + env(safe-area-inset-bottom));
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 1.2s ease;
-  text-transform: lowercase;
-}
-#nav.show { opacity: 1; }
-/* a soft shadow so the hint and links stay readable over bright scenes */
-#nav::before {
-  content: '';
-  position: absolute; left: 0; right: 0; bottom: 0;
-  height: calc(100% + 2.2rem);
-  background: linear-gradient(to top, rgba(4,5,4,.92) 35%, rgba(4,5,4,0));
-  z-index: -1;
-  pointer-events: none;
-}
-#nav .links { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.2rem 0.5rem; }
-#nav a {
-  pointer-events: auto;
-  padding: 0.55rem 0.7rem;
-  font-family: var(--pixel);
-  font-weight: 400;
-  font-size: 1.1rem;
-  color: var(--dim);
-  transition: color 0.15s;
-}
-#nav a:hover, #nav a:focus-visible { color: var(--ink); outline: none; }
-#nav a.on { color: var(--teal); }
-#hint {
-  min-height: 1.3em;
-  font-family: var(--sans);
-  font-size: 0.9rem;
-  color: var(--faint);
-  white-space: pre-wrap;
-  text-align: center;
-}
-
-#back {
-  position: fixed;
-  top: max(0.8rem, env(safe-area-inset-top));
-  left: 1.1rem;
-  z-index: 10;
-  padding: 0.6rem 0;
-  font-family: var(--pixel);
-  font-weight: 400;
-  font-size: 1.1rem;
-  color: var(--dim);
-  opacity: 0;
-  pointer-events: none;
-  text-shadow: 0 0 6px #040504, 0 0 2px #040504;
-  transition: color .15s, opacity .5s;
-}
-#back.show { opacity: 1; pointer-events: auto; }
-#back:hover, #back:focus-visible { color: var(--teal); outline: none; }
-
-#help {
-  position: fixed;
-  left: 50%;
-  bottom: calc(6.6rem + env(safe-area-inset-bottom));
-  transform: translateX(-50%);
-  z-index: 10;
-  padding: 1rem 1.4rem;
-  background: #0b0d0b;
-  border: 1px solid #1a1e1a;
-  border-radius: 0.6rem;
-  font-family: var(--sans);
-  text-transform: lowercase;
-  font-size: 1rem;
-  color: var(--dim);
-  line-height: 1.8;
-  white-space: nowrap;
-}
-#help[hidden] { display: none; }
-#help b { font-family: var(--pixel); font-weight: 400; color: var(--teal); display: inline-block; min-width: 5.2rem; }
+#keys{position:fixed;z-index:3;left:50%;transform:translateX(-50%);width:min(1100px,calc(100vw - 2*max(5vw,18px)));
+  top:84px;bottom:calc(92px + env(safe-area-inset-bottom));display:none;touch-action:none;cursor:pointer}
+body[data-scene=piano] #keys{display:flex}
+.key{flex:1;position:relative}
+.key span{position:absolute;left:0;right:0;bottom:-2.1rem;text-align:center;font:400 14px var(--pixel);color:var(--faint);transition:color .15s}
+.key.down span{color:var(--teal)}
+@media(hover:none){.key span{display:none}}
+.hint>span{display:none}
+body[data-scene=home] .hint .h{display:inline}
+body[data-scene=tiger] .hint .t{display:inline}
+body[data-scene=piano] .hint .p{display:inline}
+@media(hover:none){.fine{display:none!important}}
+@media(hover:hover){.coarse{display:none!important}}
 </style>
 </head>
-<body>
+<body data-scene="home">
+<canvas id="world" aria-hidden="true"></canvas>
 
-<div id="world" aria-hidden="true"></div>
-<div id="ring" aria-hidden="true"></div>
+<header>
+  <a class="brand" href="#" aria-label="blue tiger inc studios, home"><i class="mark"></i><span>blue tiger<span class="long"> inc studios</span></span></a>
+  <nav aria-label="main">
+    <a href="#tiger" data-s="tiger">tiger</a>
+    <a href="#piano" data-s="piano">piano</a>
+    <a class="yt" href="https://youtube.com/@BlueTigerIncStudios" target="_blank" rel="noopener">youtube <svg class="arr" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" aria-hidden="true"><path d="M3 9l6-6M4 3h5v5"/></svg></a>
+  </nav>
+</header>
 
 <main id="stage">
-  <div id="textWrap">
-    <div class="line" id="line1"></div>
-    <div class="line" id="line2"></div>
-    <textarea id="typeTarget" autocomplete="off" autocapitalize="off" spellcheck="false" rows="1" aria-label="type here"></textarea>
+  <h1 id="hero" aria-label="sup, im the blue tiger."><span id="t1"></span>
+<span id="t2" class="t"></span><i id="cur"></i></h1>
+  <div id="cta" class="btns">
+    <a class="btn primary" href="https://youtube.com/@BlueTigerIncStudios" target="_blank" rel="noopener">watch on youtube <svg class="arr" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" aria-hidden="true"><path d="M3 9l6-6M4 3h5v5"/></svg></a>
+    <a class="btn" href="#piano">play the piano</a>
   </div>
 </main>
 
-<a id="back" href="#">← home</a>
+<div id="keys" role="group" aria-label="piano"></div>
 
-<div id="help" hidden>
-  <div><b>tiger</b> say hi</div>
-  <div><b>stripes</b> a living pelt</div>
-  <div><b>hum</b> play the grid</div>
-  <div><b>videos</b> the channel</div>
-  <div><b>clear</b> start over</div>
-</div>
+<p class="hint">
+  <span class="h"><span class="fine">type something. try <b>piano</b></span><span class="coarse">drag to move the light</span></span>
+  <span class="t"><span class="fine">move your cursor. it watches you</span><span class="coarse">drag to move the light</span></span>
+  <span class="p"><span class="fine">tap, drag, or play <b>a s d f g h j k</b></span><span class="coarse">tap or drag across the keys</span></span>
+</p>
 
-<nav id="nav">
-  <div id="hint"></div>
-  <div class="links">
-    <a href="#tiger"   data-s="tiger">tiger</a>
-    <a href="#stripes" data-s="stripes">stripes</a>
-    <a href="#hum"     data-s="hum">hum</a>
-    <a href="https://youtube.com/@BlueTigerIncStudios" target="_blank" rel="noopener">videos</a>
-  </div>
-</nav>
-
-<script src="https://cdn.jsdelivr.net/npm/animejs@4.5.0/dist/bundles/anime.umd.min.js"></script>
 <script>
-(function () {
+(() => {
 'use strict';
-
-const YOUTUBE_URL = 'https://youtube.com/@BlueTigerIncStudios';
-const A = window.anime || null;                       // anime.js; the site degrades to the plain hero without it
+/* ── shared ascii engine: a lit heightfield rendered as shaded glyphs. No dependencies. ── */
+const RAMP = ' .:-=+*#%@', CHARS = RAMP + '|';
+const PALETTE = ['#2b322b', '#00766e', '#00c4b6', '#f1f1f1'];      // faint, deep, teal, white
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-const finePointer = matchMedia('(pointer: fine)').matches;
+const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
 
+function createEngine(canvas) {
+  const ctx = canvas.getContext('2d');
+  const S = { W: 0, H: 0, dpr: 1, cwD: 0, chD: 0, cw: 0, ch: 0, cols: 0, rows: 0, atlas: null };
+
+  function layout() {
+    const W = innerWidth, H = innerHeight, dpr = Math.min(2, window.devicePixelRatio || 1);
+    const fs = clamp(Math.round(Math.sqrt(W * H) / 68), 11, 18);
+    const cwD = Math.max(5, Math.round(fs * 0.6 * dpr)), chD = Math.max(8, Math.round(fs * dpr));
+    Object.assign(S, { W, H, dpr, cwD, chD, cw: cwD / dpr, ch: chD / dpr });
+    S.cols = Math.ceil(W * dpr / cwD); S.rows = Math.ceil(H * dpr / chD);
+    canvas.width = S.cols * cwD; canvas.height = S.rows * chD;
+    canvas.style.width = S.cols * S.cw + 'px'; canvas.style.height = S.rows * S.ch + 'px';
+    const a = document.createElement('canvas');
+    a.width = CHARS.length * cwD; a.height = PALETTE.length * chD;
+    const g = a.getContext('2d');
+    g.font = `${Math.round(fs * dpr * 0.98)}px "Geist Pixel", "Geist", monospace`;
+    g.textAlign = 'center'; g.textBaseline = 'middle';
+    PALETTE.forEach((c, r) => { g.fillStyle = c; for (let i = 1; i < CHARS.length; i++) g.fillText(CHARS[i], i * cwD + cwD / 2, r * chD + chD / 2 + dpr * 0.5); });
+    S.atlas = a;
+  }
+  const put = (c, r, ci, col) => { if (ci > 0 && c >= 0 && r >= 0 && c < S.cols && r < S.rows) ctx.drawImage(S.atlas, ci * S.cwD, col * S.chD, S.cwD, S.chD, c * S.cwD, r * S.chD, S.cwD, S.chD); };
+  const wipe = (c0, r0, c1, r1) => ctx.clearRect(c0 * S.cwD, r0 * S.chD, (c1 - c0) * S.cwD, (r1 - r0) * S.chD);
+  const wipeAll = () => ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  /* rasterise a drawing (in css px) to per-cell coverage, 2x2 supersampled */
+  function cover(draw) {
+    const k = 2, w = S.cols * k, h = S.rows * k;
+    const cv = document.createElement('canvas'); cv.width = w; cv.height = h;
+    const g = cv.getContext('2d', { willReadFrequently: true });
+    g.setTransform(k / S.cw, 0, 0, k / S.ch, 0, 0);
+    draw(g);
+    const d = g.getImageData(0, 0, w, h).data, out = new Float32Array(S.cols * S.rows);
+    for (let r = 0; r < S.rows; r++) for (let c = 0; c < S.cols; c++) {
+      const p = (r * k * w + c * k) * 4 + 3, q = p + w * 4;
+      out[r * S.cols + c] = (d[p] + d[p + 4] + d[q] + d[q + 4]) / 1020;
+    }
+    return out;
+  }
+  function blur(a, rad) {
+    const { cols, rows } = S, n = 2 * rad + 1, t = new Float32Array(a.length), o = new Float32Array(a.length);
+    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) { let s = 0; for (let k = -rad; k <= rad; k++) s += a[r * cols + clamp(c + k, 0, cols - 1)]; t[r * cols + c] = s / n; }
+    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) { let s = 0; for (let k = -rad; k <= rad; k++) s += t[clamp(r + k, 0, rows - 1) * cols + c]; o[r * cols + c] = s / n; }
+    return o;
+  }
+  /* distance (px) from every inside cell to the nearest outside cell, two-pass chamfer */
+  function dist(cov) {
+    const { cols, rows, cw, ch } = S, N = cols * rows, d = new Float32Array(N), dg = Math.hypot(cw, ch);
+    for (let i = 0; i < N; i++) d[i] = cov[i] > 0.5 ? 1e9 : 0;
+    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+      const i = r * cols + c; if (!d[i]) continue; let v = d[i];
+      if (c > 0) v = Math.min(v, d[i - 1] + cw);
+      if (r > 0) { v = Math.min(v, d[i - cols] + ch); if (c > 0) v = Math.min(v, d[i - cols - 1] + dg); if (c < cols - 1) v = Math.min(v, d[i - cols + 1] + dg); }
+      d[i] = v;
+    }
+    for (let r = rows - 1; r >= 0; r--) for (let c = cols - 1; c >= 0; c--) {
+      const i = r * cols + c; if (!d[i]) continue; let v = d[i];
+      if (c < cols - 1) v = Math.min(v, d[i + 1] + cw);
+      if (r < rows - 1) { v = Math.min(v, d[i + cols] + ch); if (c < cols - 1) v = Math.min(v, d[i + cols + 1] + dg); if (c > 0) v = Math.min(v, d[i + cols - 1] + dg); }
+      d[i] = v;
+    }
+    return d;
+  }
+  /* a pillow: height rises like a quarter circle from the silhouette edge; `carve` presses features in */
+  function relief(cov, R, carve, carveAmt) {
+    const { cols, rows, cw, ch } = S, N = cols * rows, d = dist(cov), h = new Float32Array(N);
+    for (let i = 0; i < N; i++) {
+      if (cov[i] <= 0.5) continue;
+      const t = Math.min(1, (d[i] - 0.5 * Math.min(cw, ch)) / R);
+      h[i] = R * 0.95 * Math.sqrt(Math.max(0, 1 - (1 - Math.max(0, t)) ** 2)) - (carve ? carve[i] * carveAmt : 0);
+    }
+    const hb = blur(blur(h, 1), 1), nx = new Float32Array(N), ny = new Float32Array(N), nz = new Float32Array(N);
+    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+      const i = r * cols + c;
+      const gx = (hb[r * cols + Math.min(cols - 1, c + 1)] - hb[r * cols + Math.max(0, c - 1)]) / (2 * cw);
+      const gy = (hb[Math.min(rows - 1, r + 1) * cols + c] - hb[Math.max(0, r - 1) * cols + c]) / (2 * ch);
+      const l = Math.hypot(gx, gy, 1);
+      nx[i] = -gx / l; ny[i] = -gy / l; nz[i] = 1 / l;
+    }
+    return { nx, ny, nz };
+  }
+  /* per-cell reveal threshold: spreads out from (cx,cy), with a little noise so it dissolves instead of wiping */
+  function thresholds(cx, cy) {
+    const { cols, rows } = S, t = new Float32Array(cols * rows), m = Math.hypot(cols, rows * S.ch / S.cw) * 0.5;
+    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+      const v = Math.sin((r * 91.7 + c * 12.9) * 4.1) * 43758.5; 
+      t[r * cols + c] = Math.hypot(c + 0.5 - cx, (r + 0.5 - cy) * S.ch / S.cw) / m * 0.8 + (v - Math.floor(v)) * 0.25;
+    }
+    return t;
+  }
+  /* eases a light toward the pointer at ~30fps and stops the moment it arrives: idle = zero cost */
+  function createLight(onChange) {
+    const cur = { x: -0.55, y: -0.7 }, tgt = { x: -0.55, y: -0.7 }; let raf = 0, last = 0;
+    function tick(t) {
+      raf = 0; if (t - last < 30) { raf = requestAnimationFrame(tick); return; } last = t;
+      const dx = tgt.x - cur.x, dy = tgt.y - cur.y, done = Math.abs(dx) + Math.abs(dy) < 0.004;
+      if (done) { cur.x = tgt.x; cur.y = tgt.y; } else { cur.x += dx * 0.2; cur.y += dy * 0.2; }
+      onChange(cur); if (!done) raf = requestAnimationFrame(tick);
+    }
+    return { cur, set(x, y) { tgt.x = x; tgt.y = y; if (reduce) { cur.x = x; cur.y = y; onChange(cur); } else if (!raf) raf = requestAnimationFrame(tick); } };
+  }
+  const lightFromPointer = (x, y) => [clamp((x / S.W - 0.5) * 2.2, -1.1, 1.1), clamp((y / S.H - 0.5) * 2.2, -1.1, 1.1)];
+  /* one-shot eased animation, full rate, ends by itself */
+  function tween(ms, fn, done) {
+    if (reduce) { fn(1); done && done(); return; }
+    const t0 = performance.now();
+    (function f(t) { const k = clamp((t - t0) / ms, 0, 1); fn(1 - (1 - k) ** 3); if (k < 1) requestAnimationFrame(f); else done && done(); })(t0);
+  }
+  return { S, ctx, layout, put, wipe, wipeAll, cover, blur, relief, thresholds, createLight, lightFromPointer, tween };
+}
+
+/* shaded glyph for a lit surface: v 0..1 */
+function glyphFor(v, faint) { const ci = Math.max(1, Math.min(9, (v * 10) | 0)); return [ci, faint ? 1 : v < 0.4 ? 1 : v < 0.82 ? 2 : 3]; }
+
+
+const YT = 'https://youtube.com/@BlueTigerIncStudios';
 const $ = s => document.querySelector(s);
-const stage = $('#stage'), typeTarget = $('#typeTarget'), nav = $('#nav'), help = $('#help');
-const hint = $('#hint'), back = $('#back'), world = $('#world'), ring = $('#ring');
+const body = document.body, canvas = $('#world'), keysEl = $('#keys'), cta = $('#cta');
+const t1 = $('#t1'), t2 = $('#t2'), cur = $('#cur');
+const eng = createEngine(canvas), S = eng.S;
+let scene = 'home', booted = false;
 
-/* ════════════════════════════════════════════════════════════════════
-   HERO: typed intro + free typing + commands
-   ════════════════════════════════════════════════════════════════════ */
-
-const FULL_LINES = [
-  { id: 'line1', words: ['sup,', 'im', 'the'], teal: false },
-  { id: 'line2', words: ['blue', 'tiger.'],     teal: true  }
-];
-
-let typing = false, typeToken = 0, heroVisible = true;
-
-function buildLine(lineDef) {
-  const el = document.getElementById(lineDef.id);
-  el.innerHTML = '';
-  const nodes = [];
-  lineDef.words.forEach((word, wi) => {
-    const w = document.createElement('span');
-    w.className = 'word';
-    if (wi > 0) w.style.marginLeft = '0.3em';
-    [...word].forEach(ch => {
-      const c = document.createElement('span');
-      c.className = 'char' + (lineDef.teal ? ' teal' : '');
-      c.textContent = ch;
-      w.appendChild(c);
-      nodes.push(c);
-    });
-    el.appendChild(w);
-  });
-  return nodes;
-}
-
-const line1Chars = buildLine(FULL_LINES[0]);
-const line2Chars = buildLine(FULL_LINES[1]);
-const allChars = [...line1Chars, ...line2Chars];
-
-const cursor = document.createElement('span');
-cursor.id = 'cursor';
-
-function typeSequence(onDone) {
-  const tok = ++typeToken;
-  typing = true;
-  allChars.forEach(c => c.classList.remove('in'));
-  cursor.remove();
-  line1Chars[0].before(cursor);
-
+/* ─────────── hero: typed intro, free typing, commands ─────────── */
+let buf = '', typeTok = 0, typedDone = false;
+const L1 = 'sup, im the', L2 = 'blue tiger.';
+function intro() {
+  const tok = ++typeTok; typedDone = false; t1.textContent = t2.textContent = ''; cta.classList.remove('show');
+  t1.before(cur);
+  const all = [...L1].map(c => [c, 1]).concat([...L2].map(c => [c, 2]));
   let i = 0;
-  const total = allChars.length;
-
-  function typeNext() {
-    if (tok !== typeToken) return;                 // cancelled (user left the hero)
-    if (i >= total) {
-      cursor.remove();
-      allChars[total - 1].after(cursor);
-      typing = false;
-      if (onDone) onDone();
-      return;
-    }
-    const ch = allChars[i];
-    ch.classList.add('in');
-    cursor.remove();
-    ch.after(cursor);
-
-    let delay = 38 + Math.random() * 55;
-    const t = ch.textContent;
-    if (t === ',' || t === '.') delay += 220;
-    if (i > 0 && allChars[i - 1].parentElement !== ch.parentElement) delay += 90;
-    i++;
-    setTimeout(typeNext, delay);
-  }
-  setTimeout(typeNext, 260);
+  (function next() {
+    if (tok !== typeTok) return;
+    if (i >= all.length) { typedDone = true; cta.classList.add('show'); return; }
+    const [ch, ln] = all[i++];
+    (ln === 1 ? t1 : t2).textContent += ch;
+    (ln === 1 ? t1 : t2).after(cur);
+    setTimeout(next, reduce ? 0 : 40 + Math.random() * 55 + (ch === ',' || ch === '.' ? 210 : 0) + (i === L1.length + 1 ? 90 : 0));
+  })();
 }
-
-function renderFreeText(value) {
-  const l1 = document.getElementById('line1');
-  const l2 = document.getElementById('line2');
-  l2.innerHTML = '';
-  l1.innerHTML = '';
-  l1.style.flexWrap = 'wrap';
-
-  const lines = value.split('\n');
-  let lastCharEl = null;
-
-  lines.forEach((lineText, li) => {
-    if (li > 0) {
-      const br = document.createElement('span');
-      br.className = 'br';
-      l1.appendChild(br);
-    }
-    lineText.split(' ').forEach((word, wi) => {
-      if (wi > 0) {
-        const space = document.createElement('span');
-        space.className = 'char in word';
-        space.textContent = ' ';
-        l1.appendChild(space);
-        lastCharEl = space;
-      }
-      if (word.length === 0) return;
-      const wordEl = document.createElement('span');
-      wordEl.className = 'word wrap-word';
-      [...word].forEach(ch => {
-        const c = document.createElement('span');
-        c.className = 'char in';
-        c.textContent = ch;
-        wordEl.appendChild(c);
-        lastCharEl = c;
-      });
-      l1.appendChild(wordEl);
-    });
-  });
-
-  cursor.remove();
-  const lastLine = lines[lines.length - 1];
-  if (lastLine === '' || !lastCharEl) l1.appendChild(cursor);
-  else lastCharEl.after(cursor);
+function renderBuf() {
+  typeTok++; typedDone = true; cta.classList.add('show');
+  if (!buf) { intro(); return; }
+  t1.textContent = buf; t2.textContent = ''; t1.after(cur);
 }
-
-const GREETING_TEXT = 'sup, im the\nblue tiger.\n';
-
-typeTarget.addEventListener('focus', () => {
-  stage.classList.add('editing');
-  if (typeTarget.value === '') {
-    typeTarget.value = GREETING_TEXT;
-    typeTarget.setSelectionRange(typeTarget.value.length, typeTarget.value.length);
-    typeToken++;                                    // stop any intro typing; we render directly now
-    renderFreeText(typeTarget.value);
-  }
-});
-typeTarget.addEventListener('input', () => {
-  renderFreeText(typeTarget.value);
-  cursor.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-});
-typeTarget.addEventListener('blur', () => {
-  stage.classList.remove('editing');
-  if (heroVisible && typeTarget.value.trim() === '') {
-    typeTarget.value = '';
-    restoreOriginal();
-  }
-});
-
-function restoreOriginal(onDone) {
-  document.getElementById('line1').innerHTML = '';
-  document.getElementById('line2').innerHTML = '';
-  const n1 = buildLine(FULL_LINES[0]);
-  const n2 = buildLine(FULL_LINES[1]);
-  allChars.length = 0; allChars.push(...n1, ...n2);
-  line1Chars.length = 0; line1Chars.push(...n1);
-  line2Chars.length = 0; line2Chars.push(...n2);
-  typeSequence(onDone);
-}
-
-function hideHero() {
-  if (!heroVisible) return;
-  heroVisible = false;
-  typeToken++;                                      // cancel typing
-  typeTarget.blur();
-  help.hidden = true;
-  const chars = stage.querySelectorAll('.char');
-  if (A && !reduce) {
-    A.animate(chars, {
-      opacity: 0, translateY: '-0.25em',
-      delay: A.stagger(10), duration: 260, ease: 'inQuad',
-      onComplete: () => { if (!heroVisible) stage.style.display = 'none'; }
-    });
-  } else stage.style.display = 'none';
-}
-
-function showHero(onDone) {
-  heroVisible = true;
-  stage.style.display = 'flex';
-  typeTarget.value = '';
-  restoreOriginal(onDone);
-}
-
-/* typed commands: write a word on its own line and press enter */
+const go = n => { location.hash = n === 'home' ? '' : n; route(); };
 const COMMANDS = {
-  tiger:   () => go('tiger'),
-  stripes: () => go('stripes'),
-  hum:     () => go('hum'),
-  home:    () => go('home'),
-  videos:  () => { location.href = YOUTUBE_URL; },
-  youtube: () => { location.href = YOUTUBE_URL; },
-  help:    () => { help.hidden = !help.hidden; },
-  clear:   () => { typeTarget.value = ''; typeTarget.blur(); }
+  youtube: () => window.open(YT, '_blank', 'noopener'), videos: () => window.open(YT, '_blank', 'noopener'),
+  tiger: () => go('tiger'), piano: () => go('piano'), hum: () => go('piano'), home: () => go('home'),
+  clear: () => { buf = ''; renderBuf(); }
 };
-
-typeTarget.addEventListener('keydown', e => {
-  if (e.key !== 'Enter') return;
-  const lines = typeTarget.value.split('\n');
-  const cmd = lines[lines.length - 1].trim().toLowerCase();
-  const fn = COMMANDS[cmd];
-  if (!fn) return;                                  // not a command: plain newline
-  e.preventDefault();
-  lines[lines.length - 1] = '';
-  typeTarget.value = lines.join('\n');
-  renderFreeText(typeTarget.value);
-  fn();
-});
-typeTarget.addEventListener('click', e => {
-  e.stopPropagation();
-  typeTarget.focus();
-  help.hidden = true;
+addEventListener('keydown', e => {
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  if (e.key === 'Escape') { if (scene !== 'home') go('home'); else { buf = ''; renderBuf(); } return; }
+  if (scene === 'piano') { pianoKey(e); return; }
+  if (scene !== 'home') return;
+  if ((e.key === 'Enter' || e.key === ' ') && e.target.closest && e.target.closest('a,button')) return;
+  if (e.key === 'Enter') {
+    const cmd = buf.trim().toLowerCase(), fn = COMMANDS[cmd.split('\n').pop().trim()];
+    if (fn) { e.preventDefault(); buf = ''; renderBuf(); fn(); } else if (buf) { buf += '\n'; renderBuf(); }
+  } else if (e.key === 'Backspace') { buf = buf.slice(0, -1); renderBuf(); e.preventDefault(); }
+  else if (e.key.length === 1 && buf.length < 60) { buf += e.key; renderBuf(); if (e.key === ' ') e.preventDefault(); }
 });
 
-/* hint line under the hero / scenes, typed out with anime.js */
-function setHint(text) {
-  hint.textContent = '';
-  if (!text) return;
-  const spans = [...text].map(ch => {
-    const s = document.createElement('span');
-    s.textContent = ch;
-    s.style.opacity = '0';
-    hint.appendChild(s);
-    return s;
-  });
-  if (A && !reduce) A.animate(spans, { opacity: [0, 1], duration: 1, delay: A.stagger(16) });
-  else spans.forEach(s => (s.style.opacity = '1'));
-}
-
-/* ════════════════════════════════════════════════════════════════════
-   WITHOUT anime.js (offline / blocked CDN): plain hero, nothing else breaks
-   ════════════════════════════════════════════════════════════════════ */
-
-if (!A) {
-  setHint('tap the text and type.');
-  nav.classList.add('show');
-  restoreOriginal();
-  return;
-}
-
-const { animate, createTimeline, createAnimatable, stagger, utils } = A;
-
-/* ════════════════════════════════════════════════════════════════════
-   THE WORLD: a grid of dots. Every scene is just a target state per dot.
-   ════════════════════════════════════════════════════════════════════ */
-
-const TEAL = '#00c4b6', DEEP = '#00766e', WHITE = '#eeeeee', DIMC = '#232823', INK = '#050605';
-const REST_O = 0.6;
-
-let cols = 0, rows = 0, cell = 24, N = 0, FULL = 3, ox = 0, oy = 0;
-let dots = [], rest = [];
-
-const S = (s, o, c) => ({ s, o, c });
-const idx = (c, r) => r * cols + c;
-const colOf = i => i % cols;
-const rowOf = i => (i / cols) | 0;
-const centerIdx = () => idx(cols >> 1, rows >> 1);
-function fill(fn) {
-  const t = new Array(N);
-  for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) t[r * cols + c] = fn(c, r);
-  return t;
-}
-function cellAt(x, y) {
-  const c = Math.floor((x - ox) / cell), r = Math.floor((y - oy) / cell);
-  return (c < 0 || r < 0 || c >= cols || r >= rows) ? -1 : r * cols + c;
-}
-
-function layout() {
-  const W = innerWidth, H = innerHeight;
-  cell = Math.max(16, Math.min(60, Math.sqrt(W * H / 2200)));   // ~2200 pixels on any screen
-  cols = Math.ceil(W / cell); rows = Math.ceil(H / cell); N = cols * rows;
-  ox = (W - cols * cell) / 2; oy = (H - rows * cell) / 2;
-  FULL = (cell - 2) / (cell * 0.26);                // scale at which a dot fills its whole cell (a "pixel")
-
-  world.style.setProperty('--cell', cell + 'px');
-  ring.style.setProperty('--cell', cell + 'px');
-  Object.assign(world.style, {
-    left: ox + 'px', top: oy + 'px',
-    width: cols * cell + 'px', height: rows * cell + 'px',
-    gridTemplateColumns: `repeat(${cols}, ${cell}px)`,
-    gridTemplateRows: `repeat(${rows}, ${cell}px)`
-  });
-  world.textContent = '';
-  const frag = document.createDocumentFragment();
-  dots = [];
-  for (let i = 0; i < N; i++) { const e = document.createElement('i'); frag.appendChild(e); dots.push(e); }
-  world.appendChild(frag);
-}
-
-function applyNow(targets) {
-  utils.remove(dots);
-  utils.set(dots, {
-    scale: (el, i) => targets[i].s,
-    opacity: (el, i) => targets[i].o,
-    backgroundColor: (el, i) => targets[i].c
-  });
-}
-
-/* the signature move: a wave leaves the origin; every dot flashes teal as it passes, then settles to its new place */
-function morph(targets, origin, done) {
-  utils.remove(dots);
-  const wave = stagger(reduce ? 0 : 6, { grid: [cols, rows], from: origin });
-  const tl = createTimeline({ onComplete: done });
-  tl.add(dots, {
-    scale: Math.max(2.4, FULL * 0.8), opacity: 1, backgroundColor: TEAL,
-    duration: reduce ? 1 : 220, ease: 'outQuad', delay: wave
-  }, 0)
-  .add(dots, {
-    scale: (el, i) => targets[i].s,
-    opacity: (el, i) => targets[i].o,
-    backgroundColor: (el, i) => targets[i].c,
-    duration: reduce ? 1 : 780, ease: 'outExpo', delay: wave
-  }, reduce ? 1 : 220);
-  return tl;
-}
-
-/* a ring of light: dots near the origin swell and flash, then return to whatever they rest as */
-function ripple(origin, o = {}) {
-  if (reduce) return;
-  const R = Math.max(3, Math.round((o.radius ?? 12) * Math.min(1.5, Math.max(0.55, cols / 45))));   // radius is relative to grid size
-  const step = o.step ?? 24, col = o.color ?? TEAL, peak = o.peak ?? 2.5;
-  const oc = colOf(origin), or = rowOf(origin);
-  const ids = [], dd = [];
-  for (let r = Math.max(0, or - R); r <= Math.min(rows - 1, or + R); r++)
-    for (let c = Math.max(0, oc - R); c <= Math.min(cols - 1, oc + R); c++) {
-      const d = Math.hypot(c - oc, r - or);
-      if (d <= R) { ids.push(r * cols + c); dd.push(d); }
-    }
-  animate(ids.map(i => dots[i]), {
-    scale: [
-      { to: (el, j) => Math.max(rest[ids[j]].s, peak * (1 - 0.45 * dd[j] / R)), duration: 170, ease: 'outQuad' },
-      { to: (el, j) => rest[ids[j]].s, duration: 620, ease: 'inOutQuad' }
-    ],
-    opacity: [
-      { to: 1, duration: 170 },
-      { to: (el, j) => rest[ids[j]].o, duration: 620 }
-    ],
-    backgroundColor: [
-      { to: col, duration: 170 },
-      { to: (el, j) => rest[ids[j]].c, duration: 620 }
-    ],
-    delay: (el, j) => dd[j] * step
-  });
-}
-
-function flare(i) {                                  // a pixel plus its four neighbours flash and fade: the cursor trail
-  const c0 = colOf(i), r0 = rowOf(i), ids = [i];
-  [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach(([dx, dy]) => {
-    const c = c0 + dx, r = r0 + dy;
-    if (c >= 0 && r >= 0 && c < cols && r < rows) ids.push(r * cols + c);
-  });
-  animate(ids.map(k => dots[k]), {
-    scale:  [{ to: (el, j) => Math.max(rest[ids[j]].s, j ? FULL * 0.5 : FULL), duration: 80 }, { to: (el, j) => rest[ids[j]].s, duration: 900 }],
-    opacity: [{ to: 1, duration: 80 }, { to: (el, j) => rest[ids[j]].o, duration: 900 }],
-    backgroundColor: [{ to: TEAL, duration: 80 }, { to: (el, j) => rest[ids[j]].c, duration: 900 }],
-    ease: 'outQuad'
-  });
-}
-
-/* ════════════════════════════════════════════════════════════════════
-   SCENES
-   ════════════════════════════════════════════════════════════════════ */
-
-const scenes = {};
-let currentName = 'home';
-let ptr = { px: innerWidth / 2, py: innerHeight / 2, cell: -1 };
-
-/* ── home: calm field, trail under the cursor, click shockwaves, a slow idle ring ── */
-let ambientTimer = 0;
-scenes.home = {
-  hint: 'tap the text and type. try "help".',
-  targets: () => fill(() => S(1, REST_O, DIMC)),
-  enter() { scheduleAmbient(); },
-  exit() { clearTimeout(ambientTimer); },
-  move(e, i) { if (!reduce) flare(i); },
-  down(e, i) { ripple(i, { radius: 15, step: 26 }); }
-};
-function scheduleAmbient() {
-  clearTimeout(ambientTimer);
-  ambientTimer = setTimeout(() => {
-    if (currentName === 'home' && !document.hidden && !reduce) {
-      const i = idx((Math.random() * cols) | 0, (Math.random() * rows) | 0);
-      ripple(i, { radius: 9, step: 34, peak: 1.8 });
-    }
-    if (currentName === 'home') scheduleAmbient();
-  }, 3800 + Math.random() * 4200);
-}
-
-/* ── tiger: the dots assemble a face. its eyes follow you. click it. ── */
-const tiger = { eyes: [], blink: false, timers: [], idleUntil: 0, wander: null, look: [] };
-
+/* ─────────── tiger: a lit pillow of glyphs, eyes that follow the light ─────────── */
+const T = {};
 function buildTiger() {
-  const k = 3;                                       // sample 3x3 per cell and read the centre: crisp pixel art, no blur
-  const cv = document.createElement('canvas');
-  cv.width = cols * k; cv.height = rows * k;
-  const g = cv.getContext('2d', { willReadFrequently: true });
-  const sc = Math.min(cols, rows) * 0.44;            // unit length in cells
-  const s = sc * k, cx = cv.width / 2, cy = rows * 0.46 * k;
-  const P = { teal: TEAL, deep: DEEP, white: WHITE, dark: '#040504' };
-
-  const E = (x, y, rx, ry, col) => { g.fillStyle = col; g.beginPath(); g.ellipse(cx + x * s, cy + y * s, rx * s, ry * s, 0, 0, 7); g.fill(); };
-  const Pl = (pts, col) => { g.fillStyle = col; g.beginPath(); pts.forEach(([x, y], n) => { const X = cx + x * s, Y = cy + y * s; n ? g.lineTo(X, Y) : g.moveTo(X, Y); }); g.closePath(); g.fill(); };
-  const both = (fn) => { fn(1); fn(-1); };
-
-  // ears
-  both(m => { E(0.66 * m, -0.62, 0.27, 0.27, P.teal); E(0.66 * m, -0.60, 0.13, 0.13, P.deep); });
-  // head, cheeks, chin
-  E(0, 0.0, 0.86, 0.74, P.teal);
-  both(m => E(0.62 * m, 0.36, 0.34, 0.30, P.teal));
-  E(0, 0.62, 0.46, 0.22, P.teal);
-  // forehead stripes
-  Pl([[-0.085, -0.74], [0.085, -0.74], [0.03, -0.34], [-0.03, -0.34]], P.dark);
-  both(m => {
-    Pl([[0.22 * m, -0.72], [0.40 * m, -0.66], [0.17 * m, -0.33]], P.dark);
-    Pl([[0.54 * m, -0.58], [0.72 * m, -0.44], [0.42 * m, -0.28]], P.dark);
-  });
-  // cheek stripes
-  both(m => {
-    Pl([[0.90 * m, -0.04], [0.88 * m, 0.12], [0.50 * m, 0.15]], P.dark);
-    Pl([[0.93 * m, 0.26], [0.90 * m, 0.42], [0.52 * m, 0.33]], P.dark);
-    Pl([[0.82 * m, 0.52], [0.78 * m, 0.66], [0.50 * m, 0.48]], P.dark);
-  });
-  // eye sockets (dark rim), then the white of the eye
-  const EY = { x: 0.35, y: -0.10, rx: 0.2, ry: 0.12 };
-  both(m => { E(EY.x * m, EY.y, EY.rx + 0.04, EY.ry + 0.04, P.dark); E(EY.x * m, EY.y, EY.rx, EY.ry, P.white); });
-  // muzzle, nose, mouth
-  both(m => E(0.13 * m, 0.40, 0.19, 0.15, P.white));
-  E(0, 0.31, 0.2, 0.12, P.white);
-  E(0, 0.60, 0.2, 0.09, P.white);
-  Pl([[-0.10, 0.20], [0.10, 0.20], [0, 0.31]], P.dark);
-  g.strokeStyle = P.dark; g.lineWidth = 0.04 * s; g.lineCap = 'round';
-  g.beginPath(); g.moveTo(cx, cy + 0.31 * s); g.lineTo(cx, cy + 0.42 * s);
-  g.moveTo(cx - 0.15 * s, cy + 0.48 * s); g.quadraticCurveTo(cx, cy + 0.50 * s, cx, cy + 0.42 * s);
-  g.quadraticCurveTo(cx, cy + 0.50 * s, cx + 0.15 * s, cy + 0.48 * s);
-  g.stroke();
-
-  // read the canvas back: nearest palette colour per cell
-  const pal = [[0, 196, 182, 1], [0, 118, 110, 2], [238, 238, 238, 3], [4, 5, 4, 0]];
-  const data = g.getImageData(0, 0, cv.width, cv.height).data, W3 = cv.width;
-  const mouth = idx(cols >> 1, Math.round(cy / k + 0.42 * sc));
-  const t = fill((c, r) => {
-    const p = ((r * k + 1) * W3 + (c * k + 1)) * 4;
-    if (data[p + 3] < 120) return S(1, REST_O, DIMC);
-    let best = 0, bd = 1e9;
-    for (let n = 0; n < pal.length; n++) {
-      const d = (data[p] - pal[n][0]) ** 2 + (data[p + 1] - pal[n][1]) ** 2 + (data[p + 2] - pal[n][2]) ** 2;
-      if (d < bd) { bd = d; best = pal[n][3]; }
-    }
-    return best === 1 ? S(FULL, 1, TEAL) : best === 2 ? S(FULL, 1, DEEP) : best === 3 ? S(FULL, 1, WHITE) : S(1, REST_O, DIMC);
-  });
-
-  // eye geometry in cell units, for the live pupils
-  tiger.eyes = [-1, 1].map(m => {
-    const e = { cx: cols / 2 + EY.x * m * sc, cy: rows * 0.46 + EY.y * sc, rx: EY.rx * sc, ry: EY.ry * sc, cells: [], state: {} };
-    for (let r = Math.floor(e.cy - e.ry - 1); r <= Math.ceil(e.cy + e.ry + 1); r++)
-      for (let c = Math.floor(e.cx - e.rx - 1); c <= Math.ceil(e.cx + e.rx + 1); c++) {
-        if (c < 0 || r < 0 || c >= cols || r >= rows) continue;
-        const dx = (c + 0.5 - e.cx) / e.rx, dy = (r + 0.5 - e.cy) / e.ry;
-        if (dx * dx + dy * dy <= 1) e.cells.push(r * cols + c);
-      }
-    return e;
-  });
-  tiger.mouth = mouth;
-  return t;
+  const { W, H, cw, ch, cols, rows } = S;
+  const s = Math.min(W * 0.46, (H - 70) * 0.44), cx = W / 2, cy = 70 + (H - 70) * 0.5;
+  const E = (g, x, y, rx, ry) => { g.beginPath(); g.ellipse(cx + x * s, cy + y * s, rx * s, ry * s, 0, 0, 7); g.fill(); };
+  const P = (g, pts) => { g.beginPath(); pts.forEach(([x, y], n) => n ? g.lineTo(cx + x * s, cy + y * s) : g.moveTo(cx + x * s, cy + y * s)); g.closePath(); g.fill(); };
+  const both = fn => { fn(1); fn(-1); };
+  const EY = { x: 0.35, y: -0.1, rx: 0.2, ry: 0.12 };
+  T.cov = eng.cover(g => { g.fillStyle = '#fff';
+    both(m => E(g, 0.66 * m, -0.62, 0.27, 0.27)); E(g, 0, 0, 0.86, 0.74); both(m => E(g, 0.62 * m, 0.36, 0.34, 0.3)); E(g, 0, 0.62, 0.46, 0.22); });
+  const stripe = eng.cover(g => { g.fillStyle = '#fff'; g.strokeStyle = '#fff';
+    P(g, [[-0.085, -0.74], [0.085, -0.74], [0.03, -0.34], [-0.03, -0.34]]);
+    both(m => {
+      P(g, [[0.22 * m, -0.72], [0.40 * m, -0.66], [0.17 * m, -0.33]]); P(g, [[0.54 * m, -0.58], [0.72 * m, -0.44], [0.42 * m, -0.28]]);
+      P(g, [[0.90 * m, -0.04], [0.88 * m, 0.12], [0.50 * m, 0.15]]); P(g, [[0.93 * m, 0.26], [0.90 * m, 0.42], [0.52 * m, 0.33]]); P(g, [[0.82 * m, 0.52], [0.78 * m, 0.66], [0.50 * m, 0.48]]);
+      E(g, EY.x * m, EY.y, EY.rx + 0.05, EY.ry + 0.05);
+    });
+    P(g, [[-0.10, 0.20], [0.10, 0.20], [0, 0.31]]);
+    g.lineWidth = 0.05 * s; g.lineCap = 'round'; g.beginPath(); g.moveTo(cx, cy + 0.31 * s); g.lineTo(cx, cy + 0.42 * s);
+    g.moveTo(cx - 0.15 * s, cy + 0.49 * s); g.quadraticCurveTo(cx, cy + 0.51 * s, cx, cy + 0.42 * s); g.quadraticCurveTo(cx, cy + 0.51 * s, cx + 0.15 * s, cy + 0.49 * s); g.stroke(); });
+  const muzzle = eng.cover(g => { g.fillStyle = '#fff'; both(m => E(g, 0.13 * m, 0.4, 0.19, 0.15)); E(g, 0, 0.31, 0.2, 0.12); E(g, 0, 0.6, 0.2, 0.09); });
+  const eyeL = eng.cover(g => { g.fillStyle = '#fff'; E(g, -EY.x, EY.y, EY.rx, EY.ry); });
+  const eyeR = eng.cover(g => { g.fillStyle = '#fff'; E(g, EY.x, EY.y, EY.rx, EY.ry); });
+  const N = cols * rows;
+  T.stripe = new Uint8Array(N); T.muz = new Uint8Array(N); T.eye = new Uint8Array(N);
+  for (let i = 0; i < N; i++) { T.stripe[i] = stripe[i] > 0.45; T.muz[i] = muzzle[i] > 0.5; T.eye[i] = eyeL[i] > 0.5 ? 1 : eyeR[i] > 0.5 ? 2 : 0; }
+  const carve = eng.blur(Float32Array.from(T.stripe), 1);
+  Object.assign(T, eng.relief(T.cov, s * 0.34, carve, s * 0.12));
+  T.soft = eng.blur(T.cov, 2); T.shadowLen = s * 0.1;
+  T.eyes = [-1, 1].map(m => ({ cx: (cx + EY.x * m * s) / cw, cy: (cy + EY.y * s) / ch, rx: EY.rx * s / cw, ry: EY.ry * s / ch }));
+  T.thr = eng.thresholds(cx / cw, cy / ch); T.rev = reduce ? 9 : 0;
 }
-
-function paintEyes() {
-  const now = performance.now();
-  const idle = now > tiger.idleUntil;
-  const tx = idle && tiger.wander ? tiger.wander.x : ptr.px;
-  const ty = idle && tiger.wander ? tiger.wander.y : ptr.py;
-  tiger.eyes.forEach(e => {
-    const ex = ox + e.cx * cell, ey = oy + e.cy * cell;
-    const vx = tx - ex, vy = ty - ey, d = Math.hypot(vx, vy) || 1;
-    const n = Math.min(1, d / (cell * 10));
-    const offx = (vx / d) * n * e.rx * 0.5, offy = (vy / d) * n * e.ry * 0.38;
-    for (const i of e.cells) {
-      const dx = (colOf(i) + 0.5 - (e.cx + offx)) / (e.rx * 0.46), dy = (rowOf(i) + 0.5 - (e.cy + offy)) / (e.ry * 0.95);
-      const want = tiger.blink ? DEEP : (dx * dx + dy * dy <= 1 ? INK : WHITE);
-      if (e.state[i] !== want) { e.state[i] = want; dots[i].style.backgroundColor = want; }
-    }
-  });
-}
-
-function tigerLoop() {
-  if (currentName !== 'tiger') return;
-  const wait = 2200 + Math.random() * 3200;
-  tiger.timers.push(setTimeout(() => {
-    tiger.blink = true; paintEyes();
-    tiger.timers.push(setTimeout(() => { tiger.blink = false; paintEyes(); tigerLoop(); }, 140));
-  }, wait));
-}
-
-scenes.tiger = {
-  hint: 'it is watching you. move around. click it.',
-  targets: buildTiger,
-  enter(settled) {
-    if (settled) afterTigerSettles();
-  },
-  settle() { afterTigerSettles(); },
-  exit() { tiger.timers.forEach(clearTimeout); tiger.timers = []; clearInterval(tiger.wanderTimer); },
-  move() { tiger.idleUntil = performance.now() + 2600; paintEyes(); },
-  down(e, i) {
-    tiger.idleUntil = performance.now() + 2600;
-    ripple(tiger.mouth ?? i, { radius: 22, step: 20, color: WHITE, peak: 2.8 });
-    ripple(i, { radius: 7, step: 20, color: TEAL });
-    // the ripple settles every pixel back to its resting colour, pupils included: redraw them afterwards
-    tiger.timers.push(setTimeout(() => { tiger.eyes.forEach(e => (e.state = {})); paintEyes(); }, 1500));
-  },
-  resize() { /* eyes rebuild with the targets */ }
-};
-function afterTigerSettles() {
-  if (currentName !== 'tiger') return;
-  tiger.eyes.forEach(e => (e.state = {}));
-  paintEyes();
-  tigerLoop();
-  clearInterval(tiger.wanderTimer);
-  tiger.wanderTimer = setInterval(() => {
-    tiger.wander = { x: innerWidth * (0.1 + Math.random() * 0.8), y: innerHeight * (0.1 + Math.random() * 0.8) };
-    if (performance.now() > tiger.idleUntil) paintEyes();
-  }, 1600);
-}
-
-/* ── stripes: a living pelt. the stripes part around your pointer. ── */
-const stripes = { t: 0, last: null, loop: null, sm: null, cur: { x: 0, y: 0 } };
-const hash = n => { const v = Math.sin(n * 127.1) * 43758.5453; return v - Math.floor(v); };
-
-function stripeClass(c, r, t, px, py) {
-  const nS = Math.max(8, Math.round(cols / 6));
-  const x = (c + 0.5) / cols, y = (r + 0.5) / rows;
-  // a gentle sway, so the pelt breathes
-  let u = x * nS + 0.30 * Math.sin(y * 2.4 + t) + 0.16 * Math.sin(y * 6.0 - 2 * t + x * 3);
-  // the stripes are pushed away from the pointer (smooth, so nothing tears)
-  const dx = c - px, dy = r - py;
-  u -= 1.6 * Math.tanh(dx / 3.5) * Math.exp(-(dy * dy) / 120) * Math.exp(-(dx * dx) / 150);
-  const id = Math.floor(u), f = Math.abs(u - id - 0.5), h = hash(id), h2 = hash(id + 7.7);
-  // every stripe is a chain of leaf shapes, pointed at both ends; the chain flows downward and loops seamlessly with t
-  const seg = y * (1.6 + 1.4 * h) + h2 * 3 + t / (Math.PI * 2);
-  const env = Math.pow(Math.sin(Math.PI * (seg - Math.floor(seg))), 0.8);
-  const w = (0.3 + 0.12 * h2) * env;
-  return f < w * 0.6 ? 1 : f < w ? 2 : 0;
-}
-const STRIPE_COL = [null, TEAL, DEEP];
-function renderStripes() {
-  const px = stripes.cur.x, py = stripes.cur.y, t = stripes.t;
+function drawTiger() {
+  const { cols, rows } = S, L = light.cur, lz = 0.8, inv = 1 / Math.hypot(L.x, L.y, lz), Lx = L.x * inv, Ly = L.y * inv, Lz = lz * inv;
+  const sdx = -L.x * T.shadowLen / S.cw, sdy = -L.y * T.shadowLen / S.ch, px = clamp(L.x, -1, 1), py = clamp(L.y, -1, 1);
+  eng.wipeAll();
   for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
-    const i = r * cols + c, k = stripeClass(c, r, t, px, py);
-    if (stripes.last[i] !== k) { stripes.last[i] = k; dots[i].style.backgroundColor = k ? STRIPE_COL[k] : '#0c0f0c'; }
+    const i = r * cols + c, rv = clamp((T.rev - T.thr[i]) * 7, 0, 1);
+    if (rv <= 0) continue;
+    let ci, col;
+    if (T.cov[i] > 0.5) {
+      const ey = T.eye[i];
+      if (ey) {
+        const e = T.eyes[ey - 1], dx = (c + 0.5 - e.cx - px * e.rx * 0.5) / (e.rx * 0.3), dy = (r + 0.5 - e.cy - py * e.ry * 0.3) / (e.ry * 0.62);
+        if (dx * dx + dy * dy <= 1) continue;
+        ci = 9; col = 3;
+      } else {
+        let v = 0.2 + 0.8 * Math.max(0, T.nx[i] * Lx + T.ny[i] * Ly + T.nz[i] * Lz);
+        v = Math.pow(v, 1.1);
+        const st = T.stripe[i];
+        if (st) v = 0.34 + v * 0.16; else if (T.muz[i]) v = Math.min(1, v + 0.3);
+        [ci, col] = glyphFor(v, st); if (st) { ci = Math.max(ci, 4); col = 1; }
+      }
+    } else {
+      const sr = Math.round(r + sdy), sc = Math.round(c + sdx);
+      if (sr < 0 || sc < 0 || sr >= rows || sc >= cols) continue;
+      const v = T.soft[sr * cols + sc];
+      if (v < 0.14) continue;
+      ci = v > 0.7 ? 3 : v > 0.4 ? 2 : 1; col = 0;
+    }
+    if (rv < 1) ci = Math.max(1, (ci * rv) | 0);
+    eng.put(c, r, ci, col);
   }
 }
-scenes.stripes = {
-  hint: 'a living pelt. drag your pointer through it.',
-  targets() {
-    stripes.cur.x = cols * 0.7; stripes.cur.y = rows * 0.5;
-    return fill((c, r) => { const k = stripeClass(c, r, 0, stripes.cur.x, stripes.cur.y); return S(FULL, 1, k ? STRIPE_COL[k] : '#0c0f0c'); });
-  },
-  enter(settled) { if (settled) this.settle(); },
-  settle() {
-    if (currentName !== 'stripes') return;
-    stripes.last = new Int8Array(N);
-    for (let i = 0; i < N; i++) stripes.last[i] = stripeClass(colOf(i), rowOf(i), 0, stripes.cur.x, stripes.cur.y);
-    world.classList.add('live');
-    stripes.sm = createAnimatable(stripes.cur, { x: 700, y: 700, ease: 'out(2)' });
-    stripes.t = 0;
-    stripes.loop = animate(stripes, { t: [0, Math.PI * 2], duration: 18000, ease: 'linear', loop: true, onUpdate: renderStripes });
-  },
-  exit() {
-    world.classList.remove('live');
-    if (stripes.loop) { stripes.loop.cancel(); stripes.loop = null; }
-    stripes.sm = null;
-    for (const el of dots) el.style.backgroundColor = '';
-  },
-  move(e, i) { if (stripes.sm) stripes.sm.x(colOf(i)).y(rowOf(i)); },
-  down(e, i) { ripple(i, { radius: 12, step: 22, color: WHITE, peak: 1 }); }
-};
 
-/* ── hum: the grid is an instrument. ten bands, pentatonic, with echo. ── */
-const hum = { AC: null, master: null, delay: null, down: false, band: -1 };
-const BANDS = 10, SCALE = [0, 2, 4, 7, 9], KEYS = 'asdfghjkl;';
-const bandOf = c => Math.min(BANDS - 1, Math.floor(c * BANDS / cols));
-
-function audio() {
-  if (hum.AC) return;
-  const AC = hum.AC = new (window.AudioContext || window.webkitAudioContext)();
-  hum.master = AC.createGain(); hum.master.gain.value = 0.6; hum.master.connect(AC.destination);
-  hum.delay = AC.createDelay(); hum.delay.delayTime.value = 0.32;
-  const fb = AC.createGain(); fb.gain.value = 0.38;
-  const wet = AC.createGain(); wet.gain.value = 0.4;
-  hum.delay.connect(fb); fb.connect(hum.delay);
-  hum.delay.connect(wet); wet.connect(hum.master);
+/* ─────────── piano: eight shaded columns; a hit sends light and a shockwave down the key ─────────── */
+const K = 8, SCALE = [0, 2, 4, 7, 9], KEYMAP = 'asdfghjk';
+const Pn = { E: new Float32Array(K), age: new Float32Array(K), hit: new Float32Array(K), was: new Uint8Array(K), x0: 0, x1: 0, y0: 0, y1: 0, kw: 1, raf: 0, last: 0 };
+for (let k = 0; k < K; k++) { const d = document.createElement('div'); d.className = 'key'; d.innerHTML = '<span>' + KEYMAP[k] + '</span>'; keysEl.appendChild(d); }
+const keyDivs = [...keysEl.children];
+function pianoLayout() {
+  const r = keysEl.getBoundingClientRect();
+  Pn.x0 = Math.round(r.left / S.cw); Pn.x1 = Math.round(r.right / S.cw); Pn.y0 = Math.round(r.top / S.ch); Pn.y1 = Math.round(r.bottom / S.ch);
+  Pn.kw = (Pn.x1 - Pn.x0) / K;
 }
-function tone(b) {
-  audio();
-  const AC = hum.AC;
+function drawKey(k) {
+  const xa = Math.round(Pn.x0 + k * Pn.kw), xb = Math.round(Pn.x0 + (k + 1) * Pn.kw), { y0, y1 } = Pn, h = y1 - y0;
+  eng.wipe(xa, y0, k === K - 1 ? xb + 1 : xb, y1);
+  const en = Pn.E[k] + 0.22 * ((k > 0 ? Pn.E[k - 1] : 0) + (k < K - 1 ? Pn.E[k + 1] : 0));
+  const mid = (xa + xb) / 2, hw = Math.max(1, (xb - xa) / 2), front = Pn.age[k] * h * 1.1;
+  for (let r = y0; r < y1; r++) {
+    const edge = r === y0 || r === y1 - 1, dr = Math.abs(r - Pn.hit[k]);
+    const base = en * (0.28 + 0.72 * Math.exp(-((dr / (h * 0.6)) ** 2))) + Pn.E[k] * 0.9 * Math.exp(-(((dr - front) / 2.4) ** 2));
+    for (let c = xa; c <= (k === K - 1 ? xb : xb - 1); c++) {
+      if (c === xa || c === xb) { eng.put(c, r, edge ? 5 : 10, en > 0.25 ? 1 : 0); continue; }
+      if (edge) { eng.put(c, r, 3, en > 0.3 ? 2 : 0); continue; }
+      const v = base * (1 - 0.4 * (((c + 0.5 - mid) / hw) ** 2));
+      if (v < 0.09) { if ((r + c) % 4 === 0) eng.put(c, r, 1, 0); continue; }
+      const [ci, col] = glyphFor(v, false); eng.put(c, r, ci, col);
+    }
+  }
+}
+const drawKeys = () => { for (let k = 0; k < K; k++) drawKey(k); };
+function pianoTick(t) {
+  Pn.raf = 0; if (scene !== 'piano') return;
+  if (t - Pn.last < 30) { Pn.raf = requestAnimationFrame(pianoTick); return; }
+  const dt = Math.min(0.1, (t - Pn.last) / 1000); Pn.last = t;
+  let live = false;
+  for (let k = 0; k < K; k++) { Pn.E[k] *= Math.exp(-dt * 2.4); Pn.age[k] += dt; if (Pn.E[k] < 0.01) Pn.E[k] = 0; }
+  const act = new Uint8Array(K);
+  for (let k = 0; k < K; k++) if (Pn.E[k] > 0 || Pn.was[k]) { act[Math.max(0, k - 1)] = act[k] = act[Math.min(K - 1, k + 1)] = 1; }
+  for (let k = 0; k < K; k++) if (act[k]) drawKey(k);
+  for (let k = 0; k < K; k++) { Pn.was[k] = Pn.E[k] > 0 ? 1 : 0; if (Pn.E[k] > 0) live = true; }
+  if (live) Pn.raf = requestAnimationFrame(pianoTick);
+}
+const kick = () => { if (!Pn.raf) { Pn.last = performance.now() - 40; Pn.raf = requestAnimationFrame(pianoTick); } };
+
+let AC, master, echo;
+function initAudio() {
+  if (!AC) {
+    AC = new (window.AudioContext || window.webkitAudioContext)();
+    master = AC.createGain(); master.gain.value = 0.6; master.connect(AC.destination);
+    echo = AC.createDelay(); echo.delayTime.value = 0.32;
+    const fb = AC.createGain(), wet = AC.createGain(); fb.gain.value = 0.36; wet.gain.value = 0.38;
+    echo.connect(fb); fb.connect(echo); echo.connect(wet); wet.connect(master);
+  }
   if (AC.state === 'suspended') AC.resume();
-  const f = 220 * Math.pow(2, (SCALE[b % 5] + 12 * Math.floor(b / 5)) / 12), t = AC.currentTime;
-  const g = AC.createGain();
-  g.gain.setValueAtTime(0, t);
-  g.gain.linearRampToValueAtTime(0.35, t + 0.01);
-  g.gain.exponentialRampToValueAtTime(0.0001, t + 1.6);
-  const o1 = AC.createOscillator(); o1.type = 'triangle'; o1.frequency.value = f;
-  const o2 = AC.createOscillator(); o2.type = 'sine'; o2.frequency.value = f * 2.003;
-  const g2 = AC.createGain(); g2.gain.value = 0.25;
-  o1.connect(g); o2.connect(g2); g2.connect(g);
-  g.connect(hum.master); g.connect(hum.delay);
+}
+function tone(k) {
+  initAudio();
+  const f = 220 * 2 ** ((SCALE[k % 5] + 12 * Math.floor(k / 5)) / 12), t = AC.currentTime, g = AC.createGain();
+  g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.34, t + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + 1.6);
+  const o1 = AC.createOscillator(), o2 = AC.createOscillator(), g2 = AC.createGain();
+  o1.type = 'triangle'; o1.frequency.value = f; o2.type = 'sine'; o2.frequency.value = f * 2.003; g2.gain.value = 0.25;
+  o1.connect(g); o2.connect(g2); g2.connect(g); g.connect(master); g.connect(echo);
   o1.start(t); o2.start(t); o1.stop(t + 1.7); o2.stop(t + 1.7);
 }
-function hit(b, origin) {
-  tone(b);
-  ripple(origin, { radius: 11, step: 20, peak: 2.6 });
-  // a beam of light down the whole band, rippling away from where you touched
-  const c0 = Math.floor(b * cols / BANDS), c1 = Math.floor((b + 1) * cols / BANDS), or = rowOf(origin);
-  const ids = [];
-  for (let r = 0; r < rows; r++) for (let c = c0; c < c1; c++) ids.push(r * cols + c);
-  if (reduce) return;
-  animate(ids.map(i => dots[i]), {
-    scale: [{ to: (el, j) => Math.max(rest[ids[j]].s, 3), duration: 140 }, { to: (el, j) => rest[ids[j]].s, duration: 560 }],
-    backgroundColor: [{ to: WHITE, duration: 140 }, { to: (el, j) => rest[ids[j]].c, duration: 560 }],
-    opacity: [{ to: 1, duration: 140 }, { to: (el, j) => rest[ids[j]].o, duration: 560 }],
-    delay: (el, j) => Math.abs(rowOf(ids[j]) - or) * 12,
-    ease: 'outQuad'
-  });
+function hit(k, y) {
+  if (k < 0 || k >= K) return;
+  tone(k); Pn.E[k] = 1; Pn.age[k] = 0; Pn.hit[k] = clamp(Math.round(y / S.ch), Pn.y0, Pn.y1 - 1);
+  keyDivs[k].classList.add('down'); setTimeout(() => keyDivs[k].classList.remove('down'), 160);
+  kick();
 }
-const humKey = e => {
-  if (e.repeat || e.metaKey || e.ctrlKey || e.altKey) return;
-  const b = KEYS.indexOf(e.key.toLowerCase());
-  if (b < 0) return;
-  hit(b, idx(Math.floor((b + 0.5) * cols / BANDS), Math.floor(rows * (0.25 + Math.random() * 0.5))));
-};
-scenes.hum = {
-  hint: 'tap, drag across it, or play  a s d f g h j k l ;',
-  targets: () => fill((c) => bandOf(c) % 2 ? S(1, 0.9, '#2f362f') : S(1, REST_O, DIMC)),
-  enter() { addEventListener('keydown', humKey); },
-  exit() { removeEventListener('keydown', humKey); hum.down = false; hum.band = -1; },
-  down(e, i) { hum.down = true; hum.band = bandOf(colOf(i)); hit(hum.band, i); },
-  move(e, i) { if (!hum.down) return; const b = bandOf(colOf(i)); if (b !== hum.band) { hum.band = b; hit(b, i); } },
-  up() { hum.down = false; hum.band = -1; }
-};
+function pianoKey(e) {
+  if (e.repeat) return;
+  const k = KEYMAP.indexOf(e.key.toLowerCase()); if (k < 0) return;
+  hit(k, (Pn.y0 + Pn.y1 + (Math.random() - 0.5) * (Pn.y1 - Pn.y0) * 0.6) / 2 * S.ch);
+}
+const down = new Map();
+const keyAt = x => { const r = keysEl.getBoundingClientRect(); return Math.floor((x - r.left) / r.width * K); };
+keysEl.addEventListener('pointerdown', e => { keysEl.setPointerCapture(e.pointerId); const k = keyAt(e.clientX); down.set(e.pointerId, k); hit(k, e.clientY); });
+keysEl.addEventListener('pointermove', e => { if (!down.has(e.pointerId)) return; const k = keyAt(e.clientX); if (k !== down.get(e.pointerId)) { down.set(e.pointerId, k); hit(k, e.clientY); } });
+['pointerup', 'pointercancel'].forEach(n => keysEl.addEventListener(n, e => down.delete(e.pointerId)));
 
-/* ════════════════════════════════════════════════════════════════════
-   ROUTER + INPUT
-   ════════════════════════════════════════════════════════════════════ */
+/* ─────────── light, routing, resize ─────────── */
+const light = eng.createLight(() => { if (scene !== 'piano') drawTiger(); });
+addEventListener('pointermove', e => { if (scene !== 'piano') light.set(...eng.lightFromPointer(e.clientX, e.clientY)); }, { passive: true });
+addEventListener('pointerdown', e => { if (scene !== 'piano') light.set(...eng.lightFromPointer(e.clientX, e.clientY)); }, { passive: true });
+document.addEventListener('pointerleave', () => { if (scene !== 'piano' && matchMedia('(hover:hover)').matches) light.set(-0.55, -0.7); });
 
-function go(name) { location.hash = name === 'home' ? '' : '#' + name; if (name === 'home') route(); }
-
-let booted = false;
+function paint() {
+  if (scene === 'piano') { eng.wipeAll(); pianoLayout(); drawKeys(); }
+  else drawTiger();
+}
 function route() {
-  const raw = location.hash.replace(/^#\/?/, '');
-  const name = scenes[raw] ? raw : 'home';
-  if (booted && name === currentName) return;
-
-  if (booted) { scenes[currentName].exit && scenes[currentName].exit(); }
-  const first = !booted;
-  const prev = currentName;
-  currentName = name;
-  const sc = scenes[name];
-
-  nav.querySelectorAll('a[data-s]').forEach(a => a.classList.toggle('on', a.dataset.s === name));
-  back.classList.toggle('show', name !== 'home');
-  document.title = name === 'home' ? 'Blue Tiger Inc Studios' : name + ' · Blue Tiger Inc Studios';
-
-  rest = sc.targets();
-
-  if (name === 'home') {
-    if (first) {
-      applyNow(fill(() => S(0, 0, DIMC)));
-      animate(dots, { scale: [0, 1], opacity: [0, REST_O], duration: 800, ease: 'outBack', delay: stagger(reduce ? 0 : 8, { grid: [cols, rows], from: 'center' }) });
-      setHint('');
-      typeSequence(() => {
-        nav.classList.add('show'); setHint(sc.hint);
-        ripple(centerIdx(), { radius: 20, step: 28, peak: 2.2 });
-      });
-    } else {
-      morph(rest, ptr.cell >= 0 ? ptr.cell : centerIdx());
-      showHero(); setHint(sc.hint);
-    }
-    sc.enter && sc.enter();
-  } else {
-    if (first) { heroVisible = false; stage.style.display = 'none'; applyNow(fill(() => S(0, 0, DIMC))); nav.classList.add('show'); }
-    else hideHero();
-    setHint(sc.hint);
-    morph(rest, ptr.cell >= 0 ? ptr.cell : centerIdx(), () => { if (currentName === name) sc.settle ? sc.settle() : null; });
-    sc.enter && sc.enter(false);
+  const h = location.hash.replace(/^#\/?/, '');
+  const s = h === 'piano' || h === 'hum' ? 'piano' : h === 'tiger' ? 'tiger' : 'home';
+  if (booted && s === scene) return;
+  const prev = scene; scene = s; body.dataset.scene = s;
+  document.title = s === 'home' ? 'Blue Tiger Inc Studios' : s + ' · Blue Tiger Inc Studios';
+  document.querySelectorAll('nav a[data-s]').forEach(a => a.classList.toggle('on', a.dataset.s === s));
+  if (!booted) return;
+  if (s === 'piano') { try { initAudio(); } catch (e) {} }
+  if ((prev === 'piano') !== (s === 'piano')) {
+    canvas.classList.add('swap');
+    setTimeout(() => { paint(); canvas.classList.remove('swap'); }, 190);
   }
-  booted = true;
+  if (s === 'home' && !typedDone) intro();
 }
-
 addEventListener('hashchange', route);
-addEventListener('keydown', e => { if (e.key === 'Escape' && currentName !== 'home') go('home'); });
 
-/* pointer: one listener, routed to the active scene; a pixel-snapped ring follows the cursor */
-let ringA = null;
-function track(e) {
-  ptr.px = e.clientX; ptr.py = e.clientY;
-  const i = cellAt(ptr.px, ptr.py);
-  if (finePointer && i >= 0) {
-    if (!ringA) ringA = createAnimatable(ring, { x: 200, y: 200, ease: 'out(3)' });
-    ring.classList.add('on');
-    ringA.x(ox + colOf(i) * cell).y(oy + rowOf(i) * cell);
-  }
-  return i;
-}
-addEventListener('pointermove', e => {
-  const i = track(e);
-  if (i < 0 || i === ptr.cell) return;
-  ptr.cell = i;
-  const sc = scenes[currentName]; sc.move && sc.move(e, i);
-}, { passive: true });
-addEventListener('pointerdown', e => {
-  const i = track(e); if (i < 0) return;
-  ptr.cell = i;
-  const sc = scenes[currentName]; sc.down && sc.down(e, i);
-}, { passive: true });
-addEventListener('pointerup', e => { const sc = scenes[currentName]; sc.up && sc.up(e); });
-addEventListener('pointercancel', e => { const sc = scenes[currentName]; sc.up && sc.up(e); });
-document.addEventListener('mouseleave', () => ring.classList.remove('on'));
-
-/* resize: rebuild the grid and snap the current scene into place */
-let rz = 0;
+let rz = 0, lastW = innerWidth, lastH = innerHeight;
 addEventListener('resize', () => {
-  clearTimeout(rz);
-  rz = setTimeout(() => {
-    const sc = scenes[currentName];
-    sc.exit && sc.exit();
-    layout();
-    rest = sc.targets();
-    applyNow(rest);
-    if (sc.settle) sc.settle(); else if (sc.enter) sc.enter(true);
-  }, 200);
+  if (innerWidth === lastW && Math.abs(innerHeight - lastH) < 140) return;   // phone address bar
+  clearTimeout(rz); rz = setTimeout(() => { lastW = innerWidth; lastH = innerHeight; eng.layout(); buildTiger(); T.rev = 9; paint(); }, 160);
 });
 
-layout();
-route();
-
+async function start() {
+  try { await Promise.race([document.fonts.load('16px "Geist Pixel"'), new Promise(r => setTimeout(r, 1500))]); } catch (e) {}
+  eng.layout(); buildTiger();
+  route(); booted = true;
+  const first = scene;
+  if (first === 'piano') { paint(); } else { T.rev = 0; eng.tween(1500, k => { T.rev = k * 1.35; drawTiger(); }); }
+  if (first === 'home') intro(); else { typedDone = false; }
+  document.fonts.ready.then(() => { eng.layout(); buildTiger(); T.rev = 9; paint(); });
+}
+start();
 })();
 </script>
 </body>
