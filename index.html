@@ -17,9 +17,10 @@
   --pad:clamp(16px,3.2vw,32px);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html,body{width:100%;height:100dvh;background:var(--bg);color:var(--ink);overflow:hidden;
+html{overscroll-behavior:none}
+html,body{width:100%;height:100dvh;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;background:var(--bg);color:var(--ink);overflow:hidden;
   font:500 15px/1.4 var(--sans);font-synthesis:none;-webkit-font-smoothing:antialiased;
-  -webkit-tap-highlight-color:transparent;text-transform:lowercase}
+  -webkit-tap-highlight-color:transparent}
 body{touch-action:none}
 a{color:inherit;text-decoration:none}
 a:focus-visible,button:focus-visible{outline:2px solid var(--teal);outline-offset:3px;border-radius:8px}
@@ -30,9 +31,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--teal);outline-offse
 header{position:fixed;z-index:10;left:0;right:0;top:0;display:flex;align-items:center;justify-content:space-between;
   padding:max(14px,env(safe-area-inset-top)) var(--pad) 22px;
   background:linear-gradient(var(--bg) 40%,rgba(4,5,4,0))}
-.brand{display:flex;align-items:center;gap:10px;min-height:40px;font-size:15px;letter-spacing:-.01em}
-.mark{width:10px;height:10px;background:var(--teal);box-shadow:0 0 14px rgba(0,196,182,.55)}
-.brand .long{color:var(--dim)}
+.brand{display:flex;align-items:center;gap:6px;min-height:40px;font-size:15px;letter-spacing:-.01em}
 nav{display:flex;align-items:center;gap:4px}
 nav a{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 12px;border-radius:9px;color:var(--dim);transition:color .15s,background .15s,border-color .15s}
 nav a:hover{color:var(--ink)}
@@ -48,76 +47,53 @@ nav a.yt:hover{border-color:var(--teal);color:var(--teal)}
   font-size:15px;border:1px solid var(--line);color:var(--ink);background:rgba(4,5,4,.5);transition:border-color .15s,background .15s,transform .1s,box-shadow .2s}
 .btn:hover{border-color:#3a443a;background:#0b0e0b}
 .btn:active{transform:translateY(1px)}
-.btn.primary{background:var(--teal);border-color:var(--teal);color:#021210;
-  box-shadow:0 0 0 1px rgba(0,196,182,.25),0 10px 34px -10px rgba(0,196,182,.6)}
+.btn.primary{background:var(--teal);border-color:var(--teal);color:#021210;}
 .btn.primary:hover{background:#17d8ca;border-color:#17d8ca}
 
 .pix{font-family:var(--pixel);font-weight:400}
 .hint{position:fixed;z-index:5;left:0;right:0;bottom:max(20px,env(safe-area-inset-bottom));text-align:center;font-size:13px;color:var(--faint);pointer-events:none}
 .hint b{font-family:var(--pixel);font-weight:400;color:var(--dim)}
-@media(max-width:520px){.brand .long{display:none}nav a{padding:0 10px}}
+
+
+.btn .arr{transition:transform .2s ease}.btn:hover .arr{transform:translate(2px,-2px)}
 
 #world{opacity:.17}
-body[data-scene=tiger] #world,body[data-scene=piano] #world{opacity:1}
-#world.swap{opacity:0!important;transition-duration:.18s}
-
+body[data-scene=tiger] #world{opacity:1}
 #stage{position:fixed;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:64px var(--pad) 40px;pointer-events:none;transition:opacity .35s ease,transform .35s ease}
-body:not([data-scene=home]) #stage{opacity:0;transform:translateY(8px);visibility:hidden;transition:opacity .25s,transform .25s,visibility 0s .25s}
-#hero{font-family:var(--pixel);font-weight:400;font-size:clamp(2.6rem,min(12.4vw,16vh),11rem);line-height:1.04;text-align:center;
-  white-space:pre-wrap;overflow-wrap:anywhere;max-width:min(94vw,1400px);color:var(--ink);
-  text-shadow:0 2px 30px #040504,0 0 3px #040504}
+  padding:64px var(--pad) 40px;pointer-events:none}
+body[data-scene=tiger] #stage{opacity:0;visibility:hidden;transition:opacity .3s .35s,visibility 0s .7s}
+#hero{pointer-events:auto;font-family:var(--pixel);font-weight:400;font-size:clamp(2.6rem,min(12.4vw,16vh),11rem);line-height:1.04;text-align:center;
+  overflow-wrap:anywhere;max-width:min(94vw,1400px);color:var(--ink);position:relative;isolation:isolate}
+#hero::before{content:'';position:absolute;inset:-18% -8%;z-index:-1;background:radial-gradient(ellipse at center,rgba(4,5,4,.78),rgba(4,5,4,0) 68%);pointer-events:none}
+#hero .ch{display:inline-block;white-space:pre;will-change:transform}
+#world.swap{opacity:0!important;transition-duration:.18s}
+body.portrait[data-scene=home] #world{opacity:1}
+body.portrait #stage{justify-content:flex-end;padding-bottom:max(44px,calc(env(safe-area-inset-bottom) + 30px))}
+body.portrait #hero{font-size:clamp(2.4rem,13vw,5.5rem)}
+body.portrait #cta{width:min(340px,100%)}body.portrait #cta .btn{width:100%;height:54px;font-size:16px}
 #hero .t{color:var(--teal)}
 #cur{display:inline-block;width:.5em;height:.8em;margin-left:.06em;vertical-align:-.04em;background:var(--teal);animation:blink 1.1s steps(1) infinite}
 @keyframes blink{50%{opacity:0}}
-#cta{margin-top:clamp(1.4rem,4.5vh,2.6rem);pointer-events:auto;opacity:0;transform:translateY(6px);transition:opacity .6s ease,transform .6s ease}
-#cta.show{opacity:1;transform:none}
-@media(max-width:520px){#cta{flex-direction:column;width:min(300px,100%)}#cta .btn{width:100%}}
-
-#keys{position:fixed;z-index:3;left:50%;transform:translateX(-50%);width:min(1100px,calc(100vw - 2*max(5vw,18px)));
-  top:84px;bottom:calc(92px + env(safe-area-inset-bottom));display:none;touch-action:none;cursor:pointer}
-body[data-scene=piano] #keys{display:flex}
-.key{flex:1;position:relative}
-.key span{position:absolute;left:0;right:0;bottom:-2.1rem;text-align:center;font:400 14px var(--pixel);color:var(--faint);transition:color .15s}
-.key.down span{color:var(--teal)}
-@media(hover:none){.key span{display:none}}
-.hint>span{display:none}
-body[data-scene=home] .hint .h{display:inline}
-body[data-scene=tiger] .hint .t{display:inline}
-body[data-scene=piano] .hint .p{display:inline}
-@media(hover:none){.fine{display:none!important}}
-@media(hover:hover){.coarse{display:none!important}}
+#cta{margin-top:clamp(1.4rem,4.5vh,2.6rem);pointer-events:auto;opacity:0}
+#cta.show{opacity:1}
 </style>
 </head>
 <body data-scene="home">
 <canvas id="world" aria-hidden="true"></canvas>
 
 <header>
-  <a class="brand" href="#" aria-label="blue tiger inc studios, home"><i class="mark"></i><span>blue tiger<span class="long"> inc studios</span></span></a>
-  <nav aria-label="main">
-    <a href="#tiger" data-s="tiger">tiger</a>
-    <a href="#piano" data-s="piano">piano</a>
-    <a class="yt" href="https://youtube.com/@BlueTigerIncStudios" target="_blank" rel="noopener">youtube <svg class="arr" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" aria-hidden="true"><path d="M3 9l6-6M4 3h5v5"/></svg></a>
-  </nav>
+  <a class="brand" href="#" id="brand" aria-label="Blue Tiger Inc Studios, home"><span id="brandt">Blue Tiger Inc Studios</span></a>
 </header>
 
 <main id="stage">
-  <h1 id="hero" aria-label="sup, im the blue tiger."><span id="t1"></span>
-<span id="t2" class="t"></span><i id="cur"></i></h1>
+  <h1 id="hero" aria-label="sup, im the blue tiger."><span id="t1"></span><br><span id="t2" class="t"></span><i id="cur"></i></h1>
   <div id="cta" class="btns">
-    <a class="btn primary" href="https://youtube.com/@BlueTigerIncStudios" target="_blank" rel="noopener">watch on youtube <svg class="arr" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" aria-hidden="true"><path d="M3 9l6-6M4 3h5v5"/></svg></a>
-    <a class="btn" href="#piano">play the piano</a>
+    <a class="btn primary" href="https://youtube.com/@BlueTigerIncStudios" target="_blank" rel="noopener">Watch on YouTube <svg class="arr" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" aria-hidden="true"><path d="M3 9l6-6M4 3h5v5"/></svg></a>
   </div>
 </main>
 
-<div id="keys" role="group" aria-label="piano"></div>
-
-<p class="hint">
-  <span class="h"><span class="fine">type something. try <b>piano</b></span><span class="coarse">drag to move the light</span></span>
-  <span class="t"><span class="fine">move your cursor. it watches you</span><span class="coarse">drag to move the light</span></span>
-  <span class="p"><span class="fine">tap, drag, or play <b>a s d f g h j k</b></span><span class="coarse">tap or drag across the keys</span></span>
-</p>
-
+<script>(()=>{var Oe=typeof window<"u",Ft=Oe?window:null,tt=Oe?document:null,V={OBJECT:0,ATTRIBUTE:1,CSS:2,TRANSFORM:3,CSS_VAR:4},g={NUMBER:0,UNIT:1,COLOR:2,COMPLEX:3},Q={NONE:0,AUTO:1,FORCE:2},$={replace:0,none:1,blend:2},us=Symbol(),$e=Symbol(),kt=Symbol(),st=Symbol(),Fs=Symbol(),T=1e-11,Ct=1e12,Xe=1e3,Rt=240,Ve="",ks="var(",At=[],Bt=(()=>{let e=new Map;return e.set("x","translateX"),e.set("y","translateY"),e.set("z","translateZ"),e})(),pt=["perspective","translateX","translateY","translateZ","rotate","rotateX","rotateY","rotateZ","scale","scaleX","scaleY","scaleZ","skew","skewX","skewY"],Bs=pt.reduce((e,t)=>({...e,[t]:t+"("}),{}),he=()=>{},$s=e=>e,Xs=/\)\s*[-.\d]/,qs=/(^#([\da-f]{3}){1,2}$)|(^#([\da-f]{4}){1,2}$)/i,zs=/rgb\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/i,Ys=/rgba\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(-?\d+|-?\d*.\d+)\s*\)/i,Zs=/hsl\(\s*(-?\d+|-?\d*.\d+)\s*,\s*(-?\d+|-?\d*.\d+)%\s*,\s*(-?\d+|-?\d*.\d+)%\s*\)/i,Hs=/hsla\(\s*(-?\d+|-?\d*.\d+)\s*,\s*(-?\d+|-?\d*.\d+)%\s*,\s*(-?\d+|-?\d*.\d+)%\s*,\s*(-?\d+|-?\d*.\d+)\s*\)/i,fs=/[-+]?\d*\.?\d+(?:e[-+]?\d)?/gi,$t=/^([-+]?\d*\.?\d+(?:e[-+]?\d+)?)([a-z]+|%)$/i,Js=/([a-z])([A-Z])/g,Ws=/(\*=|\+=|-=)/,Ks=/var\(\s*(--[\w-]+)(?:\s*,\s*([^)]+))?\s*\)/;var ht={id:null,keyframes:null,playbackEase:null,playbackRate:1,frameRate:Rt,loop:0,reversed:!1,alternate:!1,autoplay:!0,persist:!1,duration:Xe,delay:0,loopDelay:0,ease:"out(2)",composition:$.replace,modifier:$s,onBegin:he,onBeforeUpdate:he,onUpdate:he,onLoop:he,onPause:he,onComplete:he,onRender:he},Et={current:null,root:tt},v={defaults:ht,precision:4,timeScale:1,tickThreshold:200,editor:null},ds={version:"4.5.0",engine:null};Oe&&(Ft.AnimeJS||(Ft.AnimeJS=[]),Ft.AnimeJS.push(ds));var ms=e=>e.replace(Js,"$1-$2").toLowerCase(),Ee=(e,t)=>e.indexOf(t)===0,Je=Date.now,we=Array.isArray,it=e=>e&&e.constructor===Object,ge=e=>typeof e=="number"&&!isNaN(e),ye=e=>typeof e=="string",_e=e=>typeof e=="function",p=e=>typeof e>"u",qe=e=>p(e)||e===null,Xt=e=>Oe&&e instanceof SVGElement,ps=e=>qs.test(e),hs=e=>Ee(e,"rgb"),_s=e=>Ee(e,"hsl"),js=e=>ps(e)||(hs(e)||_s(e))&&(e[e.length-1]===")"||!Xs.test(e)),Dt=e=>!v.defaults.hasOwnProperty(e),Er=["opacity","rotate","overflow","color"],Qs=(e,t)=>{if(Er.includes(t))return!1;if(e.getAttribute(t)||t in e){if(t==="scale"){let s=e.parentNode;return s&&s.tagName==="filter"}return!0}},qt=e=>ye(e)?parseFloat(e):e,at=Math.pow,Nt=Math.sqrt,er=Math.sin,tr=Math.cos,Pt=Math.abs;var lt=Math.floor,sr=Math.asin;var It=Math.PI,Gs=Math.round,be=(e,t,s)=>e<t?t:e>s?s:e,E=(e,t)=>{if(t<0)return e;if(!t)return Gs(e);let s=10**t;return Gs(e*s)/s};var _t=(e,t,s)=>s===1?t:s===0?e:e+(t-e)*s,ct=e=>e===1/0?Ct:e===-1/0?-Ct:e,We=e=>e<=T?T:ct(E(e,11)),W=e=>we(e)?[...e]:e,zt=(e,t)=>{let s={...e};for(let r in t){let n=e[r];s[r]=p(n)?t[r]:n}return s},P=(e,t,s,r="_prev",n="_next")=>{let o=e._head,i=n;for(s&&(o=e._tail,i=r);o;){let a=o[i];t(o),o=a}},Ke=(e,t,s="_prev",r="_next")=>{let n=t[s],o=t[r];n?n[r]=o:e._head=o,o?o[s]=n:e._tail=n,t[s]=null,t[r]=null},Fe=(e,t,s,r="_prev",n="_next")=>{let o=e._tail;for(;o&&s&&s(o,t);)o=o[r];let i=o?o[n]:e._head;o?o[n]=t:e._head=t,i?i[r]=t:e._tail=t,t[r]=o,t[n]=i};var rr=(e,t,s)=>{let r=e.style.transform;if(r){let n=e[st],o=0,i=r.length,a;for(;o<i;){for(;o<i&&r.charCodeAt(o)===32;)o++;if(o>=i)break;let c=o;for(;o<i&&r.charCodeAt(o)!==40;)o++;if(o>=i)break;let u=r.substring(c,o),f=1,m=o+1,h=-1,b=-1;for(o++;o<i&&f>0;){let K=r.charCodeAt(o);K===40?f++:K===41?f--:K===44&&f===1&&(h===-1?h=o:b===-1&&(b=o)),o++}let S=o-1;u==="translate"||u==="translate3d"?(h===-1?n.translateX=r.substring(m,S).trim():(n.translateX=r.substring(m,h).trim(),b===-1?n.translateY=r.substring(h+1,S).trim():(n.translateY=r.substring(h+1,b).trim(),n.translateZ=r.substring(b+1,S).trim())),a=r.substring(m,S)):u==="scale"||u==="scale3d"?h===-1?n.scale=r.substring(m,S).trim():(n.scaleX=r.substring(m,h).trim(),b===-1?n.scaleY=r.substring(h+1,S).trim():(n.scaleY=r.substring(h+1,b).trim(),n.scaleZ=r.substring(b+1,S).trim())):n[u]=r.substring(m,S)}if(t==="translate3d"&&a)return s&&(s[t]=a),a;let l=n[t];if(!p(l))return s&&(s[t]=l),l}return t==="translate3d"?"0px, 0px, 0px":t==="rotate3d"?"0, 0, 0, 0deg":Ee(t,"scale")?"1":Ee(t,"rotate")||Ee(t,"skew")?"0deg":"0px"},Yt=e=>{let t=Ve;for(let s=0,r=pt.length;s<r;s++){let n=pt[s],o=e[n];if(o!==void 0){if(n==="translateX"){let i=e.translateY;if(i!==void 0){let a=e.translateZ;a!==void 0?(t+=`translate3d(${o},${i},${a}) `,s+=2):(t+=`translate(${o},${i}) `,s+=1);continue}}if(n==="scaleX"&&e.scale===void 0){let i=e.scaleY;if(i!==void 0){let a=e.scaleZ;a!==void 0?(t+=`scale3d(${o},${i},${a}) `,s+=2):(t+=`scale(${o},${i}) `,s+=1);continue}}t+=`${Bs[n]}${o}) `}n==="rotateZ"&&e.rotate3d!==void 0&&(t+=`rotate3d(${e.rotate3d}) `)}return e.matrix!==void 0&&(t+=`matrix(${e.matrix}) `),e.matrix3d!==void 0&&(t+=`matrix3d(${e.matrix3d}) `),t};var Ts=[];function Zt(e,t){if(!e)return null;let s=Ts.length;e:for(let r=0;r<s;r++){let n=Ts[r];if(n.detect&&!n.detect(e))continue;let o=n.targetAdapters;for(let i=0,a=o.length;i<a;i++){let l=o[i];if(l.detect(e)){let c=l.props[t];if(c&&(!c.gate||c.gate(e)))return c;break e}}}for(let r=0;r<s;r++){let n=Ts[r];if(n.detect&&!n.detect(e))continue;let o=n.propertyResolvers;for(let i=0,a=o.length;i<a;i++){let l=o[i](e,t);if(l)return l}}return null}var Dr=e=>{let t=zs.exec(e)||Ys.exec(e),s=p(t[4])?1:+t[4];return[+t[1],+t[2],+t[3],s]},Nr=e=>{let t=e.length,s=t===4||t===5;return[+("0x"+e[1]+e[s?1:2]),+("0x"+e[s?2:3]+e[s?2:4]),+("0x"+e[s?3:5]+e[s?3:6]),t===5||t===9?+(+("0x"+e[s?4:7]+e[s?4:8])/255).toFixed(3):1]},gs=(e,t,s)=>(s<0&&(s+=1),s>1&&(s-=1),s<1/6?e+(t-e)*6*s:s<1/2?t:s<2/3?e+(t-e)*(2/3-s)*6:e),Pr=e=>{let t=Zs.exec(e)||Hs.exec(e),s=+t[1]/360,r=+t[2]/100,n=+t[3]/100,o=p(t[4])?1:+t[4],i,a,l;if(r===0)i=a=l=n;else{let c=n<.5?n*(1+r):n+r-n*r,u=2*n-c;i=E(gs(u,c,s+1/3)*255,0),a=E(gs(u,c,s)*255,0),l=E(gs(u,c,s-1/3)*255,0)}return[i,a,l,o]},nr=e=>hs(e)?Dr(e):ps(e)?Nr(e):_s(e)?Pr(e):[0,0,0,1];var X=(e,t)=>p(e)?t:e,or=(e,t)=>{let s=e.match(Ks),r=t[$e]?t:document.documentElement,n=getComputedStyle(r)?.getPropertyValue(s[1]);return(!n||n.trim()===Ve)&&s[2]&&(n=s[2].trim()),n||0},ze=(e,t,s,r,n,o)=>{if(_e(e)){if(!n){let a=e(t,s,r,o);return isNaN(+a)?a||0:+a}let i=()=>{let a=e(t,s,r,o);return isNaN(+a)?a||0:+a};return n.func=i,i()}if(ye(e)&&Ee(e,ks)){if(!n)return or(e,t);let i=()=>or(e,t);return n.func=i,i()}return e},ys=(e,t)=>e[$e]?e[kt]&&Qs(e,t)?V.ATTRIBUTE:pt.includes(t)||Bt.get(t)?V.TRANSFORM:Ee(t,"--")?V.CSS_VAR:t in e.style?V.CSS:t in e?V.OBJECT:V.ATTRIBUTE:V.OBJECT,ir=(e,t,s)=>{let r=e.style[t];r&&s&&(s[t]=r);let n=r||getComputedStyle(e[Fs]||e).getPropertyValue(t);return n==="auto"?"0":n},rt=(e,t,s,r)=>{let n=p(s)?ys(e,t):s,o=Zt(e,t);if(o){let i=o.get(e);return i&&r&&(r[t]=i),i??0}if(n===V.OBJECT){let i=e[t];return i&&r&&(r[t]=i),i||0}if(n===V.ATTRIBUTE){let i=e.getAttribute(t);return i&&r&&(r[t]=i),i}return n===V.TRANSFORM?rr(e,t,r):n===V.CSS_VAR?ir(e,t,r).trimStart():ir(e,t,r)},Tt=(e,t,s)=>s==="-"?e-t:s==="+"?e+t:e*t,Ht=()=>({t:g.NUMBER,n:0,u:null,o:null,d:null,s:null}),xe=(e,t)=>{if(t.t=g.NUMBER,t.n=0,t.u=null,t.o=null,t.d=null,t.s=null,!e)return t;let s=+e;if(!isNaN(s))return t.n=s,t;let r=e;r[1]==="="&&(t.o=r[0],r=r.slice(2));let n=r.includes(" ")?!1:$t.exec(r);if(n)return t.t=g.UNIT,t.n=+n[1],t.u=n[2],t;if(t.o)return t.n=+r,t;if(js(r))return t.t=g.COLOR,t.d=nr(r),t;{let o=r.match(fs);return t.t=g.COMPLEX,t.d=o?o.map(Number):[],t.s=r.split(fs)||[],t}},bs=(e,t)=>(t.t=e._valueType,t.n=e._toNumber,t.u=e._unit,t.o=null,t.d=W(e._toNumbers),t.s=W(e._strings),t),De=Ht(),Jt=(e,t,s)=>{let r=e._modifier,n=e._fromNumbers,o=e._toNumbers,i=e._strings,a=i[0];for(let l=0,c=o.length;l<c;l++){let u=r(E(_t(n[l],o[l],t),s)),f=i[l+1];a+=`${f?u+f:u}`,e._numbers[l]=u}return a};var Ot=(e,t,s,r,n)=>{let o=e.parent,i=e.duration,a=e.completed,l=e.iterationDuration,c=e.iterationCount,u=e._currentIteration,f=e._loopDelay,m=e._reversed,h=e._alternate,b=e._hasChildren,S=e._delay,K=e._currentTime,ve=S+l,Y=t-S,le=be(K,-S,i),Z=be(Y,-S,i),oe=Y-K,w=Z>0,fe=Z>=i,Me=i<=T,Ne=n===Q.FORCE,Pe=0,Se=Y,ke=0;if(c>1){let Ue=l+(fe?0:f),ie=~~(Z/Ue);e._currentIteration=be(ie,0,c),fe&&e._currentIteration--,Pe=e._currentIteration%2,Se=Z-ie*Ue||0}let He=m^(h&&Pe),Ce=e._ease,F=fe?He?0:i:He?l-Se:Se;Ce&&(F=l*Ce(F/l)||0);let H=(o?o.backwards:Y<K)?!He:!!He;if(e._currentTime=Y,e._iterationTime=F,e.backwards=H,w&&!e.began?(e.began=!0,!s&&!(o&&(H||!o.began))&&e.onBegin(e)):Y<=0&&(e.began=!1),!s&&!b&&w&&e._currentIteration!==u&&e.onLoop(e),Ne||n===Q.AUTO&&(t>=(o&&S>0?0:S)&&t<=ve||t<=S&&le>S||t>=ve&&le!==i)||F>=ve&&le!==i||F<=S&&le>0&&!fe||t<=le&&le===i&&a||fe&&!a&&Me){if(w&&(e.computeDeltaTime(le),s||e.onBeforeUpdate(e)),!b){let Ue=Ne||(H?oe*-1:oe)>=v.tickThreshold,ie=E(e._offset+(o?o._offset:0)+S+F,12),d=e._head,O,te,de,Qe,Be=0;for(;d;){let me=d._composition,R=d._currentTime,Re=d._changeDuration,ce=d._absoluteStartTime+d._changeDuration,D=d._nextRep,ue=d._prevRep,ae=me!==$.none,x=ue?ue._absoluteStartTime+ue._changeDuration:0,M=ue&&ue.parent!==d.parent,se=!D||D._isOverridden?ce:D.parent===d.parent?ce+D._delay:D._absoluteStartTime<D._absoluteUpdateStartTime?D._absoluteStartTime:D._absoluteUpdateStartTime;if((Ue||(R!==Re||ie<=se||ue&&!M&&(!D||D.parent!==d.parent))&&(R!==0||ie>=d._absoluteStartTime||M&&!d._hasFromValue&&!ue._isOverridden&&ie>=x||D&&!D._isOverridden&&D.parent===d.parent&&D._currentTime!==0&&F<D._startTime))&&(!ue||M||F>=d._startTime)&&(!ae||!d._isOverridden&&(!d._isOverlapped||ie<=ce)&&(!D||D._isOverridden||ie<=se)&&(!ue||ue._isOverridden||(M?ie>=d._absoluteStartTime||!d._hasFromValue&&ie>=x:ie>=x+d._delay)))){let re=d._currentTime=be(F-d._startTime,0,Re),U=d._ease(re/d._updateDuration),k=d._modifier,G=d._valueType,J=d._tweenType,Te=J===V.OBJECT,q=G===g.NUMBER,j=q&&Te||U===0||U===1?-1:v.precision,C,L;if(q)C=L=k(E(_t(d._fromNumber,d._toNumber,U),j));else if(G===g.UNIT)L=k(E(_t(d._fromNumber,d._toNumber,U),j)),C=`${L}${d._unit}`;else if(G===g.COLOR){let I=d._numbers,B=d._fromNumbers,N=d._toNumbers,ne=1-U,z=B[0],et=B[1],Le=B[2],mt=N[0],ot=N[1],vt=N[2];I[0]=k(Math.sqrt(z*z*ne+mt*mt*U)),I[1]=k(Math.sqrt(et*et*ne+ot*ot*U)),I[2]=k(Math.sqrt(Le*Le*ne+vt*vt*U)),I[3]=k(_t(B[3],N[3],U)),(!d._setter||r)&&(C=`rgba(${E(I[0],0)},${E(I[1],0)},${E(I[2],0)},${I[3]})`)}else G===g.COMPLEX&&(C=Jt(d,U,j));if(ae&&(d._number=L),!r&&me!==$.blend){let I=d.property;O=d.target,d._setter?d._setter(O,L,d):Te?O[I]=C:J===V.ATTRIBUTE?O.setAttribute(I,C):(te=O.style,J===V.TRANSFORM?(O!==de&&(de=O,Qe=O[st]),Qe[I]=C,Be=1):J===V.CSS?te[I]=C:J===V.CSS_VAR&&te.setProperty(I,C)),w&&(ke=1)}else d._value=C}else R&&ue&&!M&&F<d._startTime&&(d._currentTime=0);Be&&d._renderTransforms&&(te.transform=Yt(Qe),Be=0),d=d._next}!s&&ke&&e.onRender(e)}!s&&w&&e.onUpdate(e)}return o&&Me?!s&&(o.began&&!H&&Y>0&&!a||H&&Y<=T&&a)&&(e.onComplete(e),e.completed=!H):w&&fe?c===1/0?e._startTime+=e.duration:e._currentIteration>=c-1&&(e.paused=!0,!a&&!b&&(e.completed=!0,!s&&!(o&&(H||!o.began))&&(e.onComplete(e),e._resolve(e)))):e.completed=!1,ke},Ye=(e,t,s,r,n)=>{let o=e._currentIteration;if(Ot(e,t,s,r,n),e._hasChildren){let i=e,a=i.backwards,l=r?t:i._iterationTime,c=Je(),u=0,f=!0;if(!r&&i._currentIteration!==o){let m=i.iterationDuration;P(i,h=>{if(!a)!h.completed&&!h.backwards&&h._currentTime<h.iterationDuration&&Ot(h,m,s,1,Q.FORCE),h.began=!1,h.completed=!1;else{let b=h.duration,S=h._offset+h._delay,K=S+b;!s&&b<=T&&(!S||K===m)&&h.onComplete(h)}}),s||i.onLoop(i)}P(i,m=>{let h=E((l-m._offset)*m._speed,12);if(a&&h>m._delay+m.duration)return;let b=m._fps<i._fps?m.requestTick(c):n;u+=Ot(m,h,s,r,b),!m.completed&&f&&(f=!1)},a),!s&&u&&i.onRender(i),(f||a)&&i._currentTime>=i.duration&&(i.paused=!0,i.completed||(i.completed=!0,s||(i.onComplete(i),i._resolve(i))))}};var ar={},Wt=(e,t,s)=>{if(s===V.TRANSFORM){let r=Bt.get(e);return r||e}else if(s===V.CSS||s===V.ATTRIBUTE&&Xt(t)&&e in t.style){let r=ar[e];if(r)return r;{let n=e&&ms(e);return ar[e]=n,n}}else return e},Vt=(e,t=!1)=>{if(e._hasChildren)P(e,s=>Vt(s,t),!0);else{let s=e;s.pause(),P(s,r=>{let n=r.property,o=r.target,i=r._tweenType,a=r._inlineValue,l=qe(a)||a===Ve;if(r._setter){if(!t&&!l){if(xe(a,De),De.d){let c=De.d,u=r._numbers;for(let f=0,m=c.length;f<m;f++)u[f]=c[f]}else r._number=De.n;r._setter(r.target,r._number,r)}}else if(i===V.OBJECT)!t&&!l&&(o[n]=a);else if(o[$e])if(i===V.ATTRIBUTE)t||(l?o.removeAttribute(n):o.setAttribute(n,a));else{let c=o.style;if(i===V.TRANSFORM){let u=o[st];l?delete u[n]:u[n]=a,r._renderTransforms&&(Object.keys(u).length?c.transform=Yt(u):c.removeProperty("transform"))}else l?c.removeProperty(ms(n)):c[n]=a}o[$e]&&s._tail===r&&s.targets.forEach(c=>{c.getAttribute&&c.getAttribute("style")===Ve&&c.removeAttribute("style")})})}return e};var gt=class{constructor(t=0){this.deltaTime=0,this._currentTime=t,this._lastTickTime=t,this._startTime=t,this._lastTime=t,this._frameDuration=Xe/Rt,this._fps=Rt,this._speed=1,this._hasChildren=!1,this._head=null,this._tail=null}get fps(){return this._fps}set fps(t){let s=+t,r=s<T?T:s,n=Xe/r;r>ht.frameRate&&(ht.frameRate=r),this._fps=r,this._frameDuration=n}get speed(){return this._speed}set speed(t){let s=+t;this._speed=s<T?T:s}requestTick(t){let s=this._frameDuration,r=t-this._lastTickTime,n=s*.25,o=n<4?n:4;return r+o<s?Q.NONE:(this._lastTickTime=r>=s?t-r%s:t,Q.AUTO)}computeDeltaTime(t){let s=t-this._lastTime;return this.deltaTime=s,this._lastTime=t,s}};var Ge={animation:null,update:he},lr=e=>{let t=Ge.animation;return t||(t={duration:T,computeDeltaTime:he,_offset:0,_delay:0,_head:null,_tail:null},Ge.animation=t,Ge.update=()=>{e.forEach(s=>{for(let r in s){let n=s[r],o=n._head;if(o){let i=o._valueType,a=i===g.COMPLEX||i===g.COLOR?W(o._fromNumbers):null,l=o._fromNumber,c=n._tail;for(;c&&c!==o;){if(a)for(let u=0,f=c._numbers.length;u<f;u++)a[u]+=c._numbers[u];else l+=c._number;c=c._prevAdd}o._toNumber=l,o._toNumbers=a}}}),Ot(t,1,1,0,Q.FORCE)}),t};var cr=Oe?requestAnimationFrame:setImmediate,Ir=Oe?cancelAnimationFrame:clearImmediate,xs=class extends gt{constructor(t){super(t),this.useDefaultMainLoop=!0,this.pauseOnDocumentHidden=!0,this.defaults=ht,this.paused=!0,this.reqId=0}update(){let t=this._currentTime=Je();if(this.requestTick(t)){this.computeDeltaTime(t);let s=this._speed,r=this._fps,n=this._head;for(;n;){let o=n._next;n.paused?(Ke(this,n),this._hasChildren=!!this._tail,n._running=!1,n.completed&&!n._cancelled&&n.cancel()):Ye(n,(t-n._startTime)*n._speed*s,0,0,n._fps<r?n.requestTick(t):Q.AUTO),n=o}Ge.update()}}wake(){return this.useDefaultMainLoop&&!this.reqId&&(this.requestTick(Je()),this.reqId=cr(ur)),this}pause(){if(this.reqId)return this.paused=!0,Or()}resume(){if(this.paused)return this.paused=!1,P(this,t=>t.resetTime()),this.wake()}get speed(){return this._speed*(v.timeScale===1?1:Xe)}set speed(t){let s=t*v.timeScale;this._speed!==s&&(this._speed=s,P(this,r=>r.speed=r._speed))}get timeUnit(){return v.timeScale===1?"ms":"s"}set timeUnit(t){let r=t==="s",n=r?.001:1;if(v.timeScale!==n){v.timeScale=n,v.tickThreshold=200*n;let o=r?.001:Xe;this.defaults.duration*=o,this._speed*=o}}get precision(){return v.precision}set precision(t){v.precision=t}},ee=(()=>{let e=new xs(Je());return Oe&&(ds.engine=e,tt.addEventListener("visibilitychange",()=>{e.pauseOnDocumentHidden&&(tt.hidden?e.pause():e.resume())})),e})(),ur=()=>{ee._head?(ee.reqId=cr(ur),ee.update()):ee.reqId=0},Or=()=>(Ir(ee.reqId),ee.reqId=0,ee);var Kt={_rep:new WeakMap,_add:new Map},Mt=(e,t,s="_rep")=>{let r=Kt[s],n=r.get(e);return n||(n={},r.set(e,n)),n[t]?n[t]:n[t]={_head:null,_tail:null}},Vr=(e,t)=>e._isOverridden||e._absoluteStartTime>t._absoluteStartTime,wt=e=>{e._isOverlapped=1,e._isOverridden=1,e._changeDuration=T,e._currentTime=T},Gt=(e,t)=>{let s=e._composition;if(s===$.replace){let r=e._absoluteStartTime;Fe(t,e,Vr,"_prevRep","_nextRep");let n=e._prevRep;if(n){let o=n.parent,i=n._absoluteEndTime;if(e.parent.id!==o.id&&o.iterationCount>1&&i+(o.duration-o.iterationDuration)>r){wt(n);let c=n._prevRep;for(;c&&c.parent.id===o.id;)wt(c),c=c._prevRep}let a=e._absoluteUpdateStartTime;if(i>a){let c=n._startTime,u=i-(c+n._updateDuration),f=E(a-u-c,12);n._changeDuration=f,n._currentTime=f,n._isOverlapped=1,f<T&&wt(n)}let l=e.parent.parent;if(!l||l!==o.parent){let c=!0;if(P(o,u=>{u._isOverlapped||(c=!1)}),c){let u=o.parent;if(u){let f=!0;P(u,m=>{m!==o&&P(m,h=>{h._isOverlapped||(f=!1)})}),f&&u.cancel()}else o.cancel()}}}}else if(s===$.blend){let r=Mt(e.target,e.property,"_add"),n=lr(Kt._add),o=r._head;o||(o={...e},o._composition=$.replace,o._updateDuration=T,o._startTime=0,o._numbers=W(e._fromNumbers),o._number=0,o._next=null,o._prev=null,Fe(r,o),Fe(n,o));let i=e._toNumber;if(e._fromNumber=o._fromNumber-i,e._toNumber=0,e._numbers=W(e._fromNumbers),e._number=0,o._fromNumber=i,e._toNumbers.length){let a=W(e._toNumbers);a.forEach((l,c)=>{e._fromNumbers[c]=o._fromNumbers[c]-l,e._toNumbers[c]=0}),o._fromNumbers=a}Fe(r,e,null,"_prevAdd","_nextAdd")}return e},vs=e=>{let t=e._composition;if(t!==$.none){let s=e.target,r=e.property,i=Kt._rep.get(s)[r];if(Ke(i,e,"_prevRep","_nextRep"),t===$.blend){let a=Kt._add,l=a.get(s);if(!l)return;let c=l[r],u=Ge.animation;Ke(c,e,"_prevAdd","_nextAdd");let f=c._head;if(f&&f===c._tail){Ke(c,f,"_prevAdd","_nextAdd"),Ke(u,f);let m=!0;for(let h in l)if(l[h]._head){m=!1;break}m&&a.delete(s)}}}return e},fr=(e,t,s)=>{let r=!1;return P(t,n=>{let o=n.target;if(e.includes(o)){let i=n.property,a=n._tweenType,l=Wt(s,o,a);(!l||l&&l===i)&&(n.parent._tail===n&&n._tweenType===V.TRANSFORM&&n._prev&&n._prev._tweenType===V.TRANSFORM&&(n._prev._renderTransforms=1),Ke(t,n),vs(n),r=!0)}},!0),r},Ss=(e,t,s)=>{let r=t||ee,n;if(r._hasChildren){let o=0;P(r,i=>{if(!i._hasChildren)if(n=fr(e,i,s),n&&!i._head)i.cancel(),Ke(r,i);else{let l=i._offset+i._delay+i.duration;l>o&&(o=l)}i._head?Ss(e,i,s):i._hasChildren=!1},!0),p(r.iterationDuration)||(r.iterationDuration=o)}else n=fr(e,r,s);n&&!r._head&&(r._hasChildren=!1,r.cancel&&r.cancel())};var dr=e=>(e.paused=!0,e.began=!1,e.completed=!1,e),Cs=e=>(e._cancelled&&(e._hasChildren?P(e,Cs):P(e,t=>{t._composition!==$.none&&Gt(t,Mt(t.target,t.property))}),e._cancelled=0),e),mr=0,wr=(e,t)=>e._priority>t._priority,ut=class extends gt{constructor(t={},s=null,r=0){super(0),++mr;let{id:n,delay:o,duration:i,reversed:a,alternate:l,loop:c,loopDelay:u,autoplay:f,frameRate:m,playbackRate:h,priority:b,onComplete:S,onLoop:K,onPause:ve,onBegin:Y,onBeforeUpdate:le,onUpdate:Z}=t;Et.current&&Et.current.register(this);let oe=s?0:ee._lastTickTime,w=s?s.defaults:v.defaults,fe=_e(o)||p(o)?w.delay:+o,Me=_e(i)||p(i)?1/0:+i,Ne=X(c,w.loop),Pe=X(u,w.loopDelay),Se=Ne===!0||Ne===1/0||Ne<0?1/0:Ne+1,ke=0;s?ke=r:(ee.reqId||ee.requestTick(Je()),ke=(ee._lastTickTime-ee._startTime)*v.timeScale),this.id=p(n)?mr:n,this.parent=s,this.duration=ct((Me+Pe)*Se-Pe)||T,this.backwards=!1,this.paused=!0,this.began=!1,this.completed=!1,this.onBegin=Y||w.onBegin,this.onBeforeUpdate=le||w.onBeforeUpdate,this.onUpdate=Z||w.onUpdate,this.onLoop=K||w.onLoop,this.onPause=ve||w.onPause,this.onComplete=S||w.onComplete,this.iterationDuration=Me,this.iterationCount=Se,this._autoplay=s?!1:X(f,w.autoplay),this._offset=ke,this._delay=fe,this._loopDelay=Pe,this._iterationTime=0,this._currentIteration=0,this._resolve=he,this._running=!1,this._reversed=+X(a,w.reversed),this._reverse=this._reversed,this._cancelled=0,this._alternate=X(l,w.alternate),this._prev=null,this._next=null,this._lastTickTime=oe,this._startTime=oe,this._lastTime=oe,this._fps=X(m,w.frameRate),this._speed=X(h,w.playbackRate),this._priority=+X(b,1)}get cancelled(){return!!this._cancelled}set cancelled(t){t?this.cancel():this.reset(!0).play()}get currentTime(){return be(E(this._currentTime,v.precision),-this._delay,this.duration)}set currentTime(t){let s=this.paused;this.pause().seek(+t),s||this.resume()}get iterationCurrentTime(){return be(E(this._iterationTime,v.precision),0,this.iterationDuration)}set iterationCurrentTime(t){this.currentTime=this.iterationDuration*this._currentIteration+t}get progress(){return be(E(this._currentTime/this.duration,10),0,1)}set progress(t){this.currentTime=this.duration*t}get iterationProgress(){return be(E(this._iterationTime/this.iterationDuration,10),0,1)}set iterationProgress(t){let s=this.iterationDuration;this.currentTime=s*this._currentIteration+s*t}get currentIteration(){return this._currentIteration}set currentIteration(t){this.currentTime=this.iterationDuration*be(+t,0,this.iterationCount-1)}get reversed(){return!!this._reversed}set reversed(t){t?this.reverse():this.play()}get speed(){return super.speed}set speed(t){super.speed=t,this.resetTime()}reset(t=!1){return Cs(this),this._reversed&&!this._reverse&&(this.reversed=!1),this._iterationTime=this.iterationDuration,Ye(this,0,1,~~t,Q.FORCE),dr(this),this._hasChildren&&P(this,dr),this}init(t=!1){this.fps=this._fps,this.speed=this._speed,!t&&this._hasChildren&&Ye(this,this.duration,1,~~t,Q.FORCE),this.reset(t);let s=this._autoplay;return s===!0?this.resume():s&&!p(s.linked)&&s.link(this),this}resetTime(){let t=1/(this._speed*ee._speed);return this._startTime=Je()-(this._currentTime+this._delay)*t,this}pause(){return this.paused?this:(this.paused=!0,this.onPause(this),this)}resume(){return this.paused?(this.paused=!1,this.duration<=T&&!this._hasChildren?Ye(this,T,0,0,Q.FORCE):(this._running||(Fe(ee,this,wr),ee._hasChildren=!0,this._running=!0),this.resetTime(),this._startTime-=12,ee.wake()),this):this}restart(){return this.reset().resume()}seek(t,s=0,r=0){Cs(this),this.completed=!1;let n=this.paused;return this.paused=!0,Ye(this,t+this._delay,~~s,~~r,Q.AUTO),n?this:this.resume()}alternate(){let t=this._reversed,s=this.iterationCount,r=this.iterationDuration,n=s===1/0?lt(Ct/r):s;return this._reversed=+(this._alternate&&!(n%2)?t:!t),s===1/0?this.iterationProgress=this._reversed?1-this.iterationProgress:this.iterationProgress:this.seek(r*n-this._currentTime),this.resetTime(),this}play(){return this._reversed&&this.alternate(),this.resume()}reverse(){return this._reversed||this.alternate(),this.resume()}cancel(){return this._hasChildren?P(this,t=>t.cancel(),!0):P(this,vs),this._cancelled=1,this.pause()}stretch(t){let s=this.duration,r=We(t);if(s===r)return this;let n=t/s,o=t<=T;return this.duration=o?T:r,this.iterationDuration=o?T:We(this.iterationDuration*n),this._offset*=n,this._delay*=n,this._loopDelay*=n,this}revert(){Ye(this,0,1,0,Q.AUTO);let t=this._autoplay;return t&&t.linked&&t.linked===this&&t.revert(),this.cancel()}complete(t=0){return this.seek(this.duration,t).cancel()}then(t=he){let s=this.then,r=()=>{this.then=null,t(this),this.then=s,this._resolve=he};return new Promise(n=>(this._resolve=()=>n(r()),this.completed&&this._resolve(),this))}};function pr(e){let t=ye(e)?Et.root.querySelectorAll(e):e;if(t instanceof NodeList||t instanceof HTMLCollection)return t}function jt(e){if(qe(e))return[];if(!Oe)return we(e)&&e.flat(1/0)||[e];if(we(e)){let s=e.flat(1/0),r=[];for(let n=0,o=s.length;n<o;n++){let i=s[n];if(!qe(i)){let a=pr(i);if(a)for(let l=0,c=a.length;l<c;l++){let u=a[l];if(!qe(u)){let f=!1;for(let m=0,h=r.length;m<h;m++)if(r[m]===u){f=!0;break}f||r.push(u)}}else{let l=!1;for(let c=0,u=r.length;c<u;c++)if(r[c]===i){l=!0;break}l||r.push(i)}}}return r}let t=pr(e);return t?Array.from(t):[e]}function Qt(e){let t=jt(e),s=t.length;for(let r=0;r<s;r++){let n=t[r];if(!n[us]){n[us]=!0;let o=Xt(n);(n.nodeType||o)&&(n[$e]=!0,n[kt]=o,n[st]={})}}return t}var Rs={deg:1,rad:180/It,turn:360},hr={},As=(e,t,s,r=!1)=>{let n=t.u,o=t.n;if(t.t===g.UNIT&&n===s)return t;let i=o+n+s,a=hr[i];if(!p(a)&&!r)t.n=a;else{let l;if(n in Rs)l=o*Rs[n]/Rs[s];else{let u=e.cloneNode(),f=e.parentNode,m=f&&f!==tt?f:tt.body;m.appendChild(u);let h=u.style;h.width=100+n;let b=u.offsetWidth||100;h.width=100+s;let S=u.offsetWidth||100,K=b/S;m.removeChild(u),l=K*o}t.n=l,hr[i]=l}return t.t,g.UNIT,t.u=s,t};var je=e=>e;var Ut=(e=1.68)=>t=>at(t,+e),Ds={in:e=>t=>e(t),out:e=>t=>1-e(1-t),inOut:e=>t=>t<.5?e(t*2)/2:1-e(t*-2+2)/2,outIn:e=>t=>t<.5?(1-e(1-t*2))/2:(e(t*2-1)+1)/2},Mr=It/2,_r=It*2,Tr={[Ve]:Ut,Quad:Ut(2),Cubic:Ut(3),Quart:Ut(4),Quint:Ut(5),Sine:e=>1-tr(e*Mr),Circ:e=>1-Nt(1-e*e),Expo:e=>e?at(2,10*e-10):0,Bounce:e=>{let t,s=4;for(;e<((t=at(2,--s))-1)/11;);return 1/at(4,3-s)-7.5625*at((t*3-2)/22-e,2)},Back:(e=1.7)=>t=>(+e+1)*t*t*t-+e*t*t,Elastic:(e=1,t=.3)=>{let s=be(+e,1,10),r=be(+t,T,2),n=r/_r*sr(1/s),o=_r/r;return i=>i===0||i===1?i:-s*at(2,-10*(1-i))*er((1-i-n)*o)}},Es=(()=>{let e={linear:je,none:je};for(let t in Ds)for(let s in Tr){let r=Tr[s],n=Ds[t];e[t+s]=s===Ve||s==="Back"||s==="Elastic"?(o,i)=>n(r(o,i)):n(r)}return e})(),es={linear:je,none:je},Ur=e=>{if(es[e])return es[e];if(e.indexOf("(")<=-1){let s=Ds[e]||e.includes("Back")||e.includes("Elastic")?Es[e]():Es[e];return s?es[e]=s:je}else{let t=e.slice(0,-1).split("("),s=Es[t[0]];return s?es[e]=s(...t[1].split(",")):je}},gr=["steps(","irregular(","linear(","cubicBezier("],ft=e=>{if(ye(e)){for(let s=0,r=gr.length;s<r;s++)if(Ee(e,gr[s]))return console.warn(`String syntax for \`ease: "${e}"\` has been removed from the core and replaced by importing and passing the easing function directly: \`ease: ${e}\``),je}return _e(e)?e:ye(e)?Ur(e):je};var _=Ht(),y=Ht(),yt={},ts={func:null},ss={func:null},rs=[null],bt=[null,null],ns={to:null},Lr=0,yr=0,nt,Ze,Fr=(e,t)=>{let s={};if(we(e)){let r=[].concat(...e.map(n=>Object.keys(n))).filter(Dt);for(let n=0,o=r.length;n<o;n++){let i=r[n],a=e.map(l=>{let c={};for(let u in l){let f=l[u];Dt(u)?u===i&&(c.to=f):c[u]=f}return c});s[i]=a}}else{let r=X(t.duration,v.defaults.duration);Object.keys(e).map(o=>({o:parseFloat(o)/100,p:e[o]})).sort((o,i)=>o.o-i.o).forEach(o=>{let i=o.o,a=o.p;for(let l in a)if(Dt(l)){let c=s[l];c||(c=s[l]=[]);let u=i*r,f=c.length,m=c[f-1],h={to:a[l]},b=0;for(let S=0;S<f;S++)b+=c[S].duration;f===1&&(h.from=m.to),a.ease&&(h.ease=a.ease),h.duration=u-(f?b:0),c.push(h)}return o});for(let o in s){let i=s[o],a;for(let l=0,c=i.length;l<c;l++){let u=i[l],f=u.ease;u.ease=a||void 0,a=f}i[0].duration||i.shift()}}return s},xt=class extends ut{constructor(t,s,r,n,o=!1,i=0,a){super(s,r,n),this._head,this._tail,++yr;let l=Qt(t),c=l.length,u=s.keyframes,f=u?zt(Fr(u,s),s):s,{id:m,delay:h,duration:b,ease:S,playbackEase:K,modifier:ve,composition:Y,onRender:le}=f,Z=r?r.defaults:v.defaults,oe=X(S,Z.ease),w=X(K,Z.playbackEase),fe=w?ft(w):null,Me=!p(oe.ease),Ne=Me?oe.ease:X(S,fe?"linear":Z.ease),Pe=Me?oe.settlingDuration:X(b,Z.duration),Se=X(h,Z.delay),ke=ve||Z.modifier,He=p(Y)&&c>=Xe?$.none:p(Y)?Z.composition:Y,Ce=this._offset+(r?r._offset:0);Me&&(oe.parent=this);let F=NaN,H=NaN,Ue=0,ie=0;for(let d=0;d<c;d++){let O=l[d],te=i||d,de=a||l,Qe=NaN,Be=NaN;for(let me in f)if(Dt(me)){let R=ys(O,me),Re=Zt(O,me),ce=Wt(me,O,R),D=f[me],ue=we(D);if(o&&!ue&&(bt[0]=D,bt[1]=D,D=bt),ue){let U=D.length,k=!it(D[0]);U===2&&k?(ns.to=D,rs[0]=ns,nt=rs):U>2&&k?(nt=[],D.forEach((G,J)=>{J?J===1?(bt[1]=G,nt.push(bt)):nt.push(G):bt[0]=G})):nt=D}else rs[0]=D,nt=rs;let ae=null,x=null,M=NaN,se=0,re=0;for(let U=nt.length;re<U;re++){let k=nt[re];it(k)?Ze=k:(ns.to=k,Ze=ns),ts.func=null,ss.func=null;let G=ze(X(Ze.composition,He),O,te,de,null,null),J=ge(G)?G:$[G];!ae&&J!==$.none&&(ae=Mt(O,ce));let Te=ae?ae._tail:null,q=r&&Te&&Te.parent.parent===r?Te:x,j=ze(Ze.to,O,te,de,ts,q),C;it(j)&&!p(j.to)?(Ze=j,C=j.to):C=j;let L=ze(Ze.from,O,te,de,ss,q),I=Ze.ease||Ne,B=ze(I,O,te,de,null,q),N=_e(B)||ye(B)?B:I,ne=!p(N)&&!p(N.ease),z=ne?N.ease:N,et=ne?N.settlingDuration:ze(X(Ze.duration,U>1?ze(Pe,O,te,de,null,q)/U:Pe),O,te,de,null,q),Le=ze(X(Ze.delay,re?0:Se),O,te,de,null,q),mt=Ze.modifier||ke,ot=!p(L),vt=!p(C),St=we(C),Sr=St||ot&&vt,Cr=x?se:0,is=x?se+Le:Le,as=E(Ce+is,12),Rr=E(Ce+Cr,12);!ie&&(ot||St)&&(ie=1);let Ie=x;if(J!==$.none){let A=ae._head;for(;A&&A._absoluteStartTime<=as;)if(A._isOverridden||(Ie=A),A=A._nextRep,A&&A._absoluteStartTime>=as)for(;A;)wt(A),A=A._nextRep}if(Sr){xe(St?ze(C[0],O,te,de,ss,q):L,_),xe(St?ze(C[1],O,te,de,ts,q):C,y);let A=rt(O,ce,R,yt);_.t===g.NUMBER&&(Ie?Ie._valueType===g.UNIT&&(_.t=g.UNIT,_.u=Ie._unit):(xe(A,De),De.t===g.UNIT&&(_.t=g.UNIT,_.u=De.u)))}else vt?xe(C,y):x?bs(x,y):xe(r&&Ie&&Ie.parent.parent===r?Ie._value:rt(O,ce,R,yt),y),ot?xe(L,_):x?bs(x,_):xe(r&&Ie&&Ie.parent.parent===r?Ie._value:rt(O,ce,R,yt),_);if(_.o&&(_.n=Tt(Ie?Ie._toNumber:xe(rt(O,ce,R,yt),De).n,_.n,_.o)),y.o&&(y.n=Tt(_.n,y.n,y.o)),_.t!==y.t){if(_.t===g.COMPLEX||y.t===g.COMPLEX){let A=_.t===g.COMPLEX?_:y,pe=_.t===g.COMPLEX?y:_;pe.t=g.COMPLEX,pe.s=W(A.s),pe.d=A.d.map(()=>pe.n)}else if(_.t===g.UNIT||y.t===g.UNIT){let A=_.t===g.UNIT?_:y,pe=_.t===g.UNIT?y:_;pe.t=g.UNIT,pe.u=A.u}else if(_.t===g.COLOR||y.t===g.COLOR){let A=_.t===g.COLOR?_:y,pe=_.t===g.COLOR?y:_;pe.t=g.COLOR,pe.d=A.d.map(()=>0)}}if(_.u!==y.u){let A=y.u?_:y;A=As(O,A,y.u?y.u:_.u,!1)}if(y.d&&_.d&&y.d.length!==_.d.length){let A=_.d.length>y.d.length?_:y,pe=A===_?y:_;pe.d=A.d.map((Xr,Ls)=>p(pe.d[Ls])?0:pe.d[Ls]),pe.s=W(A.s)}let ls=E(+et||T,12),ws=yt[ce];qe(ws)||(yt[ce]=null);let Ar=Re?Re.set:null;se=E(is+ls,12);let Lt=_.d,Ms=y.d,Us=y.s,Ae={parent:this,id:Lr++,property:ce,target:O,_value:null,_toFunc:ts.func,_fromFunc:ss.func,_ease:ft(z),_fromNumbers:Lt?W(Lt):At,_toNumbers:Ms?W(Ms):At,_strings:Us?W(Us):At,_fromNumber:_.n,_toNumber:y.n,_numbers:Lt?W(Lt):At,_number:_.n,_unit:y.u,_modifier:mt,_currentTime:0,_startTime:is,_delay:+Le,_updateDuration:ls,_changeDuration:ls,_absoluteStartTime:as,_absoluteUpdateStartTime:Rr,_absoluteEndTime:E(Ce+se,12),_hasFromValue:ot||St?1:0,_tweenType:R,_setter:Ar,_valueType:y.t,_composition:J,_isOverlapped:0,_isOverridden:0,_renderTransforms:0,_inlineValue:ws,_prevRep:null,_nextRep:null,_prevAdd:null,_nextAdd:null,_prev:null,_next:null};J!==$.none&&Gt(Ae,ae);let cs=Ae._valueType;if(cs===g.COMPLEX)Ae._value=Jt(Ae,1,-1);else if(cs===g.UNIT)Ae._value=`${mt(Ae._toNumber)}${Ae._unit}`;else if(cs===g.COLOR){let A=y.d;Ae._value=`rgba(${E(A[0],0)},${E(A[1],0)},${E(A[2],0)},${A[3]})`}else Ae._value=mt(Ae._toNumber);isNaN(M)&&(M=Ae._startTime),x=Ae,Ue++,Fe(this,Ae)}(isNaN(H)||M<H)&&(H=M),(isNaN(F)||se>F)&&(F=se),R===V.TRANSFORM&&(Qe=Ue-re,Be=Ue)}if(!isNaN(Qe)){let me=0;P(this,R=>{me>=Qe&&me<Be&&(R._renderTransforms=1,R._composition===$.blend&&P(Ge.animation,Re=>{Re.id===R.id&&(Re._renderTransforms=1)})),me++})}}c||console.warn("No target found. Make sure the element you're trying to animate is accessible before creating your animation."),H?(P(this,d=>{d._startTime-d._delay||(d._delay-=H),d._startTime-=H}),F-=H):H=0,F||(F=T,this.iterationCount=0),this.targets=l,this.id=p(m)?yr:m,this.duration=F===T?T:ct((F+this._loopDelay)*this.iterationCount-this._loopDelay)||T,this.onRender=le||Z.onRender,this._ease=fe,this._delay=H,this.iterationDuration=F,!this._autoplay&&ie&&this.onRender(this)}stretch(t){let s=this.duration;if(s===We(t))return this;let r=t/s;return P(this,n=>{n._updateDuration=We(n._updateDuration*r),n._changeDuration=We(n._changeDuration*r),n._currentTime*=r,n._delay*=r,n._startTime*=r,n._absoluteStartTime*=r,n._absoluteUpdateStartTime*=r,n._absoluteEndTime*=r}),super.stretch(t)}refresh(){return P(this,t=>{let s=t._toFunc,r=t._fromFunc;(s||r)&&(r?(xe(r(),_),_.u!==t._unit&&t.target[$e]&&As(t.target,_,t._unit,!0),t._fromNumbers=W(_.d),t._fromNumber=_.n):s&&(xe(rt(t.target,t.property,t._tweenType),De),t._fromNumbers=W(De.d),t._fromNumber=De.n),s&&(xe(s(),y),t._toNumbers=W(y.d),t._strings=W(y.s),t._toNumber=y.o?Tt(t._fromNumber,y.n,y.o):y.n))}),this.duration===T&&this.restart(),this}revert(){return super.revert(),Vt(this)}then(t){return super.then(t)}},Ns=(e,t)=>v.editor?v.editor.addAnimation(e,t):new xt(e,t,null,0,!1).init();var kr=(e,t)=>{if(Ee(t,"<")){let s=t[1]==="<",r=e._tail,n=r?r._offset+r._delay:0;return s?n:n+r.duration}},dt=(e,t)=>{let s=e.iterationDuration;if(s===T&&(s=0),p(t))return s;if(ge(+t))return+t;let r=t,n=e?e.labels:null,o=!qe(n),i=kr(e,r),a=!p(i),l=Ws.exec(r);if(l){let c=l[0],u=r.split(c),f=o&&u[0]?n[u[0]]:s,m=a?i:o?f:s,h=+u[1];return Tt(m,h,c[0])}else return a?i:o?p(n[r])?s:n[r]:s};function Br(e){return ct((e.iterationDuration+e._loopDelay)*e.iterationCount-e._loopDelay)||T}function Ps(e,t,s,r,n,o){let a=ge(e.duration)&&e.duration<=T?s-T:s;t.composition&&Ye(t,a,1,1,Q.AUTO);let l=r?new xt(r,e,t,a,!1,n,o):new ut(e,t,a);return t.composition&&l.init(!0),Fe(t,l),P(t,c=>{let f=c._offset+c._delay+c.duration;f>t.iterationDuration&&(t.iterationDuration=f)}),t.duration=Br(t),t}var br=0,os=class extends ut{constructor(t={}){super(t,null,0),++br,this.id=p(t.id)?br:t.id,this.duration=0,this.labels={};let s=t.defaults,r=v.defaults;this.defaults=s?zt(s,r):r,this.composition=X(t.composition,!0),this.onRender=t.onRender||r.onRender;let n=X(t.playbackEase,r.playbackEase);this._ease=n?ft(n):null,this.iterationDuration=0}add(t,s,r){let n=it(s),o=it(t);if(n||o){if(this._hasChildren=!0,n){let i=s,a=v.editor&&v.editor.addTimelineChild,l=r&&r.type==="Stagger"&&v.editor,c=_e(r)?r:null;if(c||l){let u=jt(t),f=this.duration,m=this.iterationDuration,h=i.id,b=0,S=u.length,K=a?a(t,i,this.id,r,S):null,ve=c||v.editor.resolveStagger(r.defaultValue);u.forEach(Y=>{let le={...K||i};this.duration=f,this.iterationDuration=m,p(h)||(le.id=h+"-"+b);let Z=dt(this,ve(Y,b,u,null,this));Ps(le,this,Z,Y,b,u),b++})}else{let u=a?a(t,i,this.id,r):i,f=r&&r.type?r.defaultValue:r;Ps(u,this,dt(this,f),t)}}else Ps(t,this,dt(this,s));return this.composition&&this.init(!0),this}}sync(t,s){if(p(t)||t&&p(t.pause))return this;t.pause();let r=+(t.effect?t.effect.getTiming().duration:t.duration);!p(t)&&!p(t.persist)&&(t.persist=!0);let n=v.editor,o=n&&n.addTimelineChild;n&&n.addTimelineSync&&(s=n.addTimelineSync(t,s,this.id),n.addTimelineChild=null);let i=this.add(t,{currentTime:[0,r],duration:r,delay:0,ease:"linear",playbackEase:"linear"},s);return n&&(n.addTimelineChild=o),i}set(t,s,r){return p(s)?this:(s.duration=T,s.composition=$.replace,this.add(t,s,r))}call(t,s){return p(t)||t&&!_e(t)?this:(v.editor&&v.editor.addTimelineCall&&(s=v.editor.addTimelineCall(t,s,this.id)),this.add({duration:0,delay:0,onComplete:()=>t(this)},s))}label(t,s){return p(t)||t&&!ye(t)?this:(v.editor&&v.editor.addTimelineLabel&&(s=v.editor.addTimelineLabel(t,s,this.id)),this.labels[t]=dt(this,s),this)}remove(t,s){return Ss(jt(t),this,s),this}stretch(t){let s=this.duration;if(s===We(t))return this;let r=t/s,n=this.labels;P(this,o=>o.stretch(o.duration*r));for(let o in n)n[o]*=r;return super.stretch(t)}refresh(){return P(this,t=>{t.refresh&&t.refresh()}),this}revert(){return super.revert(),P(this,t=>t.revert,!0),Vt(this)}then(t){return super.then(t)}},Is=e=>v.editor?v.editor.addTimeline(e):new os(e).init();var Os=(e=0,t=1,s=0)=>{let r=10**s;return Math.floor((Math.random()*(t-e+1/r)+e)*r)/r},$r=0,xr=(e,t=0,s=1,r=0)=>{let n=e===void 0?$r++:e;return(o=t,i=s,a=r)=>{n+=1831565813,n=Math.imul(n^n>>>15,n|1),n^=n+Math.imul(n^n>>>7,n|61);let l=10**a;return Math.floor((((n^n>>>14)>>>0)/4294967296*(i-o+1/l)+o)*l)/l}};var vr=(e,t=Os)=>{let s=e.length,r,n;for(;s;)n=t(0,--s),r=e[s],e[s]=e[n],e[n]=r;return e};var Vs=(e,t={})=>{let s=[],r=0,n,o=null,i=t.from,a=t.reversed,l=t.ease,c=!p(l),f=c&&!p(l.ease)?l.ease:c?ft(l):null,m=t.grid,h=m===!0,b=t.axis,S=t.total,K=p(i)||i===0||i==="first",ve=i==="center",Y=i==="last",le=i==="random",Z=we(i),oe=we(e),w=t.use,fe=oe?qt(e[0]):qt(e),Me=oe?qt(e[1]):0,Ne=$t.exec((oe?e[1]:e)+Ve),Pe=t.start||0+(oe?fe:0),Se=t.seed,He=!p(Se)&&Se!==!1?xr(Se===!0?0:Se):Os,Ce=t.jitter,F=!p(Ce),H=we(Ce),Ue=H?Ce[0]:Ce||0,ie=H?Ce[1]:Ce||0,d=K?0:ge(i)?i:0;return(O,te,de,Qe,Be)=>{let[me]=Qt(O),R=p(S)?de.length:S,Re=p(w)?!1:_e(w)?w(me,te,R):rt(me,w),ce=ge(Re)||ye(Re)&&ge(+Re)?+Re:te,D=ce>=0&&ce<R?ce:te;if(ve&&(d=(R-1)/2),Y&&(d=R-1),!s.length){if(h){let x=!0,M=!1,se=1/0,re=1/0,U=1/0,k=-1/0,G=-1/0,J=-1/0,Te=[],q=[],j=[];for(let C=0;C<R;C++){let L=de[C],I=0,B=0,N=0,ne=!1;if(L&&_e(L.getBoundingClientRect)){let z=L.getBoundingClientRect();I=z.left+z.width/2,B=z.top+z.height/2,ne=!0}else{let z=L;z&&ge(z.x)&&ge(z.y)&&(I=z.x,B=z.y,ge(z.z)&&(N=z.z,M=!0),ne=!0)}if(!ne){x=!1;break}Te.push(I),q.push(B),j.push(N),I<se&&(se=I),B<re&&(re=B),N<U&&(U=N),I>k&&(k=I),B>G&&(G=B),N>J&&(J=N)}if(x){let C=Te[0],L=q[0],I=j[0];Z?(C=se+i[0]*(k-se),L=re+i[1]*(G-re),I=M?U+(i.length>=3?i[2]:.5)*(J-U):0):ve?(C=(se+k)/2,L=(re+G)/2,I=(U+J)/2):Y?(C=Te[R-1],L=q[R-1],I=j[R-1]):ge(i)&&(C=Te[i],L=q[i],I=j[i]);for(let N=0;N<R;N++){let ne=C-Te[N],z=L-q[N],et=I-j[N],Le=Nt(ne*ne+z*z+(M?et*et:0));b==="x"&&(Le=-ne),b==="y"&&(Le=-z),b==="z"&&(Le=-et),s.push(Le)}let B=1/0;for(let N=0;N<R;N++){let ne=Pt(s[N]);ne>0&&ne<B&&(B=ne)}if(B>0&&B<1/0)for(let N=0;N<R;N++)s[N]=s[N]/B}else for(let C=0;C<R;C++)s.push(Pt(d-C))}else for(let x=0;x<R;x++)if(!m)s.push(Pt(d-x));else{let M=m.length,se=m[0]*m[1],re,U,k;Z?(re=i[0]*(m[0]-1),U=i[1]*(m[1]-1),k=M===3?(i.length>=3?i[2]:.5)*(m[2]-1):0):ve?(re=(m[0]-1)/2,U=(m[1]-1)/2,k=M===3?(m[2]-1)/2:0):(re=d%m[0],U=lt(d/m[0])%m[1],k=M===3?lt(d/se):0);let G=x%m[0],J=lt(x/m[0])%m[1],Te=M===3?lt(x/se):0,q=re-G,j=U-J,C=k-Te,L=Nt(q*q+j*j+(M===3?C*C:0));b==="x"&&(L=-q),b==="y"&&(L=-j),b==="z"&&(L=-C),s.push(L)}r=s[0];for(let x=1;x<R;x++)s[x]>r&&(r=s[x]);if(f||a)for(let x=0;x<R;x++){let M=s[x];f&&(M=f(M/r)*r),a&&(M=b?-M:Pt(r-M)),s[x]=M}if(F){o=new Array(R);for(let x=0;x<R;x++)o[x]=He(-1,1,4)}le&&(s=vr(s,He))}let ue=oe?(Me-fe)/r:fe;p(n)&&(n=Be?dt(Be,p(t.start)?Be.iterationDuration:Pe):Pe);let ae=n+(ue*E(s[D],2)||0);if(F){let x=r?s[D]/r:0,M=Ue+(ie-Ue)*x;ae=ae+o[D]*M}return t.modifier&&(ae=t.modifier(ae)),Ne&&(ae=`${ae}${Ne[2]}`),ae}};window.__anime={animate:Ns,createTimeline:Is,stagger:Vs};})();
+</script>
 <script>
 (() => {
 'use strict';
@@ -205,7 +181,8 @@ function createEngine(canvas) {
       const l = Math.hypot(gx, gy, 1);
       nx[i] = -gx / l; ny[i] = -gy / l; nz[i] = 1 / l;
     }
-    return { nx, ny, nz };
+    const rim = new Uint8Array(N); for (let i = 0; i < N; i++) rim[i] = cov[i] > 0.5 && d[i] <= ch * 1.05 ? 1 : 0;
+    return { nx, ny, nz, rim };
   }
   /* per-cell reveal threshold: spreads out from (cx,cy), with a little noise so it dissolves instead of wiping */
   function thresholds(cx, cy) {
@@ -216,14 +193,14 @@ function createEngine(canvas) {
     }
     return t;
   }
-  /* eases a light toward the pointer at ~30fps and stops the moment it arrives: idle = zero cost */
+  /* eases a light toward the pointer every frame (time-based, so it is smooth at any refresh rate) and stops the moment it arrives */
   function createLight(onChange) {
     const cur = { x: -0.55, y: -0.7 }, tgt = { x: -0.55, y: -0.7 }; let raf = 0, last = 0;
     function tick(t) {
-      raf = 0; if (t - last < 30) { raf = requestAnimationFrame(tick); return; } last = t;
-      const dx = tgt.x - cur.x, dy = tgt.y - cur.y, done = Math.abs(dx) + Math.abs(dy) < 0.004;
-      if (done) { cur.x = tgt.x; cur.y = tgt.y; } else { cur.x += dx * 0.2; cur.y += dy * 0.2; }
-      onChange(cur); if (!done) raf = requestAnimationFrame(tick);
+      raf = 0; const dt = last ? Math.min(50, t - last) : 16; last = t;
+      const k = 1 - Math.exp(-dt / 85), dx = tgt.x - cur.x, dy = tgt.y - cur.y, done = Math.abs(dx) + Math.abs(dy) < 0.003;
+      if (done) { cur.x = tgt.x; cur.y = tgt.y; } else { cur.x += dx * k; cur.y += dy * k; }
+      onChange(cur); if (!done) raf = requestAnimationFrame(tick); else last = 0;
     }
     return { cur, set(x, y) { tgt.x = x; tgt.y = y; if (reduce) { cur.x = x; cur.y = y; onChange(cur); } else if (!raf) raf = requestAnimationFrame(tick); } };
   }
@@ -234,247 +211,211 @@ function createEngine(canvas) {
     const t0 = performance.now();
     (function f(t) { const k = clamp((t - t0) / ms, 0, 1); fn(1 - (1 - k) ** 3); if (k < 1) requestAnimationFrame(f); else done && done(); })(t0);
   }
-  return { S, ctx, layout, put, wipe, wipeAll, cover, blur, relief, thresholds, createLight, lightFromPointer, tween };
+  const bounds = (cov, margin) => { let c0 = 1e9, c1 = -1, r0 = 1e9, r1 = -1; for (let r = 0; r < S.rows; r++) for (let c = 0; c < S.cols; c++) if (cov[r * S.cols + c] > 0.5) { if (c < c0) c0 = c; if (c > c1) c1 = c; if (r < r0) r0 = r; if (r > r1) r1 = r; } return [Math.max(0, c0 - margin), Math.max(0, r0 - margin), Math.min(S.cols - 1, c1 + margin), Math.min(S.rows - 1, r1 + margin)]; };
+  return { bounds, S, ctx, layout, put, wipe, wipeAll, cover, blur, relief, thresholds, createLight, lightFromPointer, tween };
 }
 
 /* shaded glyph for a lit surface: v 0..1 */
 function glyphFor(v, faint) { const ci = Math.max(1, Math.min(9, (v * 10) | 0)); return [ci, faint ? 1 : v < 0.4 ? 1 : v < 0.82 ? 2 : 3]; }
 
+/* halftone: brighter surfaces get more glyphs, darker ones thin out. returns ci*4+colour, or -1 for an empty cell */
+const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5].map(v => v / 16);
+function tone(v, r, c, force, k) {
+  if (!force && v < BAYER[(r & 3) * 4 + (c & 3)] * (k || 0.95)) return -1;
+  return Math.max(1, Math.min(8, (v * 9) | 0)) * 4 + (v < 0.4 ? 1 : v < 0.8 ? 2 : 3);
+}
+/* text scramble: letters resolve left to right out of random glyphs */
+function scramble(el, text, ms) {
+  if (reduce) { el.textContent = text; return; }
+  const G = 'abcdefghijklmnopqrstuvwxyz', n = text.length, at = [...text].map((_, i) => i / n * 0.65 + Math.random() * 0.25), t0 = performance.now();
+  if (el._sc) return; el._sc = 1;
+  (function f(t) {
+    const k = Math.min(1, (t - t0) / (ms || 900)); let o = '';
+    for (let i = 0; i < n; i++) o += text[i] === ' ' || k > at[i] ? text[i] : G[(Math.random() * 26) | 0];
+    el.textContent = o; if (k < 1) requestAnimationFrame(f); else el._sc = 0;
+  })(t0);
+}
 
+
+const { animate, stagger } = window.__anime;
+const fine = matchMedia('(hover:hover)').matches;
 const YT = 'https://youtube.com/@BlueTigerIncStudios';
 const $ = s => document.querySelector(s);
-const body = document.body, canvas = $('#world'), keysEl = $('#keys'), cta = $('#cta');
-const t1 = $('#t1'), t2 = $('#t2'), cur = $('#cur');
+const body = document.body, canvas = $('#world'), cta = $('#cta');
+const t1 = $('#t1'), t2 = $('#t2'), cur = $('#cur'), hero = $('#hero');
 const eng = createEngine(canvas), S = eng.S;
-let scene = 'home', booted = false;
+let scene = 'home', booted = false, portrait = false;
 
-/* ─────────── hero: typed intro, free typing, commands ─────────── */
+/* ─────────── hero: every character is its own element, animated with anime.js ─────────── */
 let buf = '', typeTok = 0, typedDone = false;
 const L1 = 'sup, im the', L2 = 'blue tiger.';
+function addChar(el, ch) {
+  if (ch === '\n') { const br = document.createElement('br'); el.appendChild(br); return br; }
+  const sp = document.createElement('span'); sp.className = 'ch'; sp.textContent = ch; el.appendChild(sp); return sp;
+}
+const rnd = (a, b) => a + Math.random() * (b - a);
+const chars = () => [...hero.querySelectorAll('.ch')];
+const pop = sp => { if (!reduce && sp.className === 'ch') animate(sp, { opacity: [0, 1], translateY: [rnd(0.5, 1.1) + 'em', 0], translateX: [rnd(-0.35, 0.35) + 'em', 0], rotate: [rnd(-45, 45), 0], scale: [rnd(1.5, 2.2), 1], duration: 1100, ease: 'outElastic(1,.5)' }); };
+function flourish() { if (!reduce) animate(chars(), { translateY: [{ to: '-0.09em', duration: 200, ease: 'outQuad' }, { to: 0, duration: 800, ease: 'outElastic(1,.4)' }], rotate: [{ to: () => rnd(-6, 6), duration: 200 }, { to: 0, duration: 800, ease: 'outElastic(1,.4)' }], delay: stagger(36) }); }
+function showCta() { cta.classList.add('show'); if (!reduce) animate(cta.children, { opacity: [0, 1], scale: [0.7, 1], translateY: ['0.8em', 0], duration: 1100, ease: 'outElastic(1,.55)', delay: stagger(90) }); }
+function scatter(from) {                                   // tap or click the heading: everything flies apart and springs back
+  if (reduce) return; const cs = chars(); if (!cs.length) return;
+  animate(cs, {
+    translateX: [{ to: () => rnd(-1.6, 1.6) + 'em', duration: 320, ease: 'outCubic' }, { to: 0, duration: 1100, ease: 'outElastic(1,.45)' }],
+    translateY: [{ to: () => rnd(-1.4, 1.4) + 'em', duration: 320, ease: 'outCubic' }, { to: 0, duration: 1100, ease: 'outElastic(1,.45)' }],
+    rotate: [{ to: () => rnd(-200, 200), duration: 320, ease: 'outCubic' }, { to: 0, duration: 1100, ease: 'outElastic(1,.45)' }],
+    scale: [{ to: () => rnd(0.4, 1.8), duration: 320 }, { to: 1, duration: 1100, ease: 'outElastic(1,.45)' }],
+    delay: stagger(16, { from })
+  });
+}
+function leave() { if (reduce) return; animate(chars(), { translateY: () => rnd(-2.4, -0.8) + 'em', rotate: () => rnd(-90, 90), scale: 0.3, opacity: 0, duration: 520, ease: 'inBack', delay: stagger(18, { from: 'center' }) }); }
 function intro() {
-  const tok = ++typeTok; typedDone = false; t1.textContent = t2.textContent = ''; cta.classList.remove('show');
-  t1.before(cur);
-  const all = [...L1].map(c => [c, 1]).concat([...L2].map(c => [c, 2]));
+  const tok = ++typeTok; typedDone = false; t1.textContent = t2.textContent = ''; cta.classList.remove('show'); t1.before(cur);
+  const all = [...L1].map(c => [c, t1]).concat([...L2].map(c => [c, t2]));
   let i = 0;
   (function next() {
     if (tok !== typeTok) return;
-    if (i >= all.length) { typedDone = true; cta.classList.add('show'); return; }
-    const [ch, ln] = all[i++];
-    (ln === 1 ? t1 : t2).textContent += ch;
-    (ln === 1 ? t1 : t2).after(cur);
-    setTimeout(next, reduce ? 0 : 40 + Math.random() * 55 + (ch === ',' || ch === '.' ? 210 : 0) + (i === L1.length + 1 ? 90 : 0));
+    if (i >= all.length) { typedDone = true; showCta(); flourish(); return; }
+    const [ch, el] = all[i++], sp = addChar(el, ch); pop(sp); el.after(cur);
+    setTimeout(next, reduce ? 0 : 42 + Math.random() * 55 + (ch === ',' || ch === '.' ? 210 : 0) + (i === L1.length + 1 ? 90 : 0));
   })();
 }
-function renderBuf() {
+function renderBuf(grew) {
   typeTok++; typedDone = true; cta.classList.add('show');
   if (!buf) { intro(); return; }
-  t1.textContent = buf; t2.textContent = ''; t1.after(cur);
+  t1.textContent = t2.textContent = '';
+  const chars = [...buf]; chars.forEach((c, i) => { const sp = addChar(t1, c); if (grew && i === chars.length - 1) pop(sp); });
+  t1.after(cur);
 }
+hero.addEventListener('pointerdown', e => { const t = e.target; if (navigator.vibrate && e.pointerType === 'touch') navigator.vibrate(10); scatter(t.className === 'ch' ? chars().indexOf(t) : 'center'); });
+function hop(t) { if (reduce || !t || t.className !== 'ch' || t._hop) return; t._hop = 1; animate(t, { translateY: ['-0.16em', 0], duration: 650, ease: 'outElastic(1,.7)', onComplete: () => { t._hop = 0; } }); }
+hero.addEventListener('pointerover', e => { if (fine) hop(e.target); });
 const go = n => { location.hash = n === 'home' ? '' : n; route(); };
+const open = () => window.open(YT, '_blank', 'noopener');
 const COMMANDS = {
-  youtube: () => window.open(YT, '_blank', 'noopener'), videos: () => window.open(YT, '_blank', 'noopener'),
-  tiger: () => go('tiger'), piano: () => go('piano'), hum: () => go('piano'), home: () => go('home'),
+  youtube: open, videos: open, tiger: () => go('tiger'), piano: () => { location.href = '/piano.html'; }, home: () => go('home'),
   clear: () => { buf = ''; renderBuf(); }
 };
 addEventListener('keydown', e => {
   if (e.metaKey || e.ctrlKey || e.altKey) return;
   if (e.key === 'Escape') { if (scene !== 'home') go('home'); else { buf = ''; renderBuf(); } return; }
-  if (scene === 'piano') { pianoKey(e); return; }
   if (scene !== 'home') return;
   if ((e.key === 'Enter' || e.key === ' ') && e.target.closest && e.target.closest('a,button')) return;
   if (e.key === 'Enter') {
-    const cmd = buf.trim().toLowerCase(), fn = COMMANDS[cmd.split('\n').pop().trim()];
-    if (fn) { e.preventDefault(); buf = ''; renderBuf(); fn(); } else if (buf) { buf += '\n'; renderBuf(); }
+    const fn = COMMANDS[buf.split('\n').pop().trim().toLowerCase()];
+    if (fn) { e.preventDefault(); buf = ''; renderBuf(); fn(); } else if (buf) { buf += '\n'; renderBuf(true); }
   } else if (e.key === 'Backspace') { buf = buf.slice(0, -1); renderBuf(); e.preventDefault(); }
-  else if (e.key.length === 1 && buf.length < 60) { buf += e.key; renderBuf(); if (e.key === ' ') e.preventDefault(); }
+  else if (e.key.length === 1 && buf.length < 60) { buf += e.key; renderBuf(true); if (e.key === ' ') e.preventDefault(); }
 });
 
-/* ─────────── tiger: a lit pillow of glyphs, eyes that follow the light ─────────── */
+/* ─────────── tiger: a blocky bust, lit and halftoned. eyes follow the light ─────────── */
 const T = {};
 function buildTiger() {
+  eng.wipeAll();
   const { W, H, cw, ch, cols, rows } = S;
-  const s = Math.min(W * 0.46, (H - 70) * 0.44), cx = W / 2, cy = 70 + (H - 70) * 0.5;
-  const E = (g, x, y, rx, ry) => { g.beginPath(); g.ellipse(cx + x * s, cy + y * s, rx * s, ry * s, 0, 0, 7); g.fill(); };
+  const top = portrait && scene === 'home', y0 = top ? 64 : 80, y1 = top ? H * 0.52 : H - 40;               // on a phone the tiger sits above the text
+  const s = Math.min(W * (portrait ? 0.6 : 0.46), (y1 - y0 - (top ? 16 : 80)) / 1.75), cx = W / 2, cy = (y0 + y1) / 2 - 0.16 * s;      // s = width of the head
   const P = (g, pts) => { g.beginPath(); pts.forEach(([x, y], n) => n ? g.lineTo(cx + x * s, cy + y * s) : g.moveTo(cx + x * s, cy + y * s)); g.closePath(); g.fill(); };
+  const E = (g, x, y, rx, ry) => { g.beginPath(); g.ellipse(cx + x * s, cy + y * s, rx * s, ry * s, 0, 0, 7); g.fill(); };
   const both = fn => { fn(1); fn(-1); };
-  const EY = { x: 0.35, y: -0.1, rx: 0.2, ry: 0.12 };
+  const EY = { x: 0.16, y: -0.06, rx: 0.06, ry: 0.055 };
   T.cov = eng.cover(g => { g.fillStyle = '#fff';
-    both(m => E(g, 0.66 * m, -0.62, 0.27, 0.27)); E(g, 0, 0, 0.86, 0.74); both(m => E(g, 0.62 * m, 0.36, 0.34, 0.3)); E(g, 0, 0.62, 0.46, 0.22); });
-  const stripe = eng.cover(g => { g.fillStyle = '#fff'; g.strokeStyle = '#fff';
-    P(g, [[-0.085, -0.74], [0.085, -0.74], [0.03, -0.34], [-0.03, -0.34]]);
-    both(m => {
-      P(g, [[0.22 * m, -0.72], [0.40 * m, -0.66], [0.17 * m, -0.33]]); P(g, [[0.54 * m, -0.58], [0.72 * m, -0.44], [0.42 * m, -0.28]]);
-      P(g, [[0.90 * m, -0.04], [0.88 * m, 0.12], [0.50 * m, 0.15]]); P(g, [[0.93 * m, 0.26], [0.90 * m, 0.42], [0.52 * m, 0.33]]); P(g, [[0.82 * m, 0.52], [0.78 * m, 0.66], [0.50 * m, 0.48]]);
-      E(g, EY.x * m, EY.y, EY.rx + 0.05, EY.ry + 0.05);
-    });
-    P(g, [[-0.10, 0.20], [0.10, 0.20], [0, 0.31]]);
-    g.lineWidth = 0.05 * s; g.lineCap = 'round'; g.beginPath(); g.moveTo(cx, cy + 0.31 * s); g.lineTo(cx, cy + 0.42 * s);
-    g.moveTo(cx - 0.15 * s, cy + 0.49 * s); g.quadraticCurveTo(cx, cy + 0.51 * s, cx, cy + 0.42 * s); g.quadraticCurveTo(cx, cy + 0.51 * s, cx + 0.15 * s, cy + 0.49 * s); g.stroke(); });
-  const muzzle = eng.cover(g => { g.fillStyle = '#fff'; both(m => E(g, 0.13 * m, 0.4, 0.19, 0.15)); E(g, 0, 0.31, 0.2, 0.12); E(g, 0, 0.6, 0.2, 0.09); });
+    P(g, [[-0.34, -0.43], [0.34, -0.43], [0.5, -0.02], [0.21, 0.43], [-0.21, 0.43], [-0.5, -0.02]]);                      // head
+    both(m => P(g, [[0.08 * m, -0.43], [0.15 * m, -0.69], [0.41 * m, -0.58], [0.34 * m, -0.43]]));                         // two ears
+    both(m => P(g, [[0.19 * m, 0.4], [0.46 * m, 0.3], [0.62 * m, 0.52], [0.52 * m, 0.64], [0.3 * m, 0.46]]));              // shoulders
+    both(m => P(g, [[0.62 * m, 0.5], [0.72 * m, 0.98], [0.58 * m, 1.0], [0.5 * m, 0.62]]));                                 // arms
+    P(g, [[-0.21, 0.4], [0.21, 0.4], [0.43, 0.52], [0.5, 1.0], [-0.5, 1.0], [-0.43, 0.52]]); });                             // chest
+  const ink = eng.cover(g => { g.fillStyle = '#fff';
+    both(m => { P(g, [[0.78 * m, 0.8], [0.7 * m, 0.76], [0.66 * m, 0.86]]); P(g, [[0.8 * m, 0.94], [0.72 * m, 0.9], [0.68 * m, 0.99]]); });
+    P(g, [[-0.22, 0.43], [0.22, 0.43], [0.24, 0.47], [-0.24, 0.47]]);                                                        // neck line
+    for (let n = 0; n < 4; n++) { const x = -0.15 + n * 0.1; P(g, [[x, 0.92], [x + 0.045, 0.66], [x + 0.075, 0.62], [x + 0.07, 0.7], [x + 0.02, 0.93]]); }   // claw slashes
+    P(g, [[-0.045, 0.08], [0.045, 0.08], [0, 0.135]]); });                                                                   // nose
   const eyeL = eng.cover(g => { g.fillStyle = '#fff'; E(g, -EY.x, EY.y, EY.rx, EY.ry); });
   const eyeR = eng.cover(g => { g.fillStyle = '#fff'; E(g, EY.x, EY.y, EY.rx, EY.ry); });
   const N = cols * rows;
-  T.stripe = new Uint8Array(N); T.muz = new Uint8Array(N); T.eye = new Uint8Array(N);
-  for (let i = 0; i < N; i++) { T.stripe[i] = stripe[i] > 0.45; T.muz[i] = muzzle[i] > 0.5; T.eye[i] = eyeL[i] > 0.5 ? 1 : eyeR[i] > 0.5 ? 2 : 0; }
-  const carve = eng.blur(Float32Array.from(T.stripe), 1);
-  Object.assign(T, eng.relief(T.cov, s * 0.34, carve, s * 0.12));
-  T.soft = eng.blur(T.cov, 2); T.shadowLen = s * 0.1;
+  T.ink = new Uint8Array(N); T.eye = new Uint8Array(N);
+  for (let i = 0; i < N; i++) { T.ink[i] = ink[i] > 0.45; T.eye[i] = eyeL[i] > 0.4 ? 1 : eyeR[i] > 0.4 ? 2 : 0; }
+  Object.assign(T, eng.relief(T.cov, s * 0.12, eng.blur(Float32Array.from(T.ink), 1), s * 0.04));
+  T.soft = eng.blur(T.cov, 2); T.shadowLen = s * 0.07; T.box = eng.bounds(T.cov, Math.ceil(T.shadowLen / cw) + 3);
   T.eyes = [-1, 1].map(m => ({ cx: (cx + EY.x * m * s) / cw, cy: (cy + EY.y * s) / ch, rx: EY.rx * s / cw, ry: EY.ry * s / ch }));
   T.thr = eng.thresholds(cx / cw, cy / ch); T.rev = reduce ? 9 : 0;
 }
 function drawTiger() {
   const { cols, rows } = S, L = light.cur, lz = 0.8, inv = 1 / Math.hypot(L.x, L.y, lz), Lx = L.x * inv, Ly = L.y * inv, Lz = lz * inv;
   const sdx = -L.x * T.shadowLen / S.cw, sdy = -L.y * T.shadowLen / S.ch, px = clamp(L.x, -1, 1), py = clamp(L.y, -1, 1);
-  eng.wipeAll();
-  for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+  const [bc0, br0, bc1, br1] = T.box; eng.wipe(bc0, br0, bc1 + 1, br1 + 1);
+  for (let r = br0; r <= br1; r++) for (let c = bc0; c <= bc1; c++) {
     const i = r * cols + c, rv = clamp((T.rev - T.thr[i]) * 7, 0, 1);
     if (rv <= 0) continue;
     let ci, col;
     if (T.cov[i] > 0.5) {
+      if (T.ink[i]) continue;                                    // ink: nose, slashes, notches are cut out of the body
       const ey = T.eye[i];
       if (ey) {
-        const e = T.eyes[ey - 1], dx = (c + 0.5 - e.cx - px * e.rx * 0.5) / (e.rx * 0.3), dy = (r + 0.5 - e.cy - py * e.ry * 0.3) / (e.ry * 0.62);
+        const e = T.eyes[ey - 1], dx = (c + 0.5 - e.cx - px * e.rx * 0.4) / (e.rx * 0.6), dy = (r + 0.5 - e.cy - py * e.ry * 0.3) / (e.ry * 0.8);
         if (dx * dx + dy * dy <= 1) continue;
-        ci = 9; col = 3;
+        ci = 5; col = 3;
       } else {
-        let v = 0.2 + 0.8 * Math.max(0, T.nx[i] * Lx + T.ny[i] * Ly + T.nz[i] * Lz);
-        v = Math.pow(v, 1.1);
-        const st = T.stripe[i];
-        if (st) v = 0.34 + v * 0.16; else if (T.muz[i]) v = Math.min(1, v + 0.3);
-        [ci, col] = glyphFor(v, st); if (st) { ci = Math.max(ci, 4); col = 1; }
+        const v = 0.34 + 0.66 * Math.pow(Math.max(0, T.nx[i] * Lx + T.ny[i] * Ly + T.nz[i] * Lz), 2.6);
+        const t = tone(Math.max(v, T.rim[i] ? 0.55 : 0), r, c, T.rim[i], 0.7);
+        if (t < 0) continue; ci = t >> 2; col = t & 3;
       }
     } else {
       const sr = Math.round(r + sdy), sc = Math.round(c + sdx);
       if (sr < 0 || sc < 0 || sr >= rows || sc >= cols) continue;
       const v = T.soft[sr * cols + sc];
-      if (v < 0.14) continue;
-      ci = v > 0.7 ? 3 : v > 0.4 ? 2 : 1; col = 0;
+      if (v < 0.2 || (r + c) % 2) continue;
+      ci = v > 0.6 ? 2 : 1; col = 0;
     }
     if (rv < 1) ci = Math.max(1, (ci * rv) | 0);
     eng.put(c, r, ci, col);
   }
 }
 
-/* ─────────── piano: eight shaded columns; a hit sends light and a shockwave down the key ─────────── */
-const K = 8, SCALE = [0, 2, 4, 7, 9], KEYMAP = 'asdfghjk';
-const Pn = { E: new Float32Array(K), age: new Float32Array(K), hit: new Float32Array(K), was: new Uint8Array(K), x0: 0, x1: 0, y0: 0, y1: 0, kw: 1, raf: 0, last: 0 };
-for (let k = 0; k < K; k++) { const d = document.createElement('div'); d.className = 'key'; d.innerHTML = '<span>' + KEYMAP[k] + '</span>'; keysEl.appendChild(d); }
-const keyDivs = [...keysEl.children];
-function pianoLayout() {
-  const r = keysEl.getBoundingClientRect();
-  Pn.x0 = Math.round(r.left / S.cw); Pn.x1 = Math.round(r.right / S.cw); Pn.y0 = Math.round(r.top / S.ch); Pn.y1 = Math.round(r.bottom / S.ch);
-  Pn.kw = (Pn.x1 - Pn.x0) / K;
-}
-function drawKey(k) {
-  const xa = Math.round(Pn.x0 + k * Pn.kw), xb = Math.round(Pn.x0 + (k + 1) * Pn.kw), { y0, y1 } = Pn, h = y1 - y0;
-  eng.wipe(xa, y0, k === K - 1 ? xb + 1 : xb, y1);
-  const en = Pn.E[k] + 0.22 * ((k > 0 ? Pn.E[k - 1] : 0) + (k < K - 1 ? Pn.E[k + 1] : 0));
-  const mid = (xa + xb) / 2, hw = Math.max(1, (xb - xa) / 2), front = Pn.age[k] * h * 1.1;
-  for (let r = y0; r < y1; r++) {
-    const edge = r === y0 || r === y1 - 1, dr = Math.abs(r - Pn.hit[k]);
-    const base = en * (0.28 + 0.72 * Math.exp(-((dr / (h * 0.6)) ** 2))) + Pn.E[k] * 0.9 * Math.exp(-(((dr - front) / 2.4) ** 2));
-    for (let c = xa; c <= (k === K - 1 ? xb : xb - 1); c++) {
-      if (c === xa || c === xb) { eng.put(c, r, edge ? 5 : 10, en > 0.25 ? 1 : 0); continue; }
-      if (edge) { eng.put(c, r, 3, en > 0.3 ? 2 : 0); continue; }
-      const v = base * (1 - 0.4 * (((c + 0.5 - mid) / hw) ** 2));
-      if (v < 0.09) { if ((r + c) % 4 === 0) eng.put(c, r, 1, 0); continue; }
-      const [ci, col] = glyphFor(v, false); eng.put(c, r, ci, col);
-    }
-  }
-}
-const drawKeys = () => { for (let k = 0; k < K; k++) drawKey(k); };
-function pianoTick(t) {
-  Pn.raf = 0; if (scene !== 'piano') return;
-  if (t - Pn.last < 30) { Pn.raf = requestAnimationFrame(pianoTick); return; }
-  const dt = Math.min(0.1, (t - Pn.last) / 1000); Pn.last = t;
-  let live = false;
-  for (let k = 0; k < K; k++) { Pn.E[k] *= Math.exp(-dt * 2.4); Pn.age[k] += dt; if (Pn.E[k] < 0.01) Pn.E[k] = 0; }
-  const act = new Uint8Array(K);
-  for (let k = 0; k < K; k++) if (Pn.E[k] > 0 || Pn.was[k]) { act[Math.max(0, k - 1)] = act[k] = act[Math.min(K - 1, k + 1)] = 1; }
-  for (let k = 0; k < K; k++) if (act[k]) drawKey(k);
-  for (let k = 0; k < K; k++) { Pn.was[k] = Pn.E[k] > 0 ? 1 : 0; if (Pn.E[k] > 0) live = true; }
-  if (live) Pn.raf = requestAnimationFrame(pianoTick);
-}
-const kick = () => { if (!Pn.raf) { Pn.last = performance.now() - 40; Pn.raf = requestAnimationFrame(pianoTick); } };
-
-let AC, master, echo;
-function initAudio() {
-  if (!AC) {
-    AC = new (window.AudioContext || window.webkitAudioContext)();
-    master = AC.createGain(); master.gain.value = 0.6; master.connect(AC.destination);
-    echo = AC.createDelay(); echo.delayTime.value = 0.32;
-    const fb = AC.createGain(), wet = AC.createGain(); fb.gain.value = 0.36; wet.gain.value = 0.38;
-    echo.connect(fb); fb.connect(echo); echo.connect(wet); wet.connect(master);
-  }
-  if (AC.state === 'suspended') AC.resume();
-}
-function tone(k) {
-  initAudio();
-  const f = 220 * 2 ** ((SCALE[k % 5] + 12 * Math.floor(k / 5)) / 12), t = AC.currentTime, g = AC.createGain();
-  g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.34, t + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + 1.6);
-  const o1 = AC.createOscillator(), o2 = AC.createOscillator(), g2 = AC.createGain();
-  o1.type = 'triangle'; o1.frequency.value = f; o2.type = 'sine'; o2.frequency.value = f * 2.003; g2.gain.value = 0.25;
-  o1.connect(g); o2.connect(g2); g2.connect(g); g.connect(master); g.connect(echo);
-  o1.start(t); o2.start(t); o1.stop(t + 1.7); o2.stop(t + 1.7);
-}
-function hit(k, y) {
-  if (k < 0 || k >= K) return;
-  tone(k); Pn.E[k] = 1; Pn.age[k] = 0; Pn.hit[k] = clamp(Math.round(y / S.ch), Pn.y0, Pn.y1 - 1);
-  keyDivs[k].classList.add('down'); setTimeout(() => keyDivs[k].classList.remove('down'), 160);
-  kick();
-}
-function pianoKey(e) {
-  if (e.repeat) return;
-  const k = KEYMAP.indexOf(e.key.toLowerCase()); if (k < 0) return;
-  hit(k, (Pn.y0 + Pn.y1 + (Math.random() - 0.5) * (Pn.y1 - Pn.y0) * 0.6) / 2 * S.ch);
-}
-const down = new Map();
-const keyAt = x => { const r = keysEl.getBoundingClientRect(); return Math.floor((x - r.left) / r.width * K); };
-keysEl.addEventListener('pointerdown', e => { keysEl.setPointerCapture(e.pointerId); const k = keyAt(e.clientX); down.set(e.pointerId, k); hit(k, e.clientY); });
-keysEl.addEventListener('pointermove', e => { if (!down.has(e.pointerId)) return; const k = keyAt(e.clientX); if (k !== down.get(e.pointerId)) { down.set(e.pointerId, k); hit(k, e.clientY); } });
-['pointerup', 'pointercancel'].forEach(n => keysEl.addEventListener(n, e => down.delete(e.pointerId)));
-
 /* ─────────── light, routing, resize ─────────── */
-const light = eng.createLight(() => { if (scene !== 'piano') drawTiger(); });
-addEventListener('pointermove', e => { if (scene !== 'piano') light.set(...eng.lightFromPointer(e.clientX, e.clientY)); }, { passive: true });
-addEventListener('pointerdown', e => { if (scene !== 'piano') light.set(...eng.lightFromPointer(e.clientX, e.clientY)); }, { passive: true });
-document.addEventListener('pointerleave', () => { if (scene !== 'piano' && matchMedia('(hover:hover)').matches) light.set(-0.55, -0.7); });
-
-function paint() {
-  if (scene === 'piano') { eng.wipeAll(); pianoLayout(); drawKeys(); }
-  else drawTiger();
+const light = eng.createLight(() => drawTiger());
+const lit = () => scene === 'tiger' || portrait;          // is the tiger the star of the screen right now?
+let touching = false, lastHop = 0;
+addEventListener('pointermove', e => {
+  if (lit()) light.set(...eng.lightFromPointer(e.clientX, e.clientY));
+  if (e.pointerType === 'touch' && scene === 'home' && e.timeStamp - lastHop > 45) { lastHop = e.timeStamp; hop(document.elementFromPoint(e.clientX, e.clientY)); }
+}, { passive: true });
+addEventListener('pointerdown', e => { touching = e.pointerType !== 'mouse'; if (lit()) light.set(...eng.lightFromPointer(e.clientX, e.clientY)); }, { passive: true });
+addEventListener('pointerup', () => { touching = false; }, { passive: true });
+document.addEventListener('pointerleave', () => { if (fine && lit()) light.set(-0.55, -0.7); });
+/* phones: tilt the device and the light moves across the tiger */
+if (!fine && window.DeviceOrientationEvent) {
+  const on = () => addEventListener('deviceorientation', e => { if (e.gamma == null || touching || !lit()) return; light.set(clamp(e.gamma / 26, -1.1, 1.1), clamp((e.beta - 55) / 26, -1.1, 1.1)); }, { passive: true });
+  if (typeof DeviceOrientationEvent.requestPermission === 'function') addEventListener('pointerdown', () => { DeviceOrientationEvent.requestPermission().then(r => r === 'granted' && on()).catch(() => {}); }, { once: true });
+  else on();
 }
+
 function route() {
-  const h = location.hash.replace(/^#\/?/, '');
-  const s = h === 'piano' || h === 'hum' ? 'piano' : h === 'tiger' ? 'tiger' : 'home';
+  const s = location.hash.replace(/^#\/?/, '') === 'tiger' ? 'tiger' : 'home';
   if (booted && s === scene) return;
-  const prev = scene; scene = s; body.dataset.scene = s;
-  document.title = s === 'home' ? 'Blue Tiger Inc Studios' : s + ' · Blue Tiger Inc Studios';
+  if (booted && scene === 'home' && s !== 'home') { typeTok++; typedDone = false; buf = ''; leave(); }
+  const wasTop = portrait && scene === 'home'; scene = s; body.dataset.scene = s;
+  if (booted && portrait && wasTop !== (portrait && s === 'home')) { canvas.classList.add('swap'); setTimeout(() => { buildTiger(); T.rev = 9; drawTiger(); canvas.classList.remove('swap'); }, 190); }
+  document.title = s === 'home' ? 'Blue Tiger Inc Studios' : 'Tiger · Blue Tiger Inc Studios';
   document.querySelectorAll('nav a[data-s]').forEach(a => a.classList.toggle('on', a.dataset.s === s));
-  if (!booted) return;
-  if (s === 'piano') { try { initAudio(); } catch (e) {} }
-  if ((prev === 'piano') !== (s === 'piano')) {
-    canvas.classList.add('swap');
-    setTimeout(() => { paint(); canvas.classList.remove('swap'); }, 190);
-  }
-  if (s === 'home' && !typedDone) intro();
+  if (booted && s === 'home' && !typedDone) intro();
 }
 addEventListener('hashchange', route);
 
+const measure = () => { portrait = innerHeight / innerWidth > 1.25 && innerWidth < 820; body.classList.toggle('portrait', portrait); };
 let rz = 0, lastW = innerWidth, lastH = innerHeight;
 addEventListener('resize', () => {
   if (innerWidth === lastW && Math.abs(innerHeight - lastH) < 140) return;   // phone address bar
-  clearTimeout(rz); rz = setTimeout(() => { lastW = innerWidth; lastH = innerHeight; eng.layout(); buildTiger(); T.rev = 9; paint(); }, 160);
+  clearTimeout(rz); rz = setTimeout(() => { lastW = innerWidth; lastH = innerHeight; measure(); eng.layout(); buildTiger(); T.rev = 9; drawTiger(); }, 160);
 });
 
 async function start() {
   try { await Promise.race([document.fonts.load('16px "Geist Pixel"'), new Promise(r => setTimeout(r, 1500))]); } catch (e) {}
-  eng.layout(); buildTiger();
-  route(); booted = true;
-  const first = scene;
-  if (first === 'piano') { paint(); } else { T.rev = 0; eng.tween(1500, k => { T.rev = k * 1.35; drawTiger(); }); }
-  if (first === 'home') intro(); else { typedDone = false; }
-  document.fonts.ready.then(() => { eng.layout(); buildTiger(); T.rev = 9; paint(); });
+  const bt = $('#brandt'); scramble(bt, 'Blue Tiger Inc Studios', 1100); $('#brand').addEventListener('pointerenter', () => scramble(bt, 'Blue Tiger Inc Studios', 700));
+  measure(); eng.layout(); buildTiger(); route(); booted = true;
+  T.rev = 0; eng.tween(1500, k => { T.rev = k * 1.35; drawTiger(); });
+  if (scene === 'home') intro();
+  document.fonts.ready.then(() => { measure(); eng.layout(); buildTiger(); T.rev = 9; drawTiger(); });
 }
 start();
 })();
