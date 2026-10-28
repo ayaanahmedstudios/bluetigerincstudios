@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Piano · Blue Tiger Inc Studios</title>
+<meta name="theme-color" content="#040504">
+<meta name="description" content="A small piano.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23040504'/%3E%3Crect x='3' y='3' width='10' height='10' fill='%2300c4b6'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@500&family=Geist+Pixel&display=swap" rel="stylesheet">
+<style>
+:root{
+  --teal:#00c4b6; --deep:#00766e; --bg:#040504; --ink:#eeeeee; --dim:#7d847d; --faint:#4b524b; --line:#1d231d;
+  --sans:'Geist',system-ui,sans-serif; --pixel:'Geist Pixel','Geist',monospace;
+  --pad:clamp(16px,3.2vw,32px);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{overscroll-behavior:none}
+html,body{width:100%;height:100dvh;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;background:var(--bg);color:var(--ink);overflow:hidden;
+  font:500 15px/1.4 var(--sans);font-synthesis:none;-webkit-font-smoothing:antialiased;
+  -webkit-tap-highlight-color:transparent}
+body{touch-action:none}
+a{color:inherit;text-decoration:none}
+a:focus-visible,button:focus-visible{outline:2px solid var(--teal);outline-offset:3px;border-radius:8px}
+
+#world{position:fixed;left:0;top:0;z-index:0;pointer-events:none;transition:opacity .45s ease}
+
+/* header */
+header{position:fixed;z-index:10;left:0;right:0;top:0;display:flex;align-items:center;justify-content:space-between;
+  padding:max(14px,env(safe-area-inset-top)) var(--pad) 22px;
+  background:linear-gradient(var(--bg) 40%,rgba(4,5,4,0))}
+.brand{display:flex;align-items:center;gap:6px;min-height:40px;font-size:15px;letter-spacing:-.01em}
+nav{display:flex;align-items:center;gap:4px}
+nav a{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 12px;border-radius:9px;color:var(--dim);transition:color .15s,background .15s,border-color .15s}
+nav a:hover{color:var(--ink)}
+nav a.on{color:var(--teal)}
+nav a.yt{margin-left:6px;border:1px solid var(--line);color:var(--ink)}
+nav a.yt:hover{border-color:var(--teal);color:var(--teal)}
+.arr{width:.78em;height:.78em;flex:none}
+
+/* buttons: two, same height, same radius */
+.btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+@media(max-width:520px){#msg .btns{flex-direction:column;width:min(300px,100%)}#msg .btn{width:100%}}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;height:48px;padding:0 22px;border-radius:10px;
+  font-size:15px;border:1px solid var(--line);color:var(--ink);background:rgba(4,5,4,.5);transition:border-color .15s,background .15s,transform .1s,box-shadow .2s}
+.btn:hover{border-color:#3a443a;background:#0b0e0b}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--teal);border-color:var(--teal);color:#021210;}
+.btn.primary:hover{background:#17d8ca;border-color:#17d8ca}
+
+.pix{font-family:var(--pixel);font-weight:400}
+.hint{position:fixed;z-index:5;left:0;right:0;bottom:max(20px,env(safe-area-inset-bottom));text-align:center;font-size:13px;color:var(--faint);pointer-events:none}
+.hint b{font-family:var(--pixel);font-weight:400;color:var(--dim)}
+
+
+.btn .arr{transition:transform .2s ease}.btn:hover .arr{transform:translate(2px,-2px)}
+
+#world{opacity:1}
+#keys{position:fixed;z-index:3;left:50%;transform:translateX(-50%);width:min(1100px,calc(100vw - 2*max(5vw,18px)));
+  top:84px;bottom:calc(92px + env(safe-area-inset-bottom));display:flex;touch-action:none;cursor:pointer}
+.key{flex:1;position:relative}
+.key span{position:absolute;left:0;right:0;bottom:-2.1rem;text-align:center;font:400 14px var(--pixel);color:var(--faint);transition:color .15s}
+.key.down span{color:var(--teal)}
+@media(hover:none){.key span,.fine{display:none}}
+@media(hover:hover){.coarse{display:none}}
+</style>
+</head>
+<body>
+<canvas id="world" aria-hidden="true"></canvas>
+<header>
+  <a class="brand" href="/" id="brand" aria-label="Blue Tiger Inc Studios, home"><span id="brandt">Blue Tiger Inc Studios</span></a>
+</header>
+<div id="keys" role="group" aria-label="Piano"></div>
+<p class="hint"><span class="fine">Tap, drag, or play <b>a s d f g h j k</b></span><span class="coarse">Tap or drag across the keys</span></p>
+<script>
+(() => {
+'use strict';
+/* ── shared ascii engine: a lit heightfield rendered as shaded glyphs. No dependencies. ── */
+const RAMP = ' .:-=+*#%@', CHARS = RAMP + '|';
+const PALETTE = ['#2b322b', '#00766e', '#00c4b6', '#f1f1f1'];      // faint, deep, teal, white
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
+
+function createEngine(canvas) {
+  const ctx = canvas.getContext('2d');
+  const S = { W: 0, H: 0, dpr: 1, cwD: 0, chD: 0, cw: 0, ch: 0, cols: 0, rows: 0, atlas: null };
+
+  function layout() {
+    const W = innerWidth, H = innerHeight, dpr = Math.min(2, window.devicePixelRatio || 1);
+    const fs = clamp(Math.round(Math.sqrt(W * H) / 68), 11, 18);
+    const cwD = Math.max(5, Math.round(fs * 0.6 * dpr)), chD = Math.max(8, Math.round(fs * dpr));
+    Object.assign(S, { W, H, dpr, cwD, chD, cw: cwD / dpr, ch: chD / dpr });
+    S.cols = Math.ceil(W * dpr / cwD); S.rows = Math.ceil(H * dpr / chD);
+    canvas.width = S.cols * cwD; canvas.height = S.rows * chD;
+    canvas.style.width = S.cols * S.cw + 'px'; canvas.style.height = S.rows * S.ch + 'px';
+    const a = document.createElement('canvas');
+    a.width = CHARS.length * cwD; a.height = PALETTE.length * chD;
+    const g = a.getContext('2d');
+    g.font = `${Math.round(fs * dpr * 0.98)}px "Geist Pixel", "Geist", monospace`;
+    g.textAlign = 'center'; g.textBaseline = 'middle';
+    PALETTE.forEach((c, r) => { g.fillStyle = c; for (let i = 1; i < CHARS.length; i++) g.fillText(CHARS[i], i * cwD + cwD / 2, r * chD + chD / 2 + dpr * 0.5); });
+    S.atlas = a;
+  }
+  const put = (c, r, ci, col) => { if (ci > 0 && c >= 0 && r >= 0 && c < S.cols && r < S.rows) ctx.drawImage(S.atlas, ci * S.cwD, col * S.chD, S.cwD, S.chD, c * S.cwD, r * S.chD, S.cwD, S.chD); };
+  const wipe = (c0, r0, c1, r1) => ctx.clearRect(c0 * S.cwD, r0 * S.chD, (c1 - c0) * S.cwD, (r1 - r0) * S.chD);
+  const wipeAll = () => ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  /* rasterise a drawing (in css px) to per-cell coverage, 2x2 supersampled */
+  function cover(draw) {
+    const k = 2, w = S.cols * k, h = S.rows * k;
+    const cv = document.createElement('canvas'); cv.width = w; cv.height = h;
+    const g = cv.getContext('2d', { willReadFrequently: true });
+    g.setTransform(k / S.cw, 0, 0, k / S.ch, 0, 0);
+    draw(g);
+    const d = g.getImageData(0, 0, w, h).data, out = new Float32Array(S.cols * S.rows);
+    for (let r = 0; r < S.rows; r++) for (let c = 0; c < S.cols; c++) {
+      const p = (r * k * w + c * k) * 4 + 3, q = p + w * 4;
+      out[r * S.cols + c] = (d[p] + d[p + 4] + d[q] + d[q + 4]) / 1020;
+    }
+    return out;
+  }
+  function blur(a, rad) {
+    const { cols, rows } = S, n = 2 * rad + 1, t = new Float32Array(a.length), o = new Float32Array(a.length);
+    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) { let s = 0; for (let k = -rad; k <= rad; k++) s += a[r * cols + clamp(c + k, 0, cols - 1)]; t[r * cols + c] = s / n; }
+    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) { let s = 0; for (let k = -rad; k <= rad; k++) s += t[clamp(r + k, 0, rows - 1) * cols + c]; o[r * cols + c] = s / n; }
+    return o;
+  }
+  /* distance (px) from every inside cell to the nearest outside cell, two-pass chamfer */
+  function dist(cov) {
+    const { cols, rows, cw, ch } = S, N = cols * rows, d = new Float32Array(N), dg = Math.hypot(cw, ch);
+    for (let i = 0; i < N; i++) d[i] = cov[i] > 0.5 ? 1e9 : 0;
+    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+      const i = r * cols + c; if (!d[i]) continue; let v = d[i];
+      if (c > 0) v = Math.min(v, d[i - 1] + cw);
+      if (r > 0) { v = Math.min(v, d[i - cols] + ch); if (c > 0) v = Math.min(v, d[i - cols - 1] + dg); if (c < cols - 1) v = Math.min(v, d[i - cols + 1] + dg); }
+      d[i] = v;
+    }
+    for (let r = rows - 1; r >= 0; r--) for (let c = cols - 1; c >= 0; c--) {
+      const i = r * cols + c; if (!d[i]) continue; let v = d[i];
+      if (c < cols - 1) v = Math.min(v, d[i + 1] + cw);
+      if (r < rows - 1) { v = Math.min(v, d[i + cols] + ch); if (c < cols - 1) v = Math.min(v, d[i + cols + 1] + dg); if (c > 0) v = Math.min(v, d[i + cols - 1] + dg); }
+      d[i] = v;
+    }
+    return d;
+  }
+  /* a pillow: height rises like a quarter circle from the silhouette edge; `carve` presses features in */
+  function relief(cov, R, carve, carveAmt) {
+    const { cols, rows, cw, ch } = S, N = cols * rows, d = dist(cov), h = new Float32Array(N);
+    for (let i = 0; i < N; i++) {
+      if (cov[i] <= 0.5) continue;
+      const t = Math.min(1, (d[i] - 0.5 * Math.min(cw, ch)) / R);
+      h[i] = R * 0.95 * Math.sqrt(Math.max(0, 1 - (1 - Math.max(0, t)) ** 2)) - (carve ? carve[i] * carveAmt : 0);
+    }
+    const hb = blur(blur(h, 1), 1), nx = new Float32Array(N), ny = new Float32Array(N), nz = new Float32Array(N);
+    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+      const i = r * cols + c;
+      const gx = (hb[r * cols + Math.min(cols - 1, c + 1)] - hb[r * cols + Math.max(0, c - 1)]) / (2 * cw);
+      const gy = (hb[Math.min(rows - 1, r + 1) * cols + c] - hb[Math.max(0, r - 1) * cols + c]) / (2 * ch);
+      const l = Math.hypot(gx, gy, 1);
+      nx[i] = -gx / l; ny[i] = -gy / l; nz[i] = 1 / l;
+    }
+    const rim = new Uint8Array(N); for (let i = 0; i < N; i++) rim[i] = cov[i] > 0.5 && d[i] <= ch * 1.05 ? 1 : 0;
+    return { nx, ny, nz, rim };
+  }
+  /* per-cell reveal threshold: spreads out from (cx,cy), with a little noise so it dissolves instead of wiping */
+  function thresholds(cx, cy) {
+    const { cols, rows } = S, t = new Float32Array(cols * rows), m = Math.hypot(cols, rows * S.ch / S.cw) * 0.5;
+    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+      const v = Math.sin((r * 91.7 + c * 12.9) * 4.1) * 43758.5; 
+      t[r * cols + c] = Math.hypot(c + 0.5 - cx, (r + 0.5 - cy) * S.ch / S.cw) / m * 0.8 + (v - Math.floor(v)) * 0.25;
+    }
+    return t;
+  }
+  /* eases a light toward the pointer every frame (time-based, so it is smooth at any refresh rate) and stops the moment it arrives */
+  function createLight(onChange) {
+    const cur = { x: -0.55, y: -0.7 }, tgt = { x: -0.55, y: -0.7 }; let raf = 0, last = 0;
+    function tick(t) {
+      raf = 0; const dt = last ? Math.min(50, t - last) : 16; last = t;
+      const k = 1 - Math.exp(-dt / 85), dx = tgt.x - cur.x, dy = tgt.y - cur.y, done = Math.abs(dx) + Math.abs(dy) < 0.003;
+      if (done) { cur.x = tgt.x; cur.y = tgt.y; } else { cur.x += dx * k; cur.y += dy * k; }
+      onChange(cur); if (!done) raf = requestAnimationFrame(tick); else last = 0;
+    }
+    return { cur, set(x, y) { tgt.x = x; tgt.y = y; if (reduce) { cur.x = x; cur.y = y; onChange(cur); } else if (!raf) raf = requestAnimationFrame(tick); } };
+  }
+  const lightFromPointer = (x, y) => [clamp((x / S.W - 0.5) * 2.2, -1.1, 1.1), clamp((y / S.H - 0.5) * 2.2, -1.1, 1.1)];
+  /* one-shot eased animation, full rate, ends by itself */
+  function tween(ms, fn, done) {
+    if (reduce) { fn(1); done && done(); return; }
+    const t0 = performance.now();
+    (function f(t) { const k = clamp((t - t0) / ms, 0, 1); fn(1 - (1 - k) ** 3); if (k < 1) requestAnimationFrame(f); else done && done(); })(t0);
+  }
+  const bounds = (cov, margin) => { let c0 = 1e9, c1 = -1, r0 = 1e9, r1 = -1; for (let r = 0; r < S.rows; r++) for (let c = 0; c < S.cols; c++) if (cov[r * S.cols + c] > 0.5) { if (c < c0) c0 = c; if (c > c1) c1 = c; if (r < r0) r0 = r; if (r > r1) r1 = r; } return [Math.max(0, c0 - margin), Math.max(0, r0 - margin), Math.min(S.cols - 1, c1 + margin), Math.min(S.rows - 1, r1 + margin)]; };
+  return { bounds, S, ctx, layout, put, wipe, wipeAll, cover, blur, relief, thresholds, createLight, lightFromPointer, tween };
+}
+
+/* shaded glyph for a lit surface: v 0..1 */
+function glyphFor(v, faint) { const ci = Math.max(1, Math.min(9, (v * 10) | 0)); return [ci, faint ? 1 : v < 0.4 ? 1 : v < 0.82 ? 2 : 3]; }
+
+/* halftone: brighter surfaces get more glyphs, darker ones thin out. returns ci*4+colour, or -1 for an empty cell */
+const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5].map(v => v / 16);
+function tone(v, r, c, force, k) {
+  if (!force && v < BAYER[(r & 3) * 4 + (c & 3)] * (k || 0.95)) return -1;
+  return Math.max(1, Math.min(8, (v * 9) | 0)) * 4 + (v < 0.4 ? 1 : v < 0.8 ? 2 : 3);
+}
+/* text scramble: letters resolve left to right out of random glyphs */
+function scramble(el, text, ms) {
+  if (reduce) { el.textContent = text; return; }
+  const G = 'abcdefghijklmnopqrstuvwxyz', n = text.length, at = [...text].map((_, i) => i / n * 0.65 + Math.random() * 0.25), t0 = performance.now();
+  if (el._sc) return; el._sc = 1;
+  (function f(t) {
+    const k = Math.min(1, (t - t0) / (ms || 900)); let o = '';
+    for (let i = 0; i < n; i++) o += text[i] === ' ' || k > at[i] ? text[i] : G[(Math.random() * 26) | 0];
+    el.textContent = o; if (k < 1) requestAnimationFrame(f); else el._sc = 0;
+  })(t0);
+}
+
+const $ = s => document.querySelector(s);
+const canvas = $('#world'), keysEl = $('#keys');
+const eng = createEngine(canvas), S = eng.S;
+/* ─────────── piano: eight shaded columns; a hit sends light and a shockwave down the key ─────────── */
+const K = 8, SCALE = [0, 2, 4, 7, 9], KEYMAP = 'asdfghjk';
+const Pn = { E: new Float32Array(K), age: new Float32Array(K), hit: new Float32Array(K), was: new Uint8Array(K), x0: 0, x1: 0, y0: 0, y1: 0, kw: 1, raf: 0, last: 0 };
+for (let k = 0; k < K; k++) { const d = document.createElement('div'); d.className = 'key'; d.innerHTML = '<span>' + KEYMAP[k] + '</span>'; keysEl.appendChild(d); }
+const keyDivs = [...keysEl.children];
+function pianoLayout() {
+  const r = keysEl.getBoundingClientRect();
+  Pn.x0 = Math.round(r.left / S.cw); Pn.x1 = Math.round(r.right / S.cw); Pn.y0 = Math.round(r.top / S.ch); Pn.y1 = Math.round(r.bottom / S.ch);
+  Pn.kw = (Pn.x1 - Pn.x0) / K;
+}
+function drawKey(k) {
+  const xa = Math.round(Pn.x0 + k * Pn.kw), xb = Math.round(Pn.x0 + (k + 1) * Pn.kw), { y0, y1 } = Pn, h = y1 - y0;
+  eng.wipe(xa, y0, k === K - 1 ? xb + 1 : xb, y1);
+  const en = Pn.E[k] + 0.22 * ((k > 0 ? Pn.E[k - 1] : 0) + (k < K - 1 ? Pn.E[k + 1] : 0));
+  const mid = (xa + xb) / 2, hw = Math.max(1, (xb - xa) / 2), front = Pn.age[k] * h * 1.1;
+  for (let r = y0; r < y1; r++) {
+    const edge = r === y0 || r === y1 - 1, dr = Math.abs(r - Pn.hit[k]);
+    const base = en * (0.28 + 0.72 * Math.exp(-((dr / (h * 0.6)) ** 2))) + Pn.E[k] * 0.9 * Math.exp(-(((dr - front) / 2.4) ** 2));
+    for (let c = xa; c <= (k === K - 1 ? xb : xb - 1); c++) {
+      if (c === xa || c === xb) { eng.put(c, r, edge ? 5 : 10, en > 0.25 ? 1 : 0); continue; }
+      if (edge) { eng.put(c, r, 3, en > 0.3 ? 2 : 0); continue; }
+      const v = base * (1 - 0.4 * (((c + 0.5 - mid) / hw) ** 2));
+      if (v < 0.09) { if ((r + c) % 4 === 0) eng.put(c, r, 1, 0); continue; }
+      const [ci, col] = glyphFor(v, false); eng.put(c, r, ci, col);
+    }
+  }
+}
+const drawKeys = () => { for (let k = 0; k < K; k++) drawKey(k); };
+function pianoTick(t) {
+  Pn.raf = 0;
+  if (t - Pn.last < 30) { Pn.raf = requestAnimationFrame(pianoTick); return; }
+  const dt = Math.min(0.1, (t - Pn.last) / 1000); Pn.last = t;
+  let live = false;
+  for (let k = 0; k < K; k++) { Pn.E[k] *= Math.exp(-dt * 2.4); Pn.age[k] += dt; if (Pn.E[k] < 0.01) Pn.E[k] = 0; }
+  const act = new Uint8Array(K);
+  for (let k = 0; k < K; k++) if (Pn.E[k] > 0 || Pn.was[k]) { act[Math.max(0, k - 1)] = act[k] = act[Math.min(K - 1, k + 1)] = 1; }
+  for (let k = 0; k < K; k++) if (act[k]) drawKey(k);
+  for (let k = 0; k < K; k++) { Pn.was[k] = Pn.E[k] > 0 ? 1 : 0; if (Pn.E[k] > 0) live = true; }
+  if (live) Pn.raf = requestAnimationFrame(pianoTick);
+}
+const kick = () => { if (!Pn.raf) { Pn.last = performance.now() - 40; Pn.raf = requestAnimationFrame(pianoTick); } };
+
+let AC, master, echo;
+function initAudio() {
+  if (!AC) {
+    AC = new (window.AudioContext || window.webkitAudioContext)();
+    master = AC.createGain(); master.gain.value = 0.6; master.connect(AC.destination);
+    echo = AC.createDelay(); echo.delayTime.value = 0.32;
+    const fb = AC.createGain(), wet = AC.createGain(); fb.gain.value = 0.36; wet.gain.value = 0.38;
+    echo.connect(fb); fb.connect(echo); echo.connect(wet); wet.connect(master);
+  }
+  if (AC.state === 'suspended') AC.resume();
+}
+function tone(k) {
+  initAudio();
+  const f = 220 * 2 ** ((SCALE[k % 5] + 12 * Math.floor(k / 5)) / 12), t = AC.currentTime, g = AC.createGain();
+  g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.34, t + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + 1.6);
+  const o1 = AC.createOscillator(), o2 = AC.createOscillator(), g2 = AC.createGain();
+  o1.type = 'triangle'; o1.frequency.value = f; o2.type = 'sine'; o2.frequency.value = f * 2.003; g2.gain.value = 0.25;
+  o1.connect(g); o2.connect(g2); g2.connect(g); g.connect(master); g.connect(echo);
+  o1.start(t); o2.start(t); o1.stop(t + 1.7); o2.stop(t + 1.7);
+}
+function hit(k, y) {
+  if (k < 0 || k >= K) return;
+  tone(k); Pn.E[k] = 1; Pn.age[k] = 0; Pn.hit[k] = clamp(Math.round(y / S.ch), Pn.y0, Pn.y1 - 1);
+  keyDivs[k].classList.add('down'); setTimeout(() => keyDivs[k].classList.remove('down'), 160);
+  kick();
+}
+function pianoKey(e) {
+  if (e.repeat) return;
+  const k = KEYMAP.indexOf(e.key.toLowerCase()); if (k < 0) return;
+  hit(k, (Pn.y0 + Pn.y1 + (Math.random() - 0.5) * (Pn.y1 - Pn.y0) * 0.6) / 2 * S.ch);
+}
+const down = new Map();
+const keyAt = x => { const r = keysEl.getBoundingClientRect(); return Math.floor((x - r.left) / r.width * K); };
+keysEl.addEventListener('pointerdown', e => { keysEl.setPointerCapture(e.pointerId); const k = keyAt(e.clientX); down.set(e.pointerId, k); hit(k, e.clientY); });
+keysEl.addEventListener('pointermove', e => { if (!down.has(e.pointerId)) return; const k = keyAt(e.clientX); if (k !== down.get(e.pointerId)) { down.set(e.pointerId, k); hit(k, e.clientY); } });
+['pointerup', 'pointercancel'].forEach(n => keysEl.addEventListener(n, e => down.delete(e.pointerId)));
+
+
+function paint() { eng.wipeAll(); pianoLayout(); drawKeys(); }
+addEventListener('keydown', e => { if (e.metaKey || e.ctrlKey || e.altKey) return; if (e.key === 'Escape') location.href = '/'; else pianoKey(e); });
+let rz = 0, lw = innerWidth, lh = innerHeight;
+addEventListener('resize', () => { if (innerWidth === lw && Math.abs(innerHeight - lh) < 140) return; clearTimeout(rz); rz = setTimeout(() => { lw = innerWidth; lh = innerHeight; eng.layout(); paint(); }, 160); });
+(async () => {
+  try { await Promise.race([document.fonts.load('16px "Geist Pixel"'), new Promise(r => setTimeout(r, 1500))]); } catch (e) {}
+  const bt = $('#brandt'); scramble(bt, 'Blue Tiger Inc Studios', 1100); $('#brand').addEventListener('pointerenter', () => scramble(bt, 'Blue Tiger Inc Studios', 700));
+  eng.layout(); paint();
+  document.fonts.ready.then(() => { eng.layout(); paint(); });
+})();
+})();
+</script>
+</body>
+</html>
